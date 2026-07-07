@@ -72,11 +72,11 @@ function Workspace() {
         <div className="space-y-8 lg:col-span-2">
           <IntakeSurvey customer={customer} />
           <CustomerChecklist customer={customer} allStepIds={allStepIds} />
-          <CustomerNotes customer={customer} />
         </div>
-        <aside className="space-y-6 lg:sticky lg:top-20 lg:self-start">
+        <aside className="space-y-6">
           <ProgressSummary customer={customer} allStepIds={allStepIds} />
           <CustomerTimeline customer={customer} />
+          <CustomerNotes customer={customer} />
         </aside>
       </div>
     </div>
