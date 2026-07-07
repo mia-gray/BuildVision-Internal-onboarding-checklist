@@ -4,19 +4,22 @@ import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  LayoutDashboard,
+  Users,
+  BookOpen,
   HelpCircle,
   Wrench,
   Library,
   AlertTriangle,
-  Check,
-  Bookmark,
+  Plus,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { getIcon } from "@/lib/icons";
 import { useCatalog } from "./providers/catalog-provider";
-import { useProgress } from "./providers/progress-provider";
+import { useCustomers } from "@/lib/customer/store";
+import { customerPath } from "@/lib/customer/paths";
+import { CustomerAvatar } from "./customer/avatar";
+import { CreateCustomerDialog } from "./customer/create-customer-dialog";
 
 function NavLink({
   href,
@@ -57,66 +60,62 @@ function GroupLabel({ children }: { children: React.ReactNode }) {
 export function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
   const { sections } = useCatalog();
-  const { completed, bookmarks, hydrated } = useProgress();
+  const { customers, recentIds } = useCustomers();
+
+  const customersActive = pathname === "/" || pathname.startsWith("/customers");
+  const recent = recentIds
+    .map((id) => customers.find((c) => c.id === id))
+    .filter(Boolean)
+    .slice(0, 4);
 
   const knowledge = [
+    { href: "/playbook", label: "Playbook", icon: BookOpen },
     { href: "/faq", label: "FAQ", icon: HelpCircle },
     { href: "/troubleshooting", label: "Troubleshooting", icon: Wrench },
     { href: "/resources", label: "Resources", icon: Library },
     { href: "/process-gaps", label: "Process Gaps", icon: AlertTriangle },
   ];
 
-  const bookmarkedSections = sections.filter((s) => bookmarks.has(`/sections/${s.slug}`));
-
   return (
     <nav className="flex h-full flex-col gap-0.5 px-3 pb-6">
-      <GroupLabel>Overview</GroupLabel>
-      <NavLink href="/" active={pathname === "/"} onNavigate={onNavigate}>
-        <LayoutDashboard className="size-4 shrink-0" />
-        Dashboard
+      <GroupLabel>Workspace</GroupLabel>
+      <NavLink href="/" active={customersActive} onNavigate={onNavigate}>
+        <Users className="size-4 shrink-0" />
+        Customers
       </NavLink>
+      <div className="px-1 pt-1">
+        <CreateCustomerDialog
+          trigger={
+            <button className="flex w-full items-center gap-2 rounded-md border border-dashed border-border px-2.5 py-1.5 text-sm text-muted-foreground transition-colors hover:border-primary/50 hover:text-foreground">
+              <Plus className="size-4 shrink-0" />
+              New customer
+            </button>
+          }
+        />
+      </div>
 
-      <GroupLabel>Onboarding workflow</GroupLabel>
-      {sections.map((s) => {
-        const href = `/sections/${s.slug}`;
-        const active = pathname === href;
-        const done = s.steps.filter((st) => completed.has(st.id)).length;
-        const total = s.steps.length;
-        const allDone = hydrated && done === total && total > 0;
-        const Icon = getIcon(s.icon);
-        return (
-          <NavLink key={s.slug} href={href} active={active} onNavigate={onNavigate}>
-            <Icon className="size-4 shrink-0" />
-            <span className="min-w-0 flex-1 truncate">{s.shortTitle ?? s.title}</span>
-            {hydrated &&
-              (allDone ? (
-                <span
-                  className="flex size-4 shrink-0 items-center justify-center rounded-full bg-[var(--success)] text-[var(--success-foreground)]"
-                  aria-label="Section complete"
-                >
-                  <Check className="size-3" strokeWidth={3} />
-                </span>
-              ) : done > 0 ? (
-                <span className="shrink-0 font-mono text-[10px] tabular-nums text-muted-foreground">
-                  {done}/{total}
-                </span>
-              ) : null)}
-          </NavLink>
-        );
-      })}
-
-      {bookmarkedSections.length > 0 && (
+      {recent.length > 0 && (
         <>
-          <GroupLabel>Bookmarked</GroupLabel>
-          {bookmarkedSections.map((s) => {
-            const href = `/sections/${s.slug}`;
-            return (
-              <NavLink key={s.slug} href={href} active={pathname === href} onNavigate={onNavigate}>
-                <Bookmark className="size-4 shrink-0 fill-current" />
-                <span className="truncate">{s.shortTitle ?? s.title}</span>
-              </NavLink>
-            );
-          })}
+          <GroupLabel>Recent</GroupLabel>
+          {recent.map(
+            (c) =>
+              c && (
+                <NavLink
+                  key={c.id}
+                  href={customerPath(c.id)}
+                  active={false}
+                  onNavigate={onNavigate}
+                >
+                  <CustomerAvatar
+                    name={c.name}
+                    logoUrl={c.logoUrl}
+                    size="sm"
+                    className="size-5 rounded-md text-[9px]"
+                  />
+                  <span className="truncate">{c.name}</span>
+                </NavLink>
+              ),
+          )}
         </>
       )}
 
@@ -127,6 +126,18 @@ export function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
           {k.label}
         </NavLink>
       ))}
+
+      <GroupLabel>Onboarding SOPs</GroupLabel>
+      {sections.map((s) => {
+        const href = `/sections/${s.slug}`;
+        const Icon = getIcon(s.icon);
+        return (
+          <NavLink key={s.slug} href={href} active={pathname === href} onNavigate={onNavigate}>
+            <Icon className="size-4 shrink-0" />
+            <span className="truncate">{s.shortTitle ?? s.title}</span>
+          </NavLink>
+        );
+      })}
     </nav>
   );
 }

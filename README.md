@@ -1,39 +1,39 @@
 # Client Onboarding Playbook
 
-An internal, interactive playbook that guides BuildVision's **Customer Success &
-Operations** teams through onboarding a new client — from signed contract to
-go-live. It replaces a static checklist document with a fast, searchable,
-progress-tracking knowledge base.
+An internal onboarding **workspace** for BuildVision's Customer Success &
+Operations teams. Onboarding is organized **per customer**: each customer has its
+own page that stores its own intake, checklist progress, notes, timeline, and
+status — so a CSM can start, walk away for days, and pick up exactly where they
+left off. No customer's data ever overwrites another's.
 
-> Think of it as an interactive playbook, not a PDF: check off tasks, jump around
-> with `⌘K`, and pick up exactly where you left off.
+> Reskinned in BuildVision's brand (electric indigo `#4838f8`, violet-black dark
+> mode). Feels like Linear / Notion / Stripe Dashboard: modern, minimal, fast.
 
 ---
 
 ## Highlights
 
-- **Dashboard** — overall progress ring, per-section progress, recently viewed,
-  quick links, copy-snippets, team contacts, key endpoints, 90-day roadmap, and a
-  fillable **Client Reference Sheet**.
-- **Ordered workflow** — 8 sections in strict dependency order (Intake →
-  Organizations → Email Forwarding → Email Connector/CRM → Users → Permissions →
-  File Loading → QA & Handoff), each a full SOP with overview, prerequisites,
-  step-by-step checklist, verification gates, tips, warnings, common mistakes,
-  screenshots, and related links.
-- **Interactive checklists** — check off tasks, expand/collapse (individually or
-  all), hide-completed filter, mark-all / reset, and hard **verification gates**.
-- **Command palette (`⌘K`)** — full-text search across steps, sections, FAQs,
-  troubleshooting, resources, and process gaps.
-- **Knowledge base** — FAQ, Troubleshooting (Problem / Cause / Resolution /
-  Related steps), Resources, and a **Process Gaps** page that flags missing
-  documentation with suggested fixes.
-- **Progress saved in the browser** (localStorage) — no login, no backend.
-- **Bookmarks**, **recently viewed**, **dark mode**, **print-friendly** pages,
-  **copy-to-clipboard** snippets, **keyboard shortcuts** (`?` for help), status
-  **badges** (Required / Optional / Advanced), and responsive mobile layout.
-- **Content-driven** — every word lives in editable JSON under `content/`.
-  Non-developers can update procedures or add whole new guides without touching
-  application code.
+- **Customer Dashboard** (home) — every customer as a scannable row: avatar,
+  status badge, % complete, assigned CSM, created / updated. Search, sort, filter
+  by status, recently viewed, and **Create New Customer**.
+- **Customer workspace** (`/customers/?id=…`) — header with status control,
+  progress, and quick actions; **Intake Survey** cards (editable); a per-customer
+  **interactive checklist** (auto-saving, with who/when + per-task notes);
+  **internal notes**; an **activity timeline**; and a **progress summary**.
+- **Public intake form** (`/intake/?customer=…`) — branded, mobile-friendly,
+  validated, with a progress bar and **autosaved drafts**. On submit it populates
+  that customer's intake automatically (no manual copying) and advances status.
+- **Auto-save everywhere** — checklist ticks, notes, intake edits, and status
+  changes persist instantly; leave and return without losing progress.
+- **Bonus features** — color-coded status badges, avatars/initials, breadcrumbs,
+  duplicate & archive customers, copy / email the intake link, export to PDF
+  (print), recently viewed, dark mode, `⌘K` command palette (searches customers
+  too), and keyboard shortcuts.
+- **Knowledge base** — the reference SOP **Playbook**, plus FAQ, Troubleshooting,
+  Resources, and a Process-Gaps audit. The per-customer checklist is instantiated
+  from these SOP definitions.
+- **Content-driven SOPs** — the playbook content lives in editable JSON under
+  `content/`; non-developers can edit procedures without touching code.
 
 ---
 
@@ -51,6 +51,47 @@ progress-tracking knowledge base.
 | Content | Local JSON in `content/`, loaded via `node:fs` on the server |
 
 No database or external services are required.
+
+---
+
+## Data architecture (backend-ready)
+
+Every customer is one self-contained object:
+
+```
+Customer
+├── information (name, company, CSM, status, dates)
+├── intake        (survey responses)
+├── checklist     (per-step: done, completedAt, completedBy, note)
+├── notes         (internal, categorized)
+├── timeline      (activity events)
+├── attachments   (modeled, UI-ready)
+└── status
+```
+
+The code is split into clean layers so swapping the backend touches **one file**:
+
+| Layer | File(s) | Responsibility |
+| --- | --- | --- |
+| Data models | `src/lib/customer/types.ts` | Plain, serializable types |
+| **Data access** | `src/lib/customer/repository.ts` | `CustomerRepository` interface + `LocalStorageCustomerRepository` |
+| Business logic | `src/lib/customer/service.ts` | Pure functions: progress, status, timeline, intake, etc. |
+| State binding | `src/lib/customer/store.tsx` | React provider; persists via the repository, syncs tabs |
+| UI | `src/components/customer/**` | Presentational + interactive components |
+
+To go multi-user / cross-device, implement `CustomerRepository` against Supabase /
+Firebase / Postgres and change the single `customerRepository` export in
+`repository.ts`. No UI or logic changes required.
+
+> **Note on the intake form + static hosting:** this build persists to the
+> browser's `localStorage`, so the public intake form populates the customer in
+> the **same browser**. For a customer to fill it out on their own device, wire up
+> a shared backend via the repository interface above — the app is structured for
+> exactly that. (The env vars `DATABASE_URL` / `AUTH_SECRET` are reserved for it.)
+
+Because the app is a static export on GitHub Pages, the customer workspace and
+intake form use query params (`/customers/?id=…`, `/intake/?customer=…`) rather
+than runtime path segments, which a static host can't serve.
 
 ---
 

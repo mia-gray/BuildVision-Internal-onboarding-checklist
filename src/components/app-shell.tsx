@@ -1,28 +1,34 @@
 "use client";
 
+/* eslint-disable @next/next/no-img-element -- static export logo, intentionally a plain <img> */
+
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, Search, Keyboard, Compass } from "lucide-react";
+import { Menu, Search, Keyboard } from "lucide-react";
 
+import { asset } from "@/lib/utils";
 import { Button } from "./ui/button";
 import { SidebarNav } from "./sidebar";
 import { ThemeToggle } from "./theme-toggle";
 import { useCommandPalette } from "./command-palette";
-import { useCatalog } from "./providers/catalog-provider";
 import { Dialog, DialogContent, DialogTitle } from "./ui/dialog";
 
 function Brand() {
-  const { meta } = useCatalog();
   return (
-    <Link href="/" className="flex items-center gap-2.5 group">
-      <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
-        <Compass className="size-4" strokeWidth={2.2} />
-      </span>
-      <span className="flex flex-col leading-none">
-        <span className="text-sm font-semibold tracking-tight">{meta.org}</span>
-        <span className="text-[11px] text-muted-foreground">Onboarding Playbook</span>
-      </span>
+    <Link href="/" className="flex flex-col gap-1 leading-none group" aria-label="BuildVision — home">
+      {/* Theme-swapped wordmark (CSS-only to avoid hydration flash) */}
+      <img
+        src={asset("/brand/wordmark-on-light.png")}
+        alt="BuildVision"
+        className="h-4 w-auto dark:hidden"
+      />
+      <img
+        src={asset("/brand/wordmark-on-dark.png")}
+        alt="BuildVision"
+        className="hidden h-4 w-auto dark:block"
+      />
+      <span className="text-[11px] text-muted-foreground">Customer Onboarding</span>
     </Link>
   );
 }
@@ -36,6 +42,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   React.useEffect(() => {
     setMobileOpen(false);
   }, [pathname]);
+
+  // The public intake form is customer-facing: render it without app chrome.
+  if (pathname.startsWith("/intake")) {
+    return <>{children}</>;
+  }
 
   return (
     <div className="min-h-[100dvh]">

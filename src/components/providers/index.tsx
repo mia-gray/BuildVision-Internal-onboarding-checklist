@@ -6,6 +6,7 @@ import type { Catalog } from "@/lib/types";
 import { ThemeProvider } from "./theme-provider";
 import { CatalogProvider } from "./catalog-provider";
 import { ProgressProvider } from "./progress-provider";
+import { CustomerStoreProvider } from "@/lib/customer/store";
 import { TooltipProvider } from "../ui/tooltip";
 import { CommandPaletteProvider } from "../command-palette";
 import { KeyboardShortcuts } from "../keyboard-shortcuts";
@@ -21,14 +22,16 @@ export function Providers({
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
       <CatalogProvider catalog={catalog}>
-        <ProgressProvider>
-          <TooltipProvider>
-            <CommandPaletteProvider>
-              {children}
-              <KeyboardShortcuts />
-            </CommandPaletteProvider>
-          </TooltipProvider>
-        </ProgressProvider>
+        <CustomerStoreProvider>
+          <ProgressProvider>
+            <TooltipProvider>
+              <CommandPaletteProvider>
+                {children}
+                <KeyboardShortcuts />
+              </CommandPaletteProvider>
+            </TooltipProvider>
+          </ProgressProvider>
+        </CustomerStoreProvider>
       </CatalogProvider>
     </ThemeProvider>
   );

@@ -1,0 +1,197 @@
+"use client";
+
+import * as React from "react";
+import { CheckCircle2, Loader2 } from "lucide-react";
+
+import type { Customer, IntakeSurvey } from "@/lib/customer/types";
+import { INTAKE_GROUPS, INTAKE_FIELDS, isFieldFilled, type IntakeField } from "@/lib/customer/intake-schema";
+import { useCustomers } from "@/lib/customer/store";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const draftKey = (id: string) => `bv.intakeDraft.${id}`;
+
+function Field({
+  field,
+  value,
+  error,
+  onChange,
+}: {
+  field: IntakeField;
+  value: string;
+  error?: string;
+  onChange: (v: string) => void;
+}) {
+  const base = cn(
+    "w-full rounded-lg border bg-background px-3 py-2 text-sm shadow-sm outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring",
+    error ? "border-destructive" : "border-input",
+  );
+  return (
+    <div className="flex flex-col gap-1.5">
+      <label className="text-sm font-medium">
+        {field.label}
+        {field.required && <span className="ml-0.5 text-destructive">*</span>}
+      </label>
+      {field.type === "textarea" ? (
+        <textarea rows={3} value={value} onChange={(e) => onChange(e.target.value)} placeholder={field.placeholder} className={base} />
+      ) : field.type === "select" ? (
+        <select value={value} onChange={(e) => onChange(e.target.value)} className={cn(base, "h-10")}>
+          <option value="">Select…</option>
+          {field.options?.map((o) => (
+            <option key={o} value={o}>
+              {o}
+            </option>
+          ))}
+        </select>
+      ) : (
+        <Input
+          type={field.type === "date" ? "date" : field.type}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder={field.placeholder}
+          className={cn("h-10", error && "border-destructive")}
+        />
+      )}
+      {field.helper && !error && <p className="text-xs text-muted-foreground">{field.helper}</p>}
+      {error && <p className="text-xs text-destructive">{error}</p>}
+    </div>
+  );
+}
+
+export function IntakeForm({ customer }: { customer: Customer }) {
+  const { updateIntake } = useCustomers();
+  const [values, setValues] = React.useState<IntakeSurvey>(customer.intake ?? {});
+  const [errors, setErrors] = React.useState<Record<string, string>>({});
+  const [submitting, setSubmitting] = React.useState(false);
+  const [submitted, setSubmitted] = React.useState(false);
+  const [savedAt, setSavedAt] = React.useState<number | null>(null);
+
+  // Load any autosaved draft on mount.
+  React.useEffect(() => {
+    try {
+      const raw = localStorage.getItem(draftKey(customer.id));
+      if (raw) setValues((prev) => ({ ...prev, ...(JSON.parse(raw) as IntakeSurvey) }));
+    } catch {
+      /* ignore */
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  function set(key: keyof IntakeSurvey, v: string) {
+    setValues((prev) => {
+      const next = { ...prev, [key]: v };
+      try {
+        localStorage.setItem(draftKey(customer.id), JSON.stringify(next));
+        setSavedAt(Date.now());
+      } catch {
+        /* ignore */
+      }
+      return next;
+    });
+    setErrors((e) => (e[key] ? { ...e, [key]: "" } : e));
+  }
+
+  const requiredFields = INTAKE_FIELDS.filter((f) => f.required);
+  const filledRequired = requiredFields.filter((f) => isFieldFilled(values[f.key])).length;
+  const totalTracked = INTAKE_FIELDS.length;
+  const filledAll = INTAKE_FIELDS.filter((f) => isFieldFilled(values[f.key])).length;
+  const percent = Math.round((filledAll / totalTracked) * 100);
+
+  function validate(): boolean {
+    const next: Record<string, string> = {};
+    for (const f of requiredFields) {
+      if (!isFieldFilled(values[f.key])) next[f.key] = "This field is required.";
+    }
+    if (isFieldFilled(values.email) && !EMAIL_RE.test(values.email as string)) {
+      next.email = "Enter a valid email address.";
+    }
+    setErrors(next);
+    return Object.keys(next).length === 0;
+  }
+
+  function submit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!validate()) {
+      // Scroll to first error.
+      const firstKey = Object.keys(errors)[0] ?? requiredFields.find((f) => !isFieldFilled(values[f.key]))?.key;
+      if (firstKey) document.getElementById(`field-${firstKey}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
+    setSubmitting(true);
+    updateIntake(customer.id, values, { fromForm: true });
+    try {
+      localStorage.removeItem(draftKey(customer.id));
+    } catch {
+      /* ignore */
+    }
+    setTimeout(() => {
+      setSubmitting(false);
+      setSubmitted(true);
+    }, 500);
+  }
+
+  if (submitted) {
+    return (
+      <div className="mx-auto max-w-lg py-16 text-center">
+        <span className="mx-auto mb-4 flex size-14 items-center justify-center rounded-2xl bg-[color-mix(in_oklch,var(--success)_16%,transparent)] text-[var(--success)]">
+          <CheckCircle2 className="size-7" />
+        </span>
+        <h1 className="text-2xl font-semibold tracking-tight">Thank you!</h1>
+        <p className="mt-2 text-muted-foreground">
+          Your intake details have been sent to the BuildVision team. {customer.assignedCsm} will be in
+          touch to kick off your onboarding.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <form onSubmit={submit} className="mx-auto max-w-2xl">
+      {/* progress */}
+      <div className="sticky top-0 z-10 -mx-4 mb-8 bg-background/85 px-4 py-3 backdrop-blur sm:-mx-6 sm:px-6">
+        <div className="flex items-center justify-between text-xs text-muted-foreground">
+          <span>
+            {filledRequired}/{requiredFields.length} required complete
+          </span>
+          <span>{percent}%</span>
+        </div>
+        <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-secondary">
+          <div className="h-full rounded-full bg-primary transition-[width] duration-300" style={{ width: `${percent}%` }} />
+        </div>
+      </div>
+
+      <div className="space-y-10">
+        {INTAKE_GROUPS.map((group) => (
+          <section key={group.id}>
+            <h2 className="text-lg font-semibold tracking-tight">{group.title}</h2>
+            {group.description && <p className="mt-1 text-sm text-muted-foreground">{group.description}</p>}
+            <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {group.fields.map((field) => (
+                <div key={field.key} id={`field-${field.key}`} className={field.type === "textarea" ? "sm:col-span-2" : ""}>
+                  <Field
+                    field={field}
+                    value={(values[field.key] as string) ?? ""}
+                    error={errors[field.key]}
+                    onChange={(v) => set(field.key, v)}
+                  />
+                </div>
+              ))}
+            </div>
+          </section>
+        ))}
+      </div>
+
+      <div className="mt-10 flex flex-col-reverse items-center justify-between gap-3 border-t border-border pt-6 sm:flex-row">
+        <p className="text-xs text-muted-foreground">
+          {savedAt ? "Draft saved automatically" : "Your progress saves automatically as you type."}
+        </p>
+        <Button type="submit" size="lg" disabled={submitting} className="w-full sm:w-auto">
+          {submitting ? <Loader2 className="animate-spin" /> : null}
+          {submitting ? "Submitting…" : "Submit intake"}
+        </Button>
+      </div>
+    </form>
+  );
+}

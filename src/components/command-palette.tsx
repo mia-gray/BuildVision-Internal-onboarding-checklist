@@ -13,10 +13,13 @@ import {
   CornerDownLeft,
   ArrowRight,
   LayoutDashboard,
+  Users,
 } from "lucide-react";
 
 import { Dialog, DialogContent, DialogTitle } from "./ui/dialog";
 import { useCatalog } from "./providers/catalog-provider";
+import { useCustomers } from "@/lib/customer/store";
+import { customerPath } from "@/lib/customer/paths";
 import { searchDocs } from "@/lib/search";
 import type { SearchDoc } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -58,6 +61,7 @@ export function CommandPaletteProvider({ children }: { children: React.ReactNode
   const [query, setQuery] = React.useState("");
   const router = useRouter();
   const catalog = useCatalog();
+  const { customers } = useCustomers();
 
   const toggle = React.useCallback(() => setOpen((o) => !o), []);
 
@@ -86,9 +90,22 @@ export function CommandPaletteProvider({ children }: { children: React.ReactNode
     [query, catalog.searchIndex],
   );
 
+  const customerMatches = React.useMemo(() => {
+    const q = query.trim().toLowerCase();
+    const active = customers.filter((c) => !c.archived);
+    if (!q)
+      return [...active].sort((a, b) => b.updatedAt.localeCompare(a.updatedAt)).slice(0, 5);
+    return active
+      .filter(
+        (c) => c.name.toLowerCase().includes(q) || c.companyName.toLowerCase().includes(q),
+      )
+      .slice(0, 6);
+  }, [query, customers]);
+
   const quickLinks = React.useMemo(
     () => [
-      { href: "/", title: "Dashboard", icon: LayoutDashboard },
+      { href: "/", title: "Customers", icon: Users },
+      { href: "/playbook", title: "Playbook", icon: LayoutDashboard },
       { href: "/faq", title: "FAQ", icon: HelpCircle },
       { href: "/troubleshooting", title: "Troubleshooting", icon: Wrench },
       { href: "/resources", title: "Resources", icon: Library },
@@ -132,15 +149,34 @@ export function CommandPaletteProvider({ children }: { children: React.ReactNode
               </kbd>
             </div>
             <Command.List className="max-h-[60vh] overflow-y-auto p-2">
-              {query.trim() && results.length === 0 && (
+              {query.trim() && results.length === 0 && customerMatches.length === 0 && (
                 <Command.Empty className="py-10 text-center text-sm text-muted-foreground">
                   No results for “{query}”.
                 </Command.Empty>
               )}
 
+              {customerMatches.length > 0 && (
+                <Command.Group heading={query.trim() ? "Customers" : "Recent customers"}>
+                  {customerMatches.map((c) => (
+                    <PaletteItem
+                      key={c.id}
+                      onSelect={() => go(customerPath(c.id))}
+                      icon={Users}
+                      title={c.name}
+                      meta={c.companyName}
+                    />
+                  ))}
+                </Command.Group>
+              )}
+
               {!query.trim() && (
                 <>
-                  <Command.Group heading="Sections">
+                  <Command.Group heading="Go to">
+                    {quickLinks.map((q) => (
+                      <PaletteItem key={q.href} onSelect={() => go(q.href)} icon={q.icon} title={q.title} />
+                    ))}
+                  </Command.Group>
+                  <Command.Group heading="Onboarding SOPs">
                     {catalog.sections.map((s) => (
                       <PaletteItem
                         key={s.slug}
@@ -148,16 +184,6 @@ export function CommandPaletteProvider({ children }: { children: React.ReactNode
                         icon={FileText}
                         title={s.title}
                         meta={s.phase}
-                      />
-                    ))}
-                  </Command.Group>
-                  <Command.Group heading="Go to">
-                    {quickLinks.map((q) => (
-                      <PaletteItem
-                        key={q.href}
-                        onSelect={() => go(q.href)}
-                        icon={q.icon}
-                        title={q.title}
                       />
                     ))}
                   </Command.Group>
