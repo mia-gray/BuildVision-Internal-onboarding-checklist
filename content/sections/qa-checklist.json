@@ -1,0 +1,115 @@
+{
+  "slug": "qa-checklist",
+  "title": "QA & Handoff",
+  "shortTitle": "QA & Handoff",
+  "icon": "BadgeCheck",
+  "order": 80,
+  "phase": "Phase 5",
+  "badge": "Required",
+  "estimatedTime": "60–75 min",
+  "summary": "The final gate before telling the client they're live: reconcile every task, re-test ingestion, schedule training, and get CS sign-off.",
+  "overview": "This is the **last gate before the client is told they're live**. Reconcile every checkbox from earlier phases, do a client's-eye walkthrough, re-test ingestion once more, schedule training, send the welcome package, and record CS Lead sign-off.\n\nOn sign-off, the account moves into the **90-day roadmap** (setup + training → rep enablement → expansion → full-adoption target).",
+  "prerequisites": [
+    "Phases 0–4 complete",
+    "At least one real forwarded bid already ingested",
+    "Welcome package assembled (letter, contacts, 90-day roadmap)"
+  ],
+  "tips": [
+    "Do a genuine client's-eye walkthrough — log in as/with the primary contact and walk the core flow.",
+    "Confirm no verification gate from earlier phases was skipped.",
+    "Sign-off is CS Lead by default; COO signs on exception."
+  ],
+  "warnings": [
+    "There is no formal go-live acceptance artifact defined in the source — see Process Gaps C-5. Record sign-off explicitly so 'done' is unambiguous."
+  ],
+  "commonMistakes": [
+    "Declaring go-live without re-testing a live bid ingestion.",
+    "Skipping the training calendar invite.",
+    "No recorded sign-off, so it's unclear whether the account is actually live."
+  ],
+  "steps": [
+    {
+      "id": "qa-reconcile",
+      "title": "Confirm every prior task is checked off",
+      "description": "Reconcile every checkbox across Phases 0–4; confirm no gate was skipped.",
+      "owners": ["CS"],
+      "time": "10 min",
+      "verify": "No gate skipped; all prior tasks complete."
+    },
+    {
+      "id": "qa-client-walkthrough",
+      "title": "Verify the client can access everything",
+      "description": "Do a client's-eye walkthrough — log in as/with the primary contact and walk the core flow.",
+      "owners": ["CS"],
+      "time": "15 min",
+      "verify": "Nothing broken or missing for the primary contact."
+    },
+    {
+      "id": "qa-recheck-ingestion",
+      "title": "Re-check email ingestion",
+      "description": "Confirm one more live/forwarded bid is ingested successfully.",
+      "owners": ["ENG"],
+      "time": "5 min",
+      "verify": "Bid ingested successfully."
+    },
+    {
+      "id": "qa-files-visible",
+      "title": "Check projects / files are visible",
+      "description": "Confirm files/projects are visible to the intended users at the intended org level.",
+      "owners": ["CS"],
+      "time": "10 min",
+      "verify": "Correct visibility per permission level."
+    },
+    {
+      "id": "qa-no-tasks-remain",
+      "title": "Confirm no required tasks remain (gate)",
+      "description": "Confirm no required tasks remain and no verification gate was skipped.",
+      "owners": ["CS"],
+      "time": "5 min",
+      "gate": true,
+      "verify": "Confirmed — nothing outstanding."
+    },
+    {
+      "id": "qa-schedule-training",
+      "title": "Schedule onboarding training",
+      "description": "Schedule training and send the calendar invite (referenced in the client quick-start).",
+      "owners": ["CS"],
+      "time": "10 min",
+      "verify": "Invite accepted or delivered."
+    },
+    {
+      "id": "qa-send-welcome",
+      "title": "Send the welcome package",
+      "description": "Send the welcome package to the client — letter, contacts, and 90-day roadmap.",
+      "owners": ["CS"],
+      "time": "5 min",
+      "verify": "Delivered to the primary contact."
+    },
+    {
+      "id": "qa-signoff",
+      "title": "Final sign-off (gate)",
+      "description": "CS Lead final sign-off; move the account into 90-day roadmap tracking. (COO on exception.)",
+      "owners": ["CS", "EXEC"],
+      "time": "5 min",
+      "gate": true,
+      "verify": "Sign-off recorded; account in roadmap tracking.",
+      "callouts": [
+        {
+          "type": "tip",
+          "text": "90-day roadmap: Days 1–14 setup + training; 15–30 rep enablement / first projects; 31–60 expansion + monthly check-in; 61–90 full-adoption target with CS owning the relationship."
+        }
+      ]
+    }
+  ],
+  "related": [
+    { "label": "Email Forwarding", "href": "/sections/email-forwarding" },
+    { "label": "File Loading", "href": "/sections/file-loading" },
+    { "label": "Process Gaps: definition of done", "href": "/process-gaps" }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/home.png",
+      "caption": "Client's-eye walkthrough — the home page a client sees, with notifications and completed extractions."
+    }
+  ]
+}

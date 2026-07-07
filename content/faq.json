@@ -1,0 +1,84 @@
+[
+  {
+    "id": "faq-order",
+    "question": "What order do the setup steps go in, and why does it matter?",
+    "answer": "Intake → Organizations → Email Forwarding/Connector → Users → Permissions → File Loading → QA. Users and data attach to organizations, so orgs must exist first. Ingestion is validated early because it's the backbone of the workflow. QA is always last — it's the gate before the client is told they're live.",
+    "category": "Process",
+    "related": [{ "label": "Organization Creation", "href": "/sections/organization-creation" }]
+  },
+  {
+    "id": "faq-pilot-vs-full",
+    "question": "What's the difference between a Pilot and a Full License account?",
+    "answer": "Account Type is captured at intake and applied during Organization Creation, and it may drive different feature/seat settings — so set it **before** inviting users. The exact per-type differences aren't spelled out in the source; confirm with CS if a specific feature/seat behavior is unclear. (Tracked as a documentation gap, B-7.)",
+    "category": "Accounts",
+    "related": [{ "label": "Organization Creation", "href": "/sections/organization-creation" }]
+  },
+  {
+    "id": "faq-bids-inbox",
+    "question": "Where do clients forward their bids?",
+    "answer": "Clients forward their bid-desk inbox to **Bids@BuildVision.io**. Most providers: add that address as a forwarding address, verify it, then create a rule/filter for bid-related senders. Always send a test bid and confirm it lands before moving on.",
+    "category": "Ingestion",
+    "related": [{ "label": "Email Forwarding", "href": "/sections/email-forwarding" }]
+  },
+  {
+    "id": "faq-forward-vs-connect",
+    "question": "Should a client forward email or connect their inbox?",
+    "answer": "Either — they're two paths to the same outcome. Pick one. If you forward, you don't also need to connect the inbox. Whichever you choose, BuildVision starts processing as soon as a bid arrives.",
+    "category": "Ingestion",
+    "related": [{ "label": "Email Connector", "href": "/sections/email-connector" }]
+  },
+  {
+    "id": "faq-passwords",
+    "question": "Do we set passwords for new users?",
+    "answer": "No. Users receive login credentials by email and set their own password on first sign-in at app.buildvision.io/login. Your job is to create the user, place them in the right org, trigger the invite, and confirm it was delivered.",
+    "category": "Users",
+    "related": [{ "label": "User Creation", "href": "/sections/user-creation" }]
+  },
+  {
+    "id": "faq-protected-links",
+    "question": "A bid links to a SharePoint / Google Drive file BuildVision can't open. What do I do?",
+    "answer": "Add saved credentials. In User Settings → Saved Credentials → + Add Credential, pick the provider (Microsoft, SharePoint, Google, OneDrive, etc.), name it, and enter the user's own login for that service. BuildVision then authenticates automatically whenever a matching protected link appears. Credentials are per user, and you only need one per platform.",
+    "category": "Ingestion",
+    "related": [{ "label": "Email Connector", "href": "/sections/email-connector" }]
+  },
+  {
+    "id": "faq-representation",
+    "question": "What is “Representation” in the platform?",
+    "answer": "“Representation” is the label for the client's product catalog inside BuildVision. During File Loading you load it for the org and validate it against the client's current line card with the reps. Corrections flagged by reps are turned around by the CX Lead the same day.",
+    "category": "Files",
+    "related": [{ "label": "File Loading", "href": "/sections/file-loading" }]
+  },
+  {
+    "id": "faq-switch-offices",
+    "question": "How does a user access a different office?",
+    "answer": "Users always land in their root account. If they belong to a parent org with multiple offices, they switch from My Profile → Other Accounts (click the row arrow), or from Settings → Company. They can switch back to their root account the same way.",
+    "category": "Users",
+    "related": [{ "label": "Permissions & Access", "href": "/sections/permissions" }]
+  },
+  {
+    "id": "faq-processing-time",
+    "question": "How long should file processing take?",
+    "answer": "It depends on file size — larger files take longer, and BuildVision notifies you when extraction completes. There's no documented expected processing time (gap B-3), so don't assume a file is 'stuck.' Verify processing status before declaring File Loading complete.",
+    "category": "Files",
+    "related": [{ "label": "File Loading", "href": "/sections/file-loading" }]
+  },
+  {
+    "id": "faq-who-owns",
+    "question": "Who owns each setup task internally?",
+    "answer": "The playbook assigns a recommended owner to every step — CS, OPS, ENG, EXEC, or CUST (client). These are sensible defaults, not a ratified RACI (gap C-1). CS Lead owns overall setup and final sign-off; the Support Engineer and COO handle escalations.",
+    "category": "Process"
+  },
+  {
+    "id": "faq-done",
+    "question": "When is onboarding officially “done”?",
+    "answer": "When every QA gate passes and the CS Lead records final sign-off, moving the account into 90-day roadmap tracking. There's no formal acceptance artifact defined in the source (gap C-5) — record sign-off explicitly so 'done' is unambiguous.",
+    "category": "Process",
+    "related": [{ "label": "QA & Handoff", "href": "/sections/qa-checklist" }]
+  },
+  {
+    "id": "faq-escalate",
+    "question": "When should I escalate a stuck setup task?",
+    "answer": "Escalate integration or ingestion failures to the Support Engineer, and account-level blockers to the COO. Explicit escalation thresholds aren't defined in the source (gap C-7) — when in doubt, escalate early rather than letting a client's go-live slip.",
+    "category": "Process"
+  }
+]

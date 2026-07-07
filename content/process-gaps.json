@@ -1,0 +1,146 @@
+[
+  {
+    "id": "gap-a1",
+    "code": "A-1",
+    "title": "Email Forwarding Guide link is a placeholder",
+    "detail": "The per-provider forwarding guide (Gmail / Outlook web / classic Outlook) is referenced but the URL is a placeholder (“FORWARDING GUIDE LINK”).",
+    "category": "Referenced but incomplete",
+    "impact": "medium",
+    "suggestion": "Publish the real guide and store the link in the Reference Sheet and the Resources page."
+  },
+  {
+    "id": "gap-b1",
+    "code": "B-1",
+    "title": "Historical file upload procedure",
+    "detail": "No process, supported formats, size limits, or “when is this in scope” guidance for historical files.",
+    "category": "Undefined internal procedure",
+    "impact": "medium",
+    "suggestion": "Define scope criteria, supported formats, size limits, and a step-by-step upload flow; add it to File Loading."
+  },
+  {
+    "id": "gap-b2",
+    "code": "B-2",
+    "title": "Current project file loading",
+    "detail": "No defined internal procedure for how files get into a project (the source only describes the client “running a project”).",
+    "category": "Undefined internal procedure",
+    "impact": "medium",
+    "suggestion": "Document the internal project-file loading steps and expected placement, then link from File Loading."
+  },
+  {
+    "id": "gap-b3",
+    "code": "B-3",
+    "title": "Indexing / processing expectations",
+    "detail": "No expected processing time or a clear way to tell when files are fully ready vs stuck.",
+    "category": "Undefined internal procedure",
+    "impact": "low",
+    "suggestion": "Publish typical processing windows by file size and a definitive 'ready' signal to check."
+  },
+  {
+    "id": "gap-b4",
+    "code": "B-4",
+    "title": "Organization creation mechanics",
+    "detail": "No admin steps for creating parent/child orgs, and no explicit definition of the parent↔child model beyond “offices, line cards, user hierarchies.”",
+    "category": "Undefined internal procedure",
+    "impact": "high",
+    "suggestion": "Write the exact admin steps to create parent/child orgs and define the hierarchy model precisely."
+  },
+  {
+    "id": "gap-b5",
+    "code": "B-5",
+    "title": "Credential generation trigger",
+    "detail": "The client “receives credentials by email,” but the internal step that triggers that email isn't documented.",
+    "category": "Undefined internal procedure",
+    "impact": "medium",
+    "suggestion": "Document the exact action that sends credential emails and how to re-send on bounce."
+  },
+  {
+    "id": "gap-b6",
+    "code": "B-6",
+    "title": "Role / permission catalog",
+    "detail": "The specific roles and permission levels available — and what each grants — aren't listed.",
+    "category": "Undefined internal procedure",
+    "impact": "high",
+    "suggestion": "Publish a role matrix (role → permissions granted) so assignment is deterministic."
+  },
+  {
+    "id": "gap-b7",
+    "code": "B-7",
+    "title": "Pilot vs Full License differences",
+    "detail": "What actually changes in setup between the two account types isn't specified.",
+    "category": "Undefined internal procedure",
+    "impact": "medium",
+    "suggestion": "List the concrete feature/seat differences so the account type drives clear setup choices."
+  },
+  {
+    "id": "gap-b8",
+    "code": "B-8",
+    "title": "Supported CRMs",
+    "detail": "Which CRM systems are supported and the auth method for each is not documented.",
+    "category": "Undefined internal procedure",
+    "impact": "high",
+    "suggestion": "Maintain a supported-CRM list with the auth method and required permissions per system."
+  },
+  {
+    "id": "gap-c1",
+    "code": "C-1",
+    "title": "Internal RACI",
+    "detail": "The source lists client-facing roles but not who internally owns each build task. Ownership in this playbook is a recommended default.",
+    "category": "Operational gap",
+    "impact": "medium",
+    "suggestion": "Ratify the per-task owners (CS/OPS/ENG/EXEC) with the team and lock them in."
+  },
+  {
+    "id": "gap-c2",
+    "code": "C-2",
+    "title": "Who sends the welcome package",
+    "detail": "The owner and trigger point for sending the welcome package aren't specified.",
+    "category": "Operational gap",
+    "impact": "low",
+    "suggestion": "Assign an owner and a definite trigger (e.g. immediately after CS sign-off)."
+  },
+  {
+    "id": "gap-c3",
+    "code": "C-3",
+    "title": "Data security / access provisioning",
+    "detail": "No documented least-privilege standard or offboarding process.",
+    "category": "Operational gap",
+    "impact": "high",
+    "suggestion": "Define least-privilege defaults per role and a deprovisioning checklist for departing users."
+  },
+  {
+    "id": "gap-c4",
+    "code": "C-4",
+    "title": "Error handling / rollback",
+    "detail": "No guidance for what to do when ingestion, CRM sync, or invites fail.",
+    "category": "Operational gap",
+    "impact": "medium",
+    "suggestion": "Add failure playbooks (the Troubleshooting page is a start) and rollback steps per integration."
+  },
+  {
+    "id": "gap-c5",
+    "code": "C-5",
+    "title": "Definition of “done”",
+    "detail": "No formal go-live acceptance criteria or client sign-off artifact.",
+    "category": "Operational gap",
+    "impact": "high",
+    "suggestion": "Create a go-live acceptance checklist and a recorded sign-off artifact per client."
+  },
+  {
+    "id": "gap-c6",
+    "code": "C-6",
+    "title": "Time estimates",
+    "detail": "The source gives no per-task durations. Estimates in this playbook are planning defaults.",
+    "category": "Operational gap",
+    "impact": "low",
+    "suggestion": "Calibrate the estimates against real setups and adjust per account size."
+  },
+  {
+    "id": "gap-c7",
+    "code": "C-7",
+    "title": "Escalation thresholds",
+    "detail": "When a stuck setup task should be escalated to the Support Engineer or COO isn't defined.",
+    "category": "Operational gap",
+    "impact": "medium",
+    "suggestion": "Set explicit time/severity thresholds that trigger escalation to ENG or EXEC."
+  }
+]

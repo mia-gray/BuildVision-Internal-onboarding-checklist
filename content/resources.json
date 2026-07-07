@@ -1,0 +1,116 @@
+[
+  {
+    "id": "res-app-login",
+    "title": "BuildVision App — Login",
+    "description": "Client login. Users set their own password on first sign-in.",
+    "href": "https://app.buildvision.io/login",
+    "category": "Internal links",
+    "icon": "LogIn",
+    "external": true
+  },
+  {
+    "id": "res-docs",
+    "title": "BuildVision Docs — Getting Started",
+    "description": "Email forwarding, quick start, login credentials, and switching offices.",
+    "href": "https://buildvision-docs.vercel.app/",
+    "category": "Documentation",
+    "icon": "BookOpen",
+    "external": true
+  },
+  {
+    "id": "res-forwarding-guide",
+    "title": "Email Forwarding Guide (Gmail / Outlook)",
+    "description": "Per-provider forwarding steps. URL is a placeholder in the source — publish the real link and update here.",
+    "href": "/sections/email-forwarding",
+    "category": "Documentation",
+    "icon": "Forward",
+    "placeholder": true
+  },
+  {
+    "id": "res-login-credentials",
+    "title": "Saved Credentials for Protected Links",
+    "description": "How to add SharePoint / Google Drive / OneDrive credentials so protected documents resolve.",
+    "href": "https://buildvision-docs.vercel.app/getting-started/login-credentials/",
+    "category": "Documentation",
+    "icon": "KeyRound",
+    "external": true
+  },
+  {
+    "id": "res-switching-offices",
+    "title": "Access Other Offices",
+    "description": "How users switch between a root account and child offices.",
+    "href": "https://buildvision-docs.vercel.app/getting-started/switching-offices/",
+    "category": "Documentation",
+    "icon": "Building2",
+    "external": true
+  },
+  {
+    "id": "res-quick-start",
+    "title": "Quick Start for Manufacturer Reps",
+    "description": "From home page to first sent bid in five steps (~10 min).",
+    "href": "https://buildvision-docs.vercel.app/getting-started/manufacturer-reps/",
+    "category": "Documentation",
+    "icon": "Rocket",
+    "external": true
+  },
+  {
+    "id": "res-bids-inbox",
+    "title": "Bid Ingestion Mailbox",
+    "description": "Clients forward bid-related mail here.",
+    "href": "mailto:Bids@BuildVision.io",
+    "category": "Internal links",
+    "icon": "Inbox",
+    "external": true
+  },
+  {
+    "id": "res-support",
+    "title": "General Support",
+    "description": "For client-facing issues during and after onboarding.",
+    "href": "mailto:support@buildvision.io",
+    "category": "Internal links",
+    "icon": "LifeBuoy",
+    "external": true
+  },
+  {
+    "id": "res-welcome-package",
+    "title": "Welcome Package Template",
+    "description": "Onboarding letter, contacts, quick-start, and 90-day roadmap sent at handoff. Store the canonical template link here.",
+    "href": "/resources",
+    "category": "Templates",
+    "icon": "FileText",
+    "placeholder": true
+  },
+  {
+    "id": "res-reference-sheet",
+    "title": "Client Reference Sheet",
+    "description": "Per-client intake fields to capture before build. Fillable version lives on the dashboard.",
+    "href": "/",
+    "category": "Templates",
+    "icon": "ClipboardList"
+  },
+  {
+    "id": "res-sop",
+    "title": "Detailed SOP Checklist",
+    "description": "Every step plus verification, phase by phase — the interactive sections in this app.",
+    "href": "/sections/intake",
+    "category": "SOPs",
+    "icon": "ListChecks"
+  },
+  {
+    "id": "res-process-gaps",
+    "title": "Process Gaps & Improvements",
+    "description": "Documentation gaps flagged from the source, with suggested fixes.",
+    "href": "/process-gaps",
+    "category": "SOPs",
+    "icon": "AlertTriangle"
+  },
+  {
+    "id": "res-training",
+    "title": "Onboarding Training (schedule)",
+    "description": "Calendar invite sent during QA & Handoff. Store the booking link/template here.",
+    "href": "/sections/qa-checklist",
+    "category": "Videos",
+    "icon": "Video",
+    "placeholder": true
+  }
+]

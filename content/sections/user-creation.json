@@ -1,0 +1,99 @@
+{
+  "slug": "user-creation",
+  "title": "User Creation",
+  "shortTitle": "User Creation",
+  "icon": "UserPlus",
+  "order": 50,
+  "phase": "Phase 3",
+  "badge": "Required",
+  "estimatedTime": "30–45 min",
+  "summary": "Create every user from the rep roster, place them in the right org node, send invitations, and confirm they can log in.",
+  "overview": "With the org tree in place, create users so they land in the correct hierarchy. Users receive login credentials by email and **set their own password on first sign-in** at app.buildvision.io/login.\n\nCreate accounts, place each in the right office/line card, trigger invitations, and confirm at least the primary contact and one rep can actually log in. Role and permission detail is covered in the **Permissions** section.",
+  "prerequisites": [
+    "Phase 1 (Organization Creation) complete and CS-verified",
+    "Rep roster with intended permission level per person",
+    "Active Users count from intake"
+  ],
+  "tips": [
+    "Match the number of users created to the **Active Users** count from intake.",
+    "Users set their own password on first login — you don't set passwords for them.",
+    "Spot-check a few users across different orgs rather than assuming placement is correct."
+  ],
+  "warnings": [
+    "Verify invitations actually sent — watch for bounces or stuck sends before telling the client they're live."
+  ],
+  "commonMistakes": [
+    "User count doesn't match Active Users from the contract.",
+    "Invitations show as sent but bounce, and no one notices until the client can't log in.",
+    "Placing a rep in the parent org instead of their specific office."
+  ],
+  "steps": [
+    {
+      "id": "user-create-all",
+      "title": "Create all required users",
+      "description": "Create each user from the rep roster; match the Active Users count from intake.",
+      "owners": ["OPS"],
+      "time": "3 min per user",
+      "dependsOn": "Phase 1",
+      "verify": "User count = Active Users."
+    },
+    {
+      "id": "user-place-hierarchy",
+      "title": "Place each user in the correct org node",
+      "description": "Assign each user to the correct office / line card / hierarchy node per the intake structure. (Role & permission level detail: see Permissions section.)",
+      "owners": ["OPS", "CS"],
+      "time": "15 min",
+      "verify": "Spot-check 2–3 users across different orgs."
+    },
+    {
+      "id": "user-send-invites",
+      "title": "Send invitations / trigger credential emails",
+      "description": "Trigger the invitation / credential emails so users can set their password.",
+      "owners": ["OPS"],
+      "time": "5 min",
+      "verify": "Send queue shows all delivered, no bounces.",
+      "callouts": [
+        {
+          "type": "info",
+          "text": "The exact internal step that triggers the credential email is a known gap — see Process Gaps B-5."
+        }
+      ]
+    },
+    {
+      "id": "user-verify-invites",
+      "title": "Verify invitations were sent (gate)",
+      "description": "Confirm every user received an invitation with no bounces or stuck sends.",
+      "owners": ["OPS"],
+      "time": "5 min",
+      "gate": true,
+      "verify": "All invitations delivered; no bounces."
+    },
+    {
+      "id": "user-confirm-access",
+      "title": "Confirm users have proper access",
+      "description": "Have the primary contact (and one rep) log in at app.buildvision.io/login, set a password, and confirm the correct org is visible.",
+      "owners": ["CS"],
+      "time": "10 min",
+      "verify": "Successful login; correct org visible."
+    },
+    {
+      "id": "user-support-chat",
+      "title": "Confirm in-platform support chat access",
+      "description": "Confirm the in-platform support chat is reachable for a test user.",
+      "owners": ["CS"],
+      "time": "5 min",
+      "verify": "Chat channel opens for the test user."
+    }
+  ],
+  "related": [
+    { "label": "Permissions", "href": "/sections/permissions" },
+    { "label": "Login Credentials & protected links", "href": "/sections/email-connector" },
+    { "label": "Troubleshooting: invitations", "href": "/troubleshooting" }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/home.png",
+      "caption": "After first login, a user lands on their home page — notifications, projects, and the “Connect your email” prompt."
+    }
+  ]
+}

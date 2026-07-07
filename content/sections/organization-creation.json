@@ -1,0 +1,89 @@
+{
+  "slug": "organization-creation",
+  "title": "Organization Creation",
+  "shortTitle": "Organizations",
+  "icon": "Building2",
+  "order": 20,
+  "phase": "Phase 1",
+  "badge": "Required",
+  "estimatedTime": "35–45 min",
+  "summary": "Build the parent and child org tree first — users and data attach to organizations, so this is foundational.",
+  "overview": "Organizations are the foundation. **Users and all data attach to orgs**, so the org tree must exist and be verified before you create users or load anything.\n\nThe model: a **parent organization** (the client company) with optional **child organizations** for offices and line cards. Reps live inside the correct node of that hierarchy.",
+  "prerequisites": [
+    "Phase 0 (Intake) complete",
+    "Org structure documented: offices, line cards, hierarchy, rep roster",
+    "Account Type confirmed (Pilot vs Full License)"
+  ],
+  "tips": [
+    "Match the Company name to the Reference Sheet **exactly** — it appears throughout the platform and on client-facing artifacts.",
+    "Set Account Type before inviting users; it can drive different feature/seat settings."
+  ],
+  "warnings": [
+    "This is a verification gate. Do not create users or load data until CS has signed off on the full org tree."
+  ],
+  "commonMistakes": [
+    "Creating orphaned child orgs not nested under the parent.",
+    "Misspelling the company name so it no longer matches the contract.",
+    "Skipping the CS review gate and discovering hierarchy errors after users are added."
+  ],
+  "steps": [
+    {
+      "id": "org-create-parent",
+      "title": "Create the parent organization",
+      "description": "Create the parent org using the Company name from intake.",
+      "owners": ["OPS"],
+      "time": "10 min",
+      "dependsOn": "Phase 0 complete",
+      "verify": "Name matches the Reference Sheet exactly."
+    },
+    {
+      "id": "org-create-children",
+      "title": "Create child organizations",
+      "description": "Create offices / line cards as child orgs nested under the parent, if applicable.",
+      "owners": ["OPS"],
+      "time": "5 min each",
+      "dependsOn": "parent org exists",
+      "verify": "Hierarchy renders as intended; no orphaned orgs."
+    },
+    {
+      "id": "org-apply-settings",
+      "title": "Apply organization settings & account type",
+      "description": "Configure organization settings and apply the account type — Pilot vs Full License.",
+      "owners": ["OPS"],
+      "time": "10 min",
+      "verify": "Feature/seat configuration matches the contract tier.",
+      "callouts": [
+        {
+          "type": "warning",
+          "text": "Pilot vs Full License may drive different feature/seat settings — set this before inviting users."
+        }
+      ]
+    },
+    {
+      "id": "org-verify",
+      "title": "Verify organization details (gate)",
+      "description": "CS reviews the whole org tree and settings — name spelling, hierarchy nesting, and settings against the Reference Sheet.",
+      "owners": ["CS"],
+      "time": "10 min",
+      "gate": true,
+      "verify": "CS signs off before any users or data are added.",
+      "callouts": [
+        {
+          "type": "verify",
+          "text": "Verification gate — do not proceed until CS confirms the org tree is correct."
+        }
+      ]
+    }
+  ],
+  "related": [
+    { "label": "User Creation", "href": "/sections/user-creation" },
+    { "label": "Access Other Offices (switching)", "href": "/sections/permissions" },
+    { "label": "Process Gaps: org creation mechanics", "href": "/process-gaps" }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/settings-company.png",
+      "caption": "Settings → Company shows every office and subsidiary under the root account — with type, users, phone, and address."
+    }
+  ]
+}

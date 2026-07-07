@@ -1,0 +1,81 @@
+{
+  "appName": "Client Onboarding Playbook",
+  "org": "BuildVision",
+  "tagline": "A repeatable, order-of-operations guide from signed contract through go-live.",
+  "sourceOfTruth": "Derived from the client Welcome Package (onboarding letter, quick-start, technical setup, support/escalation, and 90-day roadmap) and the BuildVision Getting Started docs.",
+  "version": "1.0.0",
+  "lastUpdated": "2026-07-07",
+  "contacts": [
+    {
+      "role": "CX Lead",
+      "name": "Mia Gray",
+      "email": "Mia@BuildVision.io"
+    },
+    {
+      "role": "COO — escalation / sign-off",
+      "name": "Ben Lyddane",
+      "email": "Ben@BuildVision.io"
+    },
+    {
+      "role": "Support Engineer",
+      "name": "Mackenzie Hoover",
+      "email": "Mackenzie@BuildVision.io"
+    }
+  ],
+  "endpoints": [
+    {
+      "label": "Client login",
+      "value": "app.buildvision.io/login",
+      "href": "https://app.buildvision.io/login"
+    },
+    {
+      "label": "Bid ingestion mailbox (clients forward here)",
+      "value": "Bids@BuildVision.io",
+      "href": "mailto:Bids@BuildVision.io"
+    },
+    {
+      "label": "General support",
+      "value": "support@buildvision.io",
+      "href": "mailto:support@buildvision.io"
+    },
+    {
+      "label": "Product catalog is labeled",
+      "value": "“Representation” inside the platform"
+    }
+  ],
+  "ownerLegend": [
+    { "key": "CS", "label": "Customer Success (CX Lead)" },
+    { "key": "OPS", "label": "Operations" },
+    { "key": "ENG", "label": "Engineering / Support Engineer" },
+    { "key": "EXEC", "label": "COO (sign-off / escalation)" },
+    { "key": "CUST", "label": "Client-side action" }
+  ],
+  "referenceFields": [
+    { "label": "Company", "type": "text" },
+    { "label": "Account Type", "type": "choice", "choices": ["Pilot", "Full License"] },
+    { "label": "Start Date", "type": "text" },
+    { "label": "Primary Contact (name + title)", "type": "text" },
+    { "label": "Contract Term", "type": "text" },
+    { "label": "Active Users (count)", "type": "text" },
+    { "label": "Customer IT/Ops contact (for integrations)", "type": "text" },
+    { "label": "CRM system in use", "type": "text" },
+    { "label": "Client bid-desk inbox to forward", "type": "text" },
+    { "label": "Signer name + title (welcome letter)", "type": "text" }
+  ],
+  "snippets": [
+    { "id": "bids-inbox", "label": "Bid ingestion mailbox", "value": "Bids@BuildVision.io" },
+    { "id": "support-email", "label": "Support email", "value": "support@buildvision.io" },
+    { "id": "login-url", "label": "Client login URL", "value": "https://app.buildvision.io/login" },
+    {
+      "id": "forwarding-ask",
+      "label": "Forwarding request (to client IT)",
+      "value": "Please add Bids@BuildVision.io as a forwarding address on the bid-desk inbox, verify the address, then create a rule that forwards bid-related mail to it."
+    }
+  ],
+  "roadmap": [
+    { "window": "Days 1–14", "focus": "Setup + training" },
+    { "window": "Days 15–30", "focus": "Rep enablement / first projects" },
+    { "window": "Days 31–60", "focus": "Expansion + monthly check-in" },
+    { "window": "Days 61–90", "focus": "Full-adoption target, CS owns the relationship" }
+  ]
+}

@@ -1,0 +1,117 @@
+[
+  {
+    "id": "ts-no-ingest",
+    "problem": "A test bid was sent but never appeared in BuildVision.",
+    "cause": "Forwarding rule not actually active, address not verified on the client side, or a filter too narrow to match the sender.",
+    "resolution": "Confirm the forwarding rule shows active on the client side and that Bids@BuildVision.io was verified. Widen the filter to cover bid-related senders. Re-send a test bid and confirm it lands in the correct org.",
+    "owner": "ENG",
+    "severity": "high",
+    "relatedSteps": [
+      { "label": "Configure email forwarding", "href": "/sections/email-forwarding" },
+      { "label": "Test ingestion end-to-end", "href": "/sections/email-forwarding" }
+    ]
+  },
+  {
+    "id": "ts-duplicate-ingest",
+    "problem": "Bids are ingesting twice.",
+    "cause": "Both email forwarding and the inbox connector are enabled for the same mailbox.",
+    "resolution": "Pick one ingestion path. Disable either the forwarding rule or the inbox connection so a bid is only captured once.",
+    "owner": "ENG",
+    "severity": "medium",
+    "relatedSteps": [
+      { "label": "Email Forwarding", "href": "/sections/email-forwarding" },
+      { "label": "Email Connector", "href": "/sections/email-connector" }
+    ]
+  },
+  {
+    "id": "ts-crm-auth",
+    "problem": "CRM integration fails to authenticate or shows permission errors.",
+    "cause": "Insufficient CRM permissions on the connecting account, or the wrong auth method for that CRM.",
+    "resolution": "Re-run authorization with an account that has deals + contacts access. Confirm the auth method for that CRM (supported-CRM list is a known gap, B-8 — check with ENG). Do not test sync until auth succeeds with no errors.",
+    "owner": "ENG",
+    "severity": "high",
+    "relatedSteps": [
+      { "label": "Configure CRM integration", "href": "/sections/email-connector" }
+    ]
+  },
+  {
+    "id": "ts-protected-link",
+    "problem": "BuildVision can't retrieve a document behind a SharePoint / Google Drive login.",
+    "cause": "No saved credential on file matches the protected link.",
+    "resolution": "Add a saved credential under User Settings → Saved Credentials for that provider, using the user's own login. Credentials are per user — the person receiving the link must add it under their own account. Re-process the email once saved.",
+    "owner": "CS",
+    "severity": "medium",
+    "relatedSteps": [
+      { "label": "Set up saved credentials", "href": "/sections/email-connector" }
+    ]
+  },
+  {
+    "id": "ts-invite-bounce",
+    "problem": "A user says they never got their invitation / credential email.",
+    "cause": "Bounce, stuck send, wrong email on the user record, or the credential-trigger step was missed.",
+    "resolution": "Check the send queue for bounces or stuck sends. Verify the email on the user record, correct it, and re-trigger the invitation. (The exact internal trigger step is a documentation gap, B-5.)",
+    "owner": "OPS",
+    "severity": "medium",
+    "relatedSteps": [
+      { "label": "Send invitations / trigger credential emails", "href": "/sections/user-creation" },
+      { "label": "Verify invitations were sent", "href": "/sections/user-creation" }
+    ]
+  },
+  {
+    "id": "ts-wrong-org",
+    "problem": "A user logs in but sees the wrong organization or can't see their office.",
+    "cause": "User placed in the wrong hierarchy node, or multi-office access not enabled.",
+    "resolution": "Re-check the user's placement against the intake structure and move them to the correct office/line card. For managers covering multiple offices, confirm they can switch via My Profile → Other Accounts.",
+    "owner": "CS",
+    "severity": "medium",
+    "relatedSteps": [
+      { "label": "Place each user in the correct org node", "href": "/sections/user-creation" },
+      { "label": "Confirm multi-office access", "href": "/sections/permissions" }
+    ]
+  },
+  {
+    "id": "ts-orphan-org",
+    "problem": "A child office appears at the top level instead of under the parent.",
+    "cause": "The child org was created without nesting it under the parent (orphaned org).",
+    "resolution": "Re-nest the child org under the correct parent so the hierarchy renders as intended. Re-run the CS verification gate on the full org tree before adding users or data.",
+    "owner": "OPS",
+    "severity": "medium",
+    "relatedSteps": [
+      { "label": "Create child organizations", "href": "/sections/organization-creation" },
+      { "label": "Verify organization details", "href": "/sections/organization-creation" }
+    ]
+  },
+  {
+    "id": "ts-files-stuck",
+    "problem": "Files appear stuck in a processing state.",
+    "cause": "Large files simply take longer to extract; there's no documented expected time so 'stuck' is ambiguous.",
+    "resolution": "Confirm the file size is large and give processing time — BuildVision notifies on completion. If it clearly exceeds a reasonable window, escalate to ENG. (Expected processing time is a known gap, B-3.)",
+    "owner": "ENG",
+    "severity": "low",
+    "relatedSteps": [
+      { "label": "Confirm indexing / processing is complete", "href": "/sections/file-loading" }
+    ]
+  },
+  {
+    "id": "ts-catalog-mismatch",
+    "problem": "Reps say the catalog (“Representation”) doesn't match their current line card.",
+    "cause": "Catalog loaded from an out-of-date source, or items need add/remove/correction.",
+    "resolution": "Log the specific add/remove/correct items during the rep walkthrough and route them to the CX Lead, who turns corrections around the same day.",
+    "owner": "CS",
+    "severity": "low",
+    "relatedSteps": [
+      { "label": "Review & validate the catalog", "href": "/sections/file-loading" }
+    ]
+  },
+  {
+    "id": "ts-missing-it-contact",
+    "problem": "Integration setup is blocked with no client IT/ops contact.",
+    "cause": "Phase 2 was started before securing the client's IT/ops contact.",
+    "resolution": "Stop and return to Intake. Confirm the IT/ops contact and get their acknowledgement before attempting forwarding or CRM setup. Escalate to CS if the client is unresponsive.",
+    "owner": "CS",
+    "severity": "high",
+    "relatedSteps": [
+      { "label": "Identify the client's IT/ops contact", "href": "/sections/intake" }
+    ]
+  }
+]

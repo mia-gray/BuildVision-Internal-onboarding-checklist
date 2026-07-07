@@ -1,0 +1,116 @@
+{
+  "slug": "file-loading",
+  "title": "File Loading & Project Data",
+  "shortTitle": "File Loading",
+  "icon": "FolderUp",
+  "order": 70,
+  "phase": "Phase 4",
+  "badge": "Required",
+  "estimatedTime": "Variable (plan 1–2 hrs + processing)",
+  "summary": "Load the “Representation” product catalog, validate it with reps, load project/historical files, and confirm processing finishes.",
+  "overview": "Files need orgs (for placement) and benefit from users (for ownership/visibility). Load the product catalog — labeled **“Representation”** — validate it against the client's current line card with the reps, then load project and (if in scope) historical files.\n\nProcessing/indexing can take time depending on file size; BuildVision notifies when extraction completes. Confirm nothing is stuck before handoff.",
+  "prerequisites": [
+    "Phase 1 (Organizations) complete — files need an org to attach to",
+    "Users created (helpful for ownership/visibility)",
+    "Line-card data source confirmed from intake"
+  ],
+  "tips": [
+    "The catalog is labeled **“Representation”** inside the platform.",
+    "Catalog corrections (add/remove/fix) are handled by the CX Lead **the same day** they're flagged — build that turnaround into the plan.",
+    "Large files take longer to process; extraction runs in the background and notifies on completion."
+  ],
+  "warnings": [
+    "Historical-file handling and current-project-file loading are not defined in the source — confirm scope and procedure with CS first (Process Gaps B-1, B-2).",
+    "There is no documented expected processing time — B-3. Don't assume 'stuck'; verify status."
+  ],
+  "commonMistakes": [
+    "Loading the catalog but never walking it with reps to catch missing/incorrect items.",
+    "Uploading historical files without confirming scope with CS.",
+    "Declaring done while files are still processing / not yet searchable."
+  ],
+  "steps": [
+    {
+      "id": "file-load-catalog",
+      "title": "Load the product catalog (“Representation”)",
+      "description": "Load the “Representation” product catalog for the organization.",
+      "owners": ["OPS", "CS"],
+      "time": "20–30 min",
+      "dependsOn": "Phase 1",
+      "verify": "Catalog appears under the correct organization."
+    },
+    {
+      "id": "file-validate-catalog",
+      "title": "Review & validate the catalog with reps",
+      "description": "Walk the catalog with reps against the client's current line card; log any add/remove/correct items and route to the CX Lead for a same-day update.",
+      "owners": ["CS", "CUST"],
+      "time": "variable",
+      "verify": "Reps confirm the catalog matches the current line card.",
+      "callouts": [
+        {
+          "type": "tip",
+          "text": "CX Lead turns catalog corrections around the same day they're flagged — schedule the walkthrough so fixes can land quickly."
+        }
+      ]
+    },
+    {
+      "id": "file-historical",
+      "title": "Upload historical files (if in scope)",
+      "description": "If historical files are in scope, upload them — confirming procedure and scope with CS first, since it is undocumented.",
+      "owners": ["OPS"],
+      "time": "variable",
+      "verify": "Files land in the intended location.",
+      "callouts": [
+        {
+          "type": "warning",
+          "text": "Historical-file handling is not defined in the source (Process Gaps B-1). Confirm scope with CS before doing this."
+        }
+      ]
+    },
+    {
+      "id": "file-current-projects",
+      "title": "Load current project files",
+      "description": "Load current project files (e.g. drag a PDF — plans, specs, schedules, addenda — onto the upload zone to start extraction).",
+      "owners": ["OPS", "CS"],
+      "time": "variable",
+      "verify": "Files attach to the correct org/project.",
+      "callouts": [
+        {
+          "type": "warning",
+          "text": "The internal project-file loading procedure is not defined in the source (Process Gaps B-2)."
+        }
+      ]
+    },
+    {
+      "id": "file-verify-visible",
+      "title": "Verify files appear correctly (gate)",
+      "description": "Confirm files show up in the right org/project.",
+      "owners": ["CS"],
+      "time": "10 min",
+      "gate": true,
+      "verify": "Files visible in the correct org/project."
+    },
+    {
+      "id": "file-processing-complete",
+      "title": "Confirm indexing / processing is complete",
+      "description": "Confirm no files are stuck processing and content is searchable/usable.",
+      "owners": ["ENG"],
+      "time": "5 min + processing wait",
+      "verify": "No files stuck in a processing state; content is searchable/usable."
+    }
+  ],
+  "related": [
+    { "label": "QA Checklist", "href": "/sections/qa-checklist" },
+    { "label": "Troubleshooting: files stuck processing", "href": "/troubleshooting" },
+    { "label": "Process Gaps: file loading & indexing", "href": "/process-gaps" }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/files-tab.png",
+      "caption": "Files tab — schedule tags jump straight to the right page in the plans."
+    },
+    {
+      "src": "/screenshots/connect-or-upload.png",
+      "caption": "Upload zone — drag plans, specs, or schedules (PDF) to start extraction."
+    }
+  ]
+}

@@ -1,0 +1,97 @@
+{
+  "slug": "email-forwarding",
+  "title": "Email Forwarding",
+  "shortTitle": "Email Forwarding",
+  "icon": "Forward",
+  "order": 30,
+  "phase": "Phase 2",
+  "badge": "Required",
+  "estimatedTime": "35–45 min",
+  "summary": "Forward the client's bid-desk inbox to Bids@BuildVision.io so bids ingest automatically — the backbone of the workflow.",
+  "overview": "Email ingestion is the **backbone of the BuildVision workflow**. Once orgs exist and the IT/ops contact is engaged, forward the client's bid-desk inbox to **Bids@BuildVision.io** and prove ingestion end-to-end before moving on.\n\nMost providers follow the same pattern: add `Bids@BuildVision.io` as a forwarding address, verify it, then create a rule/filter that forwards bid-related mail. Step-by-step setup exists for **Gmail, Outlook on the web, and classic Outlook desktop**.\n\n> Note: If a client prefers to connect their inbox directly instead of forwarding, use the **Email Connector** section — pick one path, not both.",
+  "prerequisites": [
+    "Parent organization exists (ingestion attaches to an org)",
+    "Client IT/ops contact confirmed and available",
+    "Exact bid-desk inbox address captured during intake"
+  ],
+  "tips": [
+    "Forwarding vs connecting the inbox are two paths to the same result — pick one.",
+    "Send the client's IT the ready-made forwarding request snippet (copy it from any snippet button).",
+    "Validate ingestion early; everything downstream assumes bids are flowing."
+  ],
+  "warnings": [
+    "Do not advance to go-live QA until a real forwarded message has been ingested successfully."
+  ],
+  "commonMistakes": [
+    "Forwarding is configured but never tested with a real message.",
+    "The forwarding address is added but not verified on the client side, so the rule silently fails.",
+    "A too-narrow filter drops bid emails from senders that weren't allow-listed."
+  ],
+  "steps": [
+    {
+      "id": "fwd-prereq",
+      "title": "Prerequisite check",
+      "description": "Confirm the IT/ops contact is confirmed and available, and that an org exists to attach ingestion to.",
+      "owners": ["CS", "ENG"],
+      "time": "5 min",
+      "verify": "Both true, or stop."
+    },
+    {
+      "id": "fwd-configure",
+      "title": "Configure email forwarding",
+      "description": "Set up forwarding from the client's bid-desk inbox to **Bids@BuildVision.io** — using the Gmail / Outlook web / classic Outlook steps for the client's mail system.",
+      "owners": ["ENG", "CUST"],
+      "time": "30 min",
+      "dependsOn": "IT/ops access",
+      "verify": "Forwarding rule shows active on the client side.",
+      "callouts": [
+        {
+          "type": "tip",
+          "text": "Per-provider setup (Gmail, Outlook web, classic Outlook) lives in the Email Forwarding Guide. The real URL is a known gap — see Process Gaps A-1."
+        }
+      ]
+    },
+    {
+      "id": "fwd-verify-live",
+      "title": "Verify the forwarding rule is live",
+      "description": "Confirm the forwarding rule is active on the client side.",
+      "owners": ["ENG"],
+      "time": "5 min",
+      "verify": "Rule status shows active; verification email (if any) confirmed."
+    },
+    {
+      "id": "fwd-test-ingestion",
+      "title": "Test ingestion end-to-end (gate)",
+      "description": "Send a test bid to the forwarded inbox and confirm it lands in BuildVision within the expected window.",
+      "owners": ["ENG"],
+      "time": "15 min",
+      "gate": true,
+      "verify": "Test bid appears in BuildVision, attached to the correct org.",
+      "callouts": [
+        {
+          "type": "blocker",
+          "text": "Do not advance to go-live QA until a real forwarded message has been ingested successfully."
+        }
+      ]
+    }
+  ],
+  "related": [
+    { "label": "Email Connector (inbox + CRM)", "href": "/sections/email-connector" },
+    { "label": "QA Checklist", "href": "/sections/qa-checklist" },
+    { "label": "Troubleshooting: ingestion", "href": "/troubleshooting" }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/connect-or-upload.png",
+      "caption": "Get bids flowing in — connect your inbox, or upload a document to try it on something specific first."
+    },
+    {
+      "src": "/screenshots/gmail-settings.png",
+      "caption": "Gmail: open the gear menu → “See all settings” to reach forwarding and filters."
+    },
+    {
+      "src": "/screenshots/gmail-filter.png",
+      "caption": "Create a filter for bid-related senders, then forward matching mail to Bids@BuildVision.io."
+    }
+  ]
+}
