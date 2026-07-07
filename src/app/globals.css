@@ -58,9 +58,12 @@
   --brand-from: oklch(0.53 0.25 272);
   --brand-to: oklch(0.6 0.2 250);
 
-  --sidebar: oklch(0.985 0.004 286);
-  --sidebar-foreground: oklch(0.2 0.02 286);
-  --sidebar-border: oklch(0.92 0.006 286);
+  /* Sidebar — deep BuildVision indigo in BOTH themes for brand presence + depth. */
+  --sidebar: oklch(0.22 0.05 281);
+  --sidebar-foreground: oklch(0.93 0.02 285);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-accent: oklch(0.32 0.075 279);
+  --sidebar-accent-foreground: oklch(0.98 0.012 285);
 }
 
 .dark {
@@ -103,9 +106,12 @@
   --brand-from: oklch(0.7 0.19 274);
   --brand-to: oklch(0.72 0.16 250);
 
-  --sidebar: oklch(0.135 0.016 288);
-  --sidebar-foreground: oklch(0.96 0.005 286);
-  --sidebar-border: oklch(1 0 0 / 8%);
+  /* Sidebar stays the same deep indigo in dark mode (slightly deeper base). */
+  --sidebar: oklch(0.2 0.05 281);
+  --sidebar-foreground: oklch(0.93 0.02 285);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-accent: oklch(0.3 0.075 279);
+  --sidebar-accent-foreground: oklch(0.98 0.012 285);
 }
 
 @theme inline {

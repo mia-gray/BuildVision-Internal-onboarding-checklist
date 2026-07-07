@@ -40,8 +40,8 @@ function NavLink({
       className={cn(
         "group flex items-center gap-2.5 rounded-md px-2.5 py-1.5 text-sm transition-colors",
         active
-          ? "bg-accent font-medium text-accent-foreground"
-          : "text-muted-foreground hover:bg-accent/60 hover:text-foreground",
+          ? "bg-[var(--sidebar-accent)] font-medium text-[var(--sidebar-accent-foreground)] shadow-sm"
+          : "text-[var(--sidebar-foreground)]/70 hover:bg-white/[0.07] hover:text-[var(--sidebar-foreground)]",
       )}
     >
       {children}
@@ -51,7 +51,7 @@ function NavLink({
 
 function GroupLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p className="px-2.5 pb-1 pt-4 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70">
+    <p className="px-2.5 pb-1 pt-4 text-[11px] font-semibold uppercase tracking-wider text-[var(--sidebar-foreground)]/45">
       {children}
     </p>
   );
@@ -86,7 +86,7 @@ export function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
       <div className="px-1 pt-1">
         <CreateCustomerDialog
           trigger={
-            <button className="flex w-full items-center gap-2 rounded-md border border-dashed border-border px-2.5 py-1.5 text-sm text-muted-foreground transition-colors hover:border-primary/50 hover:text-foreground">
+            <button className="flex w-full items-center gap-2 rounded-md border border-dashed border-white/15 px-2.5 py-1.5 text-sm text-[var(--sidebar-foreground)]/70 transition-colors hover:border-white/30 hover:bg-white/[0.05] hover:text-[var(--sidebar-foreground)]">
               <Plus className="size-4 shrink-0" />
               New customer
             </button>

@@ -17,18 +17,9 @@ import { Dialog, DialogContent, DialogTitle } from "./ui/dialog";
 function Brand() {
   return (
     <Link href="/" className="flex flex-col gap-1 leading-none group" aria-label="BuildVision — home">
-      {/* Theme-swapped wordmark (CSS-only to avoid hydration flash) */}
-      <img
-        src={asset("/brand/wordmark-on-light.png")}
-        alt="BuildVision"
-        className="h-4 w-auto dark:hidden"
-      />
-      <img
-        src={asset("/brand/wordmark-on-dark.png")}
-        alt="BuildVision"
-        className="hidden h-4 w-auto dark:block"
-      />
-      <span className="text-[11px] text-muted-foreground">Customer Onboarding</span>
+      {/* Sidebar is always dark indigo, so use the light-on-dark wordmark. */}
+      <img src={asset("/brand/wordmark-on-dark.png")} alt="BuildVision" className="h-4 w-auto" />
+      <span className="text-[11px] text-[var(--sidebar-foreground)]/55">Customer Onboarding</span>
     </Link>
   );
 }
@@ -50,12 +41,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-[100dvh]">
-      {/* Desktop sidebar */}
-      <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r border-sidebar-border bg-sidebar lg:flex">
-        <div className="flex h-14 shrink-0 items-center px-5">
+      {/* Desktop sidebar — deep indigo panel with a top sheen + edge shadow for depth */}
+      <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col overflow-hidden border-r border-sidebar-border bg-sidebar text-[var(--sidebar-foreground)] shadow-[6px_0_28px_-18px_rgba(0,0,0,0.65)] lg:flex">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/[0.06] via-transparent to-black/20"
+        />
+        <div className="relative flex h-14 shrink-0 items-center px-5">
           <Brand />
         </div>
-        <div className="min-h-0 flex-1 overflow-y-auto">
+        <div className="relative min-h-0 flex-1 overflow-y-auto">
           <SidebarNav />
         </div>
       </aside>
@@ -64,7 +59,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <Dialog open={mobileOpen} onOpenChange={setMobileOpen}>
         <DialogContent
           showClose
-          className="flex flex-col left-0 top-0 h-[100dvh] w-[17rem] max-w-[17rem] translate-x-0 rounded-none rounded-r-xl data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left p-0"
+          className="flex flex-col left-0 top-0 h-[100dvh] w-[17rem] max-w-[17rem] translate-x-0 rounded-none rounded-r-xl data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left p-0 bg-sidebar text-[var(--sidebar-foreground)] border-sidebar-border"
         >
           <DialogTitle className="sr-only">Navigation</DialogTitle>
           <div className="flex h-14 items-center px-5">
