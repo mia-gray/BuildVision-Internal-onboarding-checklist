@@ -88,8 +88,13 @@ export function CustomerHeader({
   }
 
   return (
-    <div className="rounded-xl border border-border bg-card p-5 sm:p-6">
-      <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+    <div className="relative overflow-hidden rounded-xl border border-border bg-card p-5 sm:p-6">
+      {/* Subtle brand wash for a premium, on-brand header. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 -top-px h-28 bg-gradient-to-b from-primary/[0.07] to-transparent"
+      />
+      <div className="relative flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
         <div className="flex items-start gap-4">
           <CustomerAvatar name={customer.name} logoUrl={customer.logoUrl} size="lg" />
           <div className="min-w-0">
