@@ -80,10 +80,16 @@
     {
       "id": "qa-send-welcome",
       "title": "Send the welcome package",
-      "description": "Send the welcome package to the client — letter, contacts, and 90-day roadmap.",
+      "description": "Send the welcome package to the client — welcome letter, team contacts, account summary, platform quick-start, technical-setup checklist, support/escalation, and the 90-day roadmap.\n\nStart from the [Welcome Package Template (PDF)](/guides/welcome-package-template.pdf) and fill the **[BRACKETED]** fields from the customer's Reference Sheet / intake ([COMPANY NAME], [SIGNER NAME], [START DATE], [ACCOUNT TYPE], etc.).",
       "owners": ["CS"],
       "time": "5 min",
-      "verify": "Delivered to the primary contact."
+      "verify": "Delivered to the primary contact.",
+      "callouts": [
+        {
+          "type": "tip",
+          "text": "The template's bracketed fields map 1:1 to the intake / Reference Sheet, so most of it is copy-paste. Update the forwarding-guide link in the template to the hosted [Email Forwarding Guide](/guides/email-forwarding-guide.pdf)."
+        }
+      ]
     },
     {
       "id": "qa-signoff",
@@ -102,6 +108,7 @@
     }
   ],
   "related": [
+    { "label": "Download: Welcome Package Template (PDF)", "href": "/guides/welcome-package-template.pdf", "external": true },
     { "label": "Email Forwarding", "href": "/sections/email-forwarding" },
     { "label": "File Loading", "href": "/sections/file-loading" },
     { "label": "Process Gaps: definition of done", "href": "/process-gaps" }

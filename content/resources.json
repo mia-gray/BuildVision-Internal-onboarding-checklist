@@ -19,12 +19,20 @@
   },
   {
     "id": "res-forwarding-guide",
-    "title": "Email Forwarding Guide (Gmail / Outlook)",
-    "description": "Per-provider forwarding steps. URL is a placeholder in the source — publish the real link and update here.",
-    "href": "/sections/email-forwarding",
+    "title": "Email Forwarding Guide (Gmail / Outlook) — PDF",
+    "description": "Per-provider forwarding steps for Gmail, Outlook on the web, and classic Outlook desktop, plus IT/admin external-forwarding fixes.",
+    "href": "/guides/email-forwarding-guide.pdf",
     "category": "Documentation",
     "icon": "Forward",
-    "placeholder": true
+    "external": true
+  },
+  {
+    "id": "res-forwarding-sop",
+    "title": "Email Forwarding — in-app SOP",
+    "description": "The same guide embedded in the interactive Email Forwarding checklist.",
+    "href": "/sections/email-forwarding",
+    "category": "SOPs",
+    "icon": "Forward"
   },
   {
     "id": "res-login-credentials",
@@ -73,12 +81,12 @@
   },
   {
     "id": "res-welcome-package",
-    "title": "Welcome Package Template",
-    "description": "Onboarding letter, contacts, quick-start, and 90-day roadmap sent at handoff. Store the canonical template link here.",
-    "href": "/resources",
+    "title": "Welcome Package Template — PDF",
+    "description": "Fillable welcome letter, team, account, quick-start, technical-setup checklist, support/escalation, and 90-day roadmap. Replace the [BRACKETED] fields from the Reference Sheet.",
+    "href": "/guides/welcome-package-template.pdf",
     "category": "Templates",
     "icon": "FileText",
-    "placeholder": true
+    "external": true
   },
   {
     "id": "res-reference-sheet",

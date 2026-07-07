@@ -8,56 +8,68 @@
   "badge": "Required",
   "estimatedTime": "35–45 min",
   "summary": "Forward the client's bid-desk inbox to Bids@BuildVision.io so bids ingest automatically — the backbone of the workflow.",
-  "overview": "Email ingestion is the **backbone of the BuildVision workflow**. Once orgs exist and the IT/ops contact is engaged, forward the client's bid-desk inbox to **Bids@BuildVision.io** and prove ingestion end-to-end before moving on.\n\nMost providers follow the same pattern: add `Bids@BuildVision.io` as a forwarding address, verify it, then create a rule/filter that forwards bid-related mail. Step-by-step setup exists for **Gmail, Outlook on the web, and classic Outlook desktop**.\n\n> Note: If a client prefers to connect their inbox directly instead of forwarding, use the **Email Connector** section — pick one path, not both.",
+  "overview": "Email ingestion is the **backbone of the BuildVision workflow**. Once orgs exist and the IT/ops contact is engaged, forward the client's bid-desk inbox to **Bids@BuildVision.io** and prove ingestion end-to-end before moving on.\n\nThe full step-by-step for **Gmail / Google Workspace**, **Outlook on the web**, and **classic Outlook desktop** is in the *Configure email forwarding* step below (and in the [downloadable Email Forwarding Guide](/guides/email-forwarding-guide.pdf)).\n\n**Before you start:**\n- **Verification email** — the first time the address is added, Gmail/Outlook send a one-time verification message to Bids@BuildVision.io. Email your CX lead to confirm BuildVision received it.\n- **External forwarding may be blocked** — many Microsoft 365 / Google Workspace accounts disable external forwarding by default (this causes the **5.7.520 bounce**). Coordinate with the client's IT/admin to approve it before testing.\n\n> If a client prefers to connect their inbox directly instead of forwarding, use the **Email Connector** section — pick one path, not both.",
   "prerequisites": [
     "Parent organization exists (ingestion attaches to an org)",
     "Client IT/ops contact confirmed and available",
-    "Exact bid-desk inbox address captured during intake"
+    "Exact bid-desk inbox address captured during intake",
+    "External forwarding approved by the client's IT/admin (M365 / Google Workspace)"
   ],
   "tips": [
     "Forwarding vs connecting the inbox are two paths to the same result — pick one.",
-    "Send the client's IT the ready-made forwarding request snippet (copy it from any snippet button).",
-    "Validate ingestion early; everything downstream assumes bids are flowing."
+    "Gmail: use a **filter** so only project emails forward (by sender/domain, subject like Bid/RFQ/Proposal/Quote, and Has attachment). Desktop browser only — the mobile app can't set this up.",
+    "Outlook: use **Forward to**, not **Redirect to** — Redirect strips your team's name and sends replies to the original sender.",
+    "Layer multiple Gmail filters (one per contractor / distribution list) — all forward to Bids@BuildVision.io without duplicating.",
+    "Send the client's IT the ready-made forwarding request snippet (copy it from any snippet button)."
   ],
   "warnings": [
+    "Gmail: add the filter **after** setting up the forwarding address — otherwise every email in the inbox forwards.",
+    "Only the past 30 days of matching email are extracted (or the window agreed in the pilot contract). Gmail filters can't be time-bound, so all matching mail is sent.",
     "Do not advance to go-live QA until a real forwarded message has been ingested successfully."
   ],
   "commonMistakes": [
     "Forwarding is configured but never tested with a real message.",
     "The forwarding address is added but not verified on the client side, so the rule silently fails.",
-    "A too-narrow filter drops bid emails from senders that weren't allow-listed."
+    "A too-narrow filter drops bid emails from senders that weren't allow-listed.",
+    "External forwarding is left blocked by IT policy, producing a 5.7.520 bounce."
   ],
   "steps": [
     {
       "id": "fwd-prereq",
       "title": "Prerequisite check",
-      "description": "Confirm the IT/ops contact is confirmed and available, and that an org exists to attach ingestion to.",
+      "description": "Confirm the IT/ops contact is confirmed and available, an org exists to attach ingestion to, and external forwarding is approved by the client's IT/admin.",
       "owners": ["CS", "ENG"],
       "time": "5 min",
-      "verify": "Both true, or stop."
+      "verify": "All true, or stop.",
+      "callouts": [
+        {
+          "type": "info",
+          "text": "If external forwarding is disabled: **Google** — https://support.google.com/a/answer/14724207 · **Microsoft 365** — https://learn.microsoft.com/en-us/defender-office-365/outbound-spam-policies-external-email-forwarding"
+        }
+      ]
     },
     {
       "id": "fwd-configure",
       "title": "Configure email forwarding",
-      "description": "Set up forwarding from the client's bid-desk inbox to **Bids@BuildVision.io** — using the Gmail / Outlook web / classic Outlook steps for the client's mail system.",
+      "description": "Set up forwarding from the client's bid-desk inbox to **Bids@BuildVision.io**, then add a filter/rule so only project emails forward. Follow the client's mail system:\n\n### Gmail / Google Workspace\nGmail forwards via a **filter** so only matching messages reach BuildVision. Desktop browser only.\n\n**Step 1 — Add & verify the forwarding address**\n1. Gear icon → **See all settings** → **Forwarding and POP/IMAP**.\n2. Under Forwarding → **Add a forwarding address** → enter `Bids@BuildVision.io` → Next → Proceed → OK.\n3. Gmail emails a verification message to Bids@BuildVision.io; your CX lead confirms it on our side. Once confirmed it shows as verified.\n\n**Step 2 — Filter project emails**\n1. Gear → See all settings → **Filters and Blocked Addresses** → **Create a new filter**.\n2. Criteria: **From** a contractor / distribution list / domain (e.g. `@contractordomain.com`), or **Subject** contains `Bid, RFQ, Proposal, Quote`.\n3. Check **Has attachment** so drawings, schedules, and specs come through.\n4. **Create filter** → check **Forward it to** → select `Bids@BuildVision.io`.\n5. Check **Also apply filter to matching conversations** to forward existing project emails too → **Create filter**.\n\n### Outlook on the web (Microsoft 365 / Outlook.com)\n1. Sign in at `outlook.office.com` (or `outlook.live.com` for personal accounts).\n2. **Settings → Mail → Rules → Add new rule**.\n3. Name it (e.g. *Forward bids to BuildVision*).\n4. Condition: **From** a contractor / domain, **Subject includes** `Bid, RFQ, Proposal, Quote`, or **Has attachment**.\n5. Action: **Forward to** → `Bids@BuildVision.io`. **Avoid Redirect to.**\n6. **Save** — applies to new mail immediately.\n\n### Classic Outlook desktop (Windows)\n1. **File → Manage Rules & Alerts → New Rule → Apply rule on messages I receive → Next**.\n2. Conditions: *from people or public group* (contractors) and/or *with specific words in the subject* (`Bid, RFQ, Proposal, Quote`); under actions check **forward it to people or public groups**.\n3. Click the underlined **people or public group**, enter `Bids@BuildVision.io` → OK.\n4. **Finish → Apply**.",
       "owners": ["ENG", "CUST"],
       "time": "30 min",
-      "dependsOn": "IT/ops access",
-      "verify": "Forwarding rule shows active on the client side.",
+      "dependsOn": "IT/ops access + external forwarding approved",
+      "verify": "Forwarding rule/filter shows active on the client side.",
       "callouts": [
         {
-          "type": "tip",
-          "text": "Per-provider setup (Gmail, Outlook web, classic Outlook) lives in the Email Forwarding Guide. The real URL is a known gap — see Process Gaps A-1."
+          "type": "warning",
+          "text": "Gmail: create the filter right after adding the forwarding address, or **all** email forwards. Also apply to matching conversations to backfill existing project mail (extraction covers ~30 days or the pilot-agreed window)."
         }
       ]
     },
     {
       "id": "fwd-verify-live",
       "title": "Verify the forwarding rule is live",
-      "description": "Confirm the forwarding rule is active on the client side.",
+      "description": "Confirm the forwarding rule/filter is active on the client side and the verification message was confirmed by the CX lead.",
       "owners": ["ENG"],
       "time": "5 min",
-      "verify": "Rule status shows active; verification email (if any) confirmed."
+      "verify": "Rule status shows active; verification confirmed by CX; no 5.7.520 bounce."
     },
     {
       "id": "fwd-test-ingestion",
@@ -76,6 +88,7 @@
     }
   ],
   "related": [
+    { "label": "Download: Email Forwarding Guide (PDF)", "href": "/guides/email-forwarding-guide.pdf", "external": true },
     { "label": "Email Connector (inbox + CRM)", "href": "/sections/email-connector" },
     { "label": "QA Checklist", "href": "/sections/qa-checklist" },
     { "label": "Troubleshooting: ingestion", "href": "/troubleshooting" }
@@ -91,7 +104,7 @@
     },
     {
       "src": "/screenshots/gmail-filter.png",
-      "caption": "Create a filter for bid-related senders, then forward matching mail to Bids@BuildVision.io."
+      "caption": "Create a filter for bid-related senders (with Has attachment), then forward matching mail to Bids@BuildVision.io."
     }
   ]
 }

@@ -1,14 +1,5 @@
 [
   {
-    "id": "gap-a1",
-    "code": "A-1",
-    "title": "Email Forwarding Guide link is a placeholder",
-    "detail": "The per-provider forwarding guide (Gmail / Outlook web / classic Outlook) is referenced but the URL is a placeholder (“FORWARDING GUIDE LINK”).",
-    "category": "Referenced but incomplete",
-    "impact": "medium",
-    "suggestion": "Publish the real guide and store the link in the Reference Sheet and the Resources page."
-  },
-  {
     "id": "gap-b1",
     "code": "B-1",
     "title": "Historical file upload procedure",
