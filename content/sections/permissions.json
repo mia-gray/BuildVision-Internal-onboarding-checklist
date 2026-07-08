@@ -3,7 +3,7 @@
   "title": "Permissions & Access",
   "shortTitle": "Permissions",
   "icon": "ShieldCheck",
-  "order": 60,
+  "order": 27,
   "phase": "Phase 3",
   "badge": "Required",
   "estimatedTime": "20–30 min",
