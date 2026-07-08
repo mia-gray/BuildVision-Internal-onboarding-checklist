@@ -8,6 +8,7 @@ import { INTAKE_GROUPS, INTAKE_FIELDS, isFieldFilled, isFieldVisible, type Intak
 import { useCustomers } from "@/lib/customer/store";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { OfficeList } from "./office-list";
 import { cn } from "@/lib/utils";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -79,7 +80,7 @@ export function IntakeForm({ customer }: { customer: Customer }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  function set(key: keyof IntakeSurvey, v: string) {
+  function set(key: keyof IntakeSurvey, v: string | string[]) {
     setValues((prev) => {
       const next = { ...prev, [key]: v };
       try {
@@ -172,16 +173,28 @@ export function IntakeForm({ customer }: { customer: Customer }) {
             <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
               {group.fields
                 .filter((field) => isFieldVisible(field, values))
-                .map((field) => (
-                  <div key={field.key} id={`field-${field.key}`} className={field.type === "textarea" ? "sm:col-span-2" : ""}>
-                    <Field
-                      field={field}
-                      value={(values[field.key] as string) ?? ""}
-                      error={errors[field.key]}
-                      onChange={(v) => set(field.key, v)}
-                    />
-                  </div>
-                ))}
+                .map((field) =>
+                  field.type === "list" ? (
+                    <div key={field.key} id={`field-${field.key}`} className="sm:col-span-2">
+                      <label className="mb-1.5 block text-sm font-medium">{field.label}</label>
+                      <OfficeList
+                        value={(values[field.key] as string[]) ?? []}
+                        onChange={(arr) => set(field.key, arr)}
+                        placeholder={field.placeholder}
+                      />
+                      {field.helper && <p className="mt-1.5 text-xs text-muted-foreground">{field.helper}</p>}
+                    </div>
+                  ) : (
+                    <div key={field.key} id={`field-${field.key}`} className={field.type === "textarea" ? "sm:col-span-2" : ""}>
+                      <Field
+                        field={field}
+                        value={(values[field.key] as string) ?? ""}
+                        error={errors[field.key]}
+                        onChange={(v) => set(field.key, v)}
+                      />
+                    </div>
+                  ),
+                )}
             </div>
           </section>
         ))}

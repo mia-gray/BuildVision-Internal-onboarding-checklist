@@ -10,6 +10,7 @@ import { formatDate } from "@/lib/format";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { OfficeList } from "@/components/intake/office-list";
 
 function displayValue(field: IntakeField, value?: string): string {
   if (!isFieldFilled(value)) return "—";
@@ -137,11 +138,39 @@ export function IntakeSurvey({ customer }: { customer: Customer }) {
                     <dt className="text-xs text-muted-foreground">{field.label}</dt>
                     {editing ? (
                       <dd>
-                        <FieldInput
-                          field={field}
-                          value={(draft[field.key] as string) ?? ""}
-                          onChange={(v) => setDraft((d) => ({ ...d, [field.key]: v }))}
-                        />
+                        {field.type === "list" ? (
+                          <OfficeList
+                            value={(draft[field.key] as string[]) ?? []}
+                            onChange={(arr) => setDraft((d) => ({ ...d, [field.key]: arr }))}
+                            placeholder={field.placeholder}
+                            compact
+                          />
+                        ) : (
+                          <FieldInput
+                            field={field}
+                            value={(draft[field.key] as string) ?? ""}
+                            onChange={(v) => setDraft((d) => ({ ...d, [field.key]: v }))}
+                          />
+                        )}
+                      </dd>
+                    ) : field.type === "list" ? (
+                      <dd className="text-sm">
+                        {isFieldFilled(customer.intake[field.key]) ? (
+                          <div className="flex flex-wrap gap-1.5">
+                            {((customer.intake[field.key] as string[]) ?? [])
+                              .filter(Boolean)
+                              .map((o, i) => (
+                                <span
+                                  key={i}
+                                  className="rounded-md bg-muted px-2 py-0.5 text-xs text-foreground/90"
+                                >
+                                  {o}
+                                </span>
+                              ))}
+                          </div>
+                        ) : (
+                          <span className="text-muted-foreground/60">—</span>
+                        )}
                       </dd>
                     ) : (
                       <dd

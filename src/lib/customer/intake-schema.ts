@@ -5,7 +5,7 @@
  */
 import type { IntakeSurvey } from "./types";
 
-export type IntakeFieldType = "text" | "email" | "tel" | "textarea" | "select" | "date";
+export type IntakeFieldType = "text" | "email" | "tel" | "textarea" | "select" | "date" | "list";
 
 export interface IntakeField {
   key: keyof IntakeSurvey;
@@ -35,7 +35,28 @@ export const INTAKE_GROUPS: IntakeGroup[] = [
     description: "Tell us who you are.",
     fields: [
       { key: "companyName", label: "Company Name", type: "text", required: true, placeholder: "Acme Mechanical" },
-      { key: "organizationName", label: "Organization Name", type: "text", placeholder: "Parent org, if different" },
+      {
+        key: "organizationName",
+        label: "How should your organization name appear in BuildVision?",
+        type: "text",
+        placeholder: "e.g. Acme Mechanical",
+        helper: "This is the name your team will see across BuildVision.",
+      },
+      {
+        key: "addChildOffices",
+        label: "Do you want any child offices added?",
+        type: "select",
+        options: ["No", "Yes"],
+        helper: "Offices or branches nested under your main organization.",
+      },
+      {
+        key: "childOffices",
+        label: "Child office names",
+        type: "list",
+        placeholder: "Office name (e.g. Reno)",
+        helper: "Add one box per office. You can add or remove as many as you need.",
+        showIf: { key: "addChildOffices", equals: "Yes" },
+      },
       {
         key: "industry",
         label: "Industry",
@@ -100,6 +121,7 @@ export const INTAKE_GROUPS: IntakeGroup[] = [
 export const INTAKE_FIELDS: IntakeField[] = INTAKE_GROUPS.flatMap((g) => g.fields);
 
 export function isFieldFilled(value: unknown): boolean {
+  if (Array.isArray(value)) return value.some((v) => typeof v === "string" && v.trim().length > 0);
   return typeof value === "string" ? value.trim().length > 0 : value != null;
 }
 

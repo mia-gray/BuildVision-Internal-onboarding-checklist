@@ -28,6 +28,8 @@ export function seedCustomers(): Customer[] {
     intake: {
       companyName: "Sierra Air Partners, LLC",
       organizationName: "Sierra Air Partners",
+      addChildOffices: "Yes",
+      childOffices: ["Reno (HQ)", "Sacramento", "Las Vegas"],
       primaryContact: "Dana Okafor, VP Sales",
       email: "dana.okafor@sierraair.com",
       phone: "(775) 412-8830",
@@ -99,6 +101,7 @@ export function seedCustomers(): Customer[] {
     intake: {
       companyName: "Cascade Mechanical Group, Inc.",
       organizationName: "Cascade Mechanical",
+      addChildOffices: "No",
       primaryContact: "Priya Venkataraman, Operations Director",
       email: "priya.v@cascademech.com",
       phone: "(503) 987-2214",
