@@ -42,8 +42,7 @@ export const INTAKE_GROUPS: IntakeGroup[] = [
         type: "select",
         options: [
           "Manufacturer's Rep",
-          "Mechanical Contractor",
-          "Distributor",
+          "Contractor",
           "Manufacturer",
           "Engineering Firm",
           "Other",

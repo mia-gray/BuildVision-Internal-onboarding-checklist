@@ -103,7 +103,7 @@ export function seedCustomers(): Customer[] {
       email: "priya.v@cascademech.com",
       phone: "(503) 987-2214",
       address: "915 SE Grand Ave, Portland, OR 97214",
-      industry: "Mechanical Contractor",
+      industry: "Contractor",
       crmSystem: "Salesforce",
       emailMethod: "Email Forwarding",
       bidInbox: "estimating@cascademech.com",
