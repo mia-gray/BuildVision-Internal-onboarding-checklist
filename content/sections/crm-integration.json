@@ -65,8 +65,5 @@
     { "label": "Email Credentials", "href": "/sections/email-credentials" },
     { "label": "Troubleshooting: CRM sync", "href": "/troubleshooting" },
     { "label": "Process Gaps: supported CRMs", "href": "/process-gaps" }
-  ],
-  "screenshots": [
-    { "caption": "CRM integration — deals and contacts syncing between the client's CRM and BuildVision." }
   ]
 }
