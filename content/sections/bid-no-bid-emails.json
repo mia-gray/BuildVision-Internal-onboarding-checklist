@@ -1,0 +1,88 @@
+{
+  "slug": "bid-no-bid-emails",
+  "title": "Bid / No-Bid Emails",
+  "shortTitle": "Bid / No-Bid Emails",
+  "icon": "MailCheck",
+  "order": 72,
+  "phase": "Phase 4",
+  "badge": "Required",
+  "estimatedTime": "20–30 min",
+  "summary": "Make sure the customer receives BuildVision's bid / no-bid recommendation emails and knows how to use them to decide which projects to pursue.",
+  "overview": "For every project BuildVision ingests, we send a **bid / no-bid recommendation email** — a quick read on whether the project is worth pursuing, based on the extracted data (fit to the client's line card, scope, equipment, engineer of record, and location).\n\nThese emails are how reps prioritize their day, so confirm they're switched on, reaching the right people, and that the team trusts and acts on them.",
+  "prerequisites": [
+    "Ingestion live and validated (Email Forwarding / Email Credentials)",
+    "Product catalog (“Representation”) loaded and validated",
+    "Users created and placed in the correct offices"
+  ],
+  "tips": [
+    "Route emails to the actual decision-makers per office, not just a shared inbox no one reads.",
+    "Walk the client through *why* a project was flagged bid vs no-bid so they trust the signal.",
+    "Confirm the cadence fits their workflow — per-project as bids arrive, or a daily digest."
+  ],
+  "warnings": [
+    "Don't call ingestion 'done' until a real bid/no-bid email has actually been received and reviewed with the client.",
+    "A no-bid recommendation is guidance, not a hard rule — make sure reps know they can still choose to bid."
+  ],
+  "commonMistakes": [
+    "Emails enabled but sent to the wrong recipients (or a black-hole inbox).",
+    "Reps ignore the emails because no one explained what drives the recommendation.",
+    "Cadence is too noisy (or too quiet) for how the team actually works."
+  ],
+  "steps": [
+    {
+      "id": "bid-confirm-enabled",
+      "title": "Confirm bid / no-bid emails are enabled",
+      "description": "Verify bid/no-bid recommendation emails are switched on for the organization.",
+      "owners": ["ENG"],
+      "time": "5 min",
+      "dependsOn": "ingestion live",
+      "verify": "Bid/no-bid emails are enabled for the account."
+    },
+    {
+      "id": "bid-recipients",
+      "title": "Set the right recipients",
+      "description": "Confirm the emails go to the decision-makers / reps for each office, matching the intake roster and hierarchy.",
+      "owners": ["CS"],
+      "time": "5 min",
+      "verify": "Recipient list matches the intended people per office."
+    },
+    {
+      "id": "bid-review-criteria",
+      "title": "Review the recommendation criteria with the client",
+      "description": "Walk the client through what drives a bid vs no-bid signal — line-card fit, scope/equipment, engineer of record, and location — so they understand and trust it.",
+      "owners": ["CS"],
+      "time": "10 min",
+      "verify": "Client understands the signals and agrees they reflect how they bid."
+    },
+    {
+      "id": "bid-cadence",
+      "title": "Confirm cadence & format",
+      "description": "Agree how the emails arrive (per project as bids come in, or a daily digest) so they fit the team's workflow.",
+      "owners": ["CS", "ENG"],
+      "time": "5 min",
+      "verify": "Cadence and format agreed with the client."
+    },
+    {
+      "id": "bid-test-email",
+      "title": "Confirm a real bid / no-bid email lands (gate)",
+      "description": "Trigger or wait for a real recommendation email and confirm it arrives, is readable, and points to the right project.",
+      "owners": ["ENG"],
+      "time": "10 min",
+      "gate": true,
+      "verify": "A real bid/no-bid email is received by the intended recipients."
+    },
+    {
+      "id": "bid-enablement",
+      "title": "Enable reps to act on the emails",
+      "description": "Show reps how to read a recommendation and act on it (open the project, mark bid/no-bid, follow up).",
+      "owners": ["CS"],
+      "time": "10 min",
+      "verify": "A rep can open a recommendation and act on it confidently."
+    }
+  ],
+  "related": [
+    { "label": "File Loading & Project Data", "href": "/sections/file-loading" },
+    { "label": "Hoover Dashboard", "href": "/sections/hoover-dashboard" },
+    { "label": "Email Forwarding", "href": "/sections/email-forwarding" }
+  ]
+}

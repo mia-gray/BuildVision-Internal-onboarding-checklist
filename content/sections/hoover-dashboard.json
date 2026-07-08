@@ -1,0 +1,105 @@
+{
+  "slug": "hoover-dashboard",
+  "title": "Hoover Dashboard",
+  "shortTitle": "Hoover Dashboard",
+  "icon": "LayoutDashboard",
+  "order": 74,
+  "phase": "Phase 4",
+  "badge": "Required",
+  "estimatedTime": "45–60 min + build time",
+  "summary": "Stand up the customer's insight dashboard from their ingested files and extracted data — scope what they want to see, validate it, and set a date to make it live.",
+  "overview": "The **Hoover Dashboard** turns the documents BuildVision ingests and the data we extract (projects, equipment, manufacturers, engineers of record, bid activity, and trends) into insight the customer can act on.\n\nThis section makes sure the dashboard actually reflects what *this* customer cares about, that the numbers are trustworthy, and that it's shared with their team on an agreed timeline — not left half-built.",
+  "prerequisites": [
+    "Files ingested and processing complete (File Loading)",
+    "Product catalog validated so extracted data maps correctly",
+    "Users created so the right people can be granted access"
+  ],
+  "tips": [
+    "Start from the client's *decisions*: what would they do differently if they could see it? Build views around that.",
+    "Validate a few numbers against something the client already knows to be true — trust is everything.",
+    "Agree a concrete go-live date so the dashboard doesn't stay in 'almost ready' forever."
+  ],
+  "warnings": [
+    "Don't share the dashboard until enough data is ingested to make it meaningful — an empty or sparse dashboard erodes confidence.",
+    "Insights are only as good as the extraction; if the catalog or data looks off, fix that before publishing."
+  ],
+  "commonMistakes": [
+    "Building generic views no one asked for instead of what the client wants to see.",
+    "Publishing before validating the numbers with the client.",
+    "No agreed timeline, so the dashboard never actually goes live to their team."
+  ],
+  "steps": [
+    {
+      "id": "dash-scope",
+      "title": "Define what the client wants to see",
+      "description": "Work with the client to list the metrics and views that matter to them — e.g. projects by manufacturer, equipment counts, engineers of record, bid activity / win rate, geography, and trends over time.",
+      "owners": ["CS"],
+      "time": "20 min",
+      "verify": "Documented list of the client's desired views, metrics, and filters."
+    },
+    {
+      "id": "dash-data-readiness",
+      "title": "Confirm data readiness",
+      "description": "Confirm enough files are ingested and extracted to populate the dashboard meaningfully (not empty or sparse).",
+      "owners": ["ENG"],
+      "time": "10 min",
+      "dependsOn": "File Loading complete",
+      "verify": "Dashboard has real, representative data to work with."
+    },
+    {
+      "id": "dash-build",
+      "title": "Build the dashboard views",
+      "description": "Configure the views, filters, and saved views to match the client's priorities from the scoping step.",
+      "owners": ["ENG", "CS"],
+      "time": "variable",
+      "verify": "Requested views are built and rendering with the client's data."
+    },
+    {
+      "id": "dash-validate",
+      "title": "Validate insights with the client (gate)",
+      "description": "Spot-check the numbers and insights against something the client already knows to be true; correct any extraction/catalog issues before proceeding.",
+      "owners": ["CS", "CUST"],
+      "time": "15 min",
+      "gate": true,
+      "verify": "Client confirms the data and insights look correct and trustworthy."
+    },
+    {
+      "id": "dash-access",
+      "title": "Grant access to the right users",
+      "description": "Confirm the intended users (and offices) can reach the dashboard with the correct visibility.",
+      "owners": ["CS", "OPS"],
+      "time": "10 min",
+      "verify": "Intended users can open the dashboard and see the right scope."
+    },
+    {
+      "id": "dash-timeline",
+      "title": "Agree the go-live timeline",
+      "description": "Set a concrete date to make the dashboard available to the client's broader team, and communicate it.",
+      "owners": ["CS"],
+      "time": "5 min",
+      "verify": "Go-live date agreed and communicated to the client."
+    },
+    {
+      "id": "dash-publish",
+      "title": "Publish / share the dashboard (gate)",
+      "description": "On the agreed date, make the dashboard live to the intended audience.",
+      "owners": ["CS", "ENG"],
+      "time": "10 min",
+      "gate": true,
+      "verify": "Dashboard is live and visible to the intended team."
+    },
+    {
+      "id": "dash-training",
+      "title": "Walk the client through reading it",
+      "description": "Show the client how to navigate the dashboard, apply filters, and draw insights that inform bid decisions.",
+      "owners": ["CS"],
+      "time": "15 min",
+      "verify": "Client can navigate and interpret the dashboard on their own."
+    }
+  ],
+  "related": [
+    { "label": "Bid / No-Bid Emails", "href": "/sections/bid-no-bid-emails" },
+    { "label": "File Loading & Project Data", "href": "/sections/file-loading" },
+    { "label": "QA & Handoff", "href": "/sections/qa-checklist" }
+  ]
+}
