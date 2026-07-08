@@ -20,7 +20,7 @@
     "severity": "medium",
     "relatedSteps": [
       { "label": "Email Forwarding", "href": "/sections/email-forwarding" },
-      { "label": "Email Connector", "href": "/sections/email-connector" }
+      { "label": "Email Credentials", "href": "/sections/email-credentials" }
     ]
   },
   {
@@ -31,7 +31,7 @@
     "owner": "ENG",
     "severity": "high",
     "relatedSteps": [
-      { "label": "Configure CRM integration", "href": "/sections/email-connector" }
+      { "label": "Configure CRM integration", "href": "/sections/crm-integration" }
     ]
   },
   {
@@ -42,7 +42,7 @@
     "owner": "CS",
     "severity": "medium",
     "relatedSteps": [
-      { "label": "Set up saved credentials", "href": "/sections/email-connector" }
+      { "label": "Set up saved credentials", "href": "/sections/email-credentials" }
     ]
   },
   {

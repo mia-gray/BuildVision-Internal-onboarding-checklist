@@ -8,7 +8,7 @@
   "badge": "Required",
   "estimatedTime": "35–45 min",
   "summary": "Forward the client's bid-desk inbox to Bids@BuildVision.io so bids ingest automatically — the backbone of the workflow.",
-  "overview": "Email ingestion is the **backbone of the BuildVision workflow**. Once orgs exist and the IT/ops contact is engaged, forward the client's bid-desk inbox to **Bids@BuildVision.io** and prove ingestion end-to-end before moving on.\n\nThe full step-by-step for **Gmail / Google Workspace**, **Outlook on the web**, and **classic Outlook desktop** is in the *Configure email forwarding* step below (and in the [downloadable Email Forwarding Guide](/guides/email-forwarding-guide.pdf)).\n\n**Before you start:**\n- **Verification email** — the first time the address is added, Gmail/Outlook send a one-time verification message to Bids@BuildVision.io. Email your CX lead to confirm BuildVision received it.\n- **External forwarding may be blocked** — many Microsoft 365 / Google Workspace accounts disable external forwarding by default (this causes the **5.7.520 bounce**). Coordinate with the client's IT/admin to approve it before testing.\n\n> If a client prefers to connect their inbox directly instead of forwarding, use the **Email Connector** section — pick one path, not both.",
+  "overview": "Email ingestion is the **backbone of the BuildVision workflow**. Once orgs exist and the IT/ops contact is engaged, forward the client's bid-desk inbox to **Bids@BuildVision.io** and prove ingestion end-to-end before moving on.\n\nThe full step-by-step for **Gmail / Google Workspace**, **Outlook on the web**, and **classic Outlook desktop** is in the *Configure email forwarding* step below (and in the [downloadable Email Forwarding Guide](/guides/email-forwarding-guide.pdf)).\n\n**Before you start:**\n- **Verification email** — the first time the address is added, Gmail/Outlook send a one-time verification message to Bids@BuildVision.io. Email your CX lead to confirm BuildVision received it.\n- **External forwarding may be blocked** — many Microsoft 365 / Google Workspace accounts disable external forwarding by default (this causes the **5.7.520 bounce**). Coordinate with the client's IT/admin to approve it before testing.\n\n> If a client prefers to connect their inbox directly instead of forwarding, use the **Email Credentials** section — pick one path, not both.",
   "prerequisites": [
     "Parent organization exists (ingestion attaches to an org)",
     "Client IT/ops contact confirmed and available",
@@ -89,7 +89,7 @@
   ],
   "related": [
     { "label": "Download: Email Forwarding Guide (PDF)", "href": "/guides/email-forwarding-guide.pdf", "external": true },
-    { "label": "Email Connector (inbox + CRM)", "href": "/sections/email-connector" },
+    { "label": "Email Credentials", "href": "/sections/email-credentials" },
     { "label": "QA Checklist", "href": "/sections/qa-checklist" },
     { "label": "Troubleshooting: ingestion", "href": "/troubleshooting" }
   ],

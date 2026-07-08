@@ -87,7 +87,7 @@
   ],
   "related": [
     { "label": "Permissions", "href": "/sections/permissions" },
-    { "label": "Login Credentials & protected links", "href": "/sections/email-connector" },
+    { "label": "Login Credentials & protected links", "href": "/sections/email-credentials" },
     { "label": "Troubleshooting: invitations", "href": "/troubleshooting" }
   ],
   "screenshots": [

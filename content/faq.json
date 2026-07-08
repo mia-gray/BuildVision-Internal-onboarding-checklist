@@ -25,7 +25,7 @@
     "question": "Should a client forward email or connect their inbox?",
     "answer": "Either — they're two paths to the same outcome. Pick one. If you forward, you don't also need to connect the inbox. Whichever you choose, BuildVision starts processing as soon as a bid arrives.",
     "category": "Ingestion",
-    "related": [{ "label": "Email Connector", "href": "/sections/email-connector" }]
+    "related": [{ "label": "Email Credentials", "href": "/sections/email-credentials" }]
   },
   {
     "id": "faq-passwords",
@@ -39,7 +39,7 @@
     "question": "A bid links to a SharePoint / Google Drive file BuildVision can't open. What do I do?",
     "answer": "Add saved credentials. In User Settings → Saved Credentials → + Add Credential, pick the provider (Microsoft, SharePoint, Google, OneDrive, etc.), name it, and enter the user's own login for that service. BuildVision then authenticates automatically whenever a matching protected link appears. Credentials are per user, and you only need one per platform.",
     "category": "Ingestion",
-    "related": [{ "label": "Email Connector", "href": "/sections/email-connector" }]
+    "related": [{ "label": "Email Credentials", "href": "/sections/email-credentials" }]
   },
   {
     "id": "faq-representation",

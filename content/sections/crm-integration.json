@@ -1,0 +1,72 @@
+{
+  "slug": "crm-integration",
+  "title": "CRM Integration",
+  "shortTitle": "CRM Integration",
+  "icon": "PlugZap",
+  "order": 45,
+  "phase": "Phase 2",
+  "badge": "Required",
+  "estimatedTime": "45–60 min",
+  "summary": "Connect the client's CRM so deals and contacts sync with BuildVision, then validate with a real test record.",
+  "overview": "Wire up the client's CRM so **deals and contacts flow both ways** between their CRM and BuildVision. Authorize the connection, confirm it's healthy, and prove it end-to-end with a test record before moving on.\n\nCapture the CRM system name and how credentials/auth will be provided during Intake.",
+  "prerequisites": [
+    "Parent organization exists",
+    "CRM system name and auth path captured during intake",
+    "Client IT/ops contact engaged"
+  ],
+  "tips": [
+    "Authorize with an account that has access to deals + contacts.",
+    "Validate with a real test deal/contact — don't assume the sync works from a green status alone."
+  ],
+  "warnings": [
+    "CRM auth must complete with no permission errors before you test a sync.",
+    "The list of supported CRMs and the auth method for each is a known gap — see Process Gaps B-8."
+  ],
+  "commonMistakes": [
+    "CRM connected but sync never validated with a real test record.",
+    "Authorizing with an account that lacks deals/contacts permissions.",
+    "Skipping the end-to-end gate and discovering mapping issues after go-live."
+  ],
+  "steps": [
+    {
+      "id": "conn-crm",
+      "title": "Configure CRM integration",
+      "description": "Connect the CRM integration and authorize the deals + contacts sync.",
+      "owners": ["ENG", "CUST"],
+      "time": "30–45 min",
+      "dependsOn": "CRM credentials",
+      "verify": "Auth succeeds; no permission errors.",
+      "callouts": [
+        {
+          "type": "info",
+          "text": "The list of supported CRMs and the auth method for each is a known gap — see Process Gaps B-8."
+        }
+      ]
+    },
+    {
+      "id": "conn-verify",
+      "title": "Verify the connection is live",
+      "description": "Confirm the CRM sync is authenticated and the connection status is healthy.",
+      "owners": ["ENG"],
+      "time": "10 min",
+      "verify": "Connection status healthy; no auth or permission errors."
+    },
+    {
+      "id": "conn-test-sync",
+      "title": "Test CRM sync end-to-end (gate)",
+      "description": "Confirm a test deal/contact syncs from the CRM and appears correctly mapped in BuildVision.",
+      "owners": ["ENG"],
+      "time": "15 min",
+      "gate": true,
+      "verify": "Record appears correctly mapped in BuildVision."
+    }
+  ],
+  "related": [
+    { "label": "Email Credentials", "href": "/sections/email-credentials" },
+    { "label": "Troubleshooting: CRM sync", "href": "/troubleshooting" },
+    { "label": "Process Gaps: supported CRMs", "href": "/process-gaps" }
+  ],
+  "screenshots": [
+    { "caption": "CRM integration — deals and contacts syncing between the client's CRM and BuildVision." }
+  ]
+}
