@@ -31,7 +31,12 @@ export const CUSTOMER_STATUSES: {
 /** The customer's intake survey responses. All optional until submitted. */
 export interface IntakeSurvey {
   companyName?: string;
+  /** How the org name should appear in BuildVision. */
   organizationName?: string;
+  /** "Yes" | "No" — whether to create child offices. */
+  addChildOffices?: string;
+  /** Names of child offices to create (when addChildOffices = "Yes"). */
+  childOffices?: string[];
   primaryContact?: string;
   email?: string;
   phone?: string;
