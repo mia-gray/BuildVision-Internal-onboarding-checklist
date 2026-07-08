@@ -28,19 +28,8 @@ export function CustomerChecklist({
   const { sections } = useCatalog();
   const doneTotal = allStepIds.reduce((n, id) => n + (customer.checklist[id]?.done ? 1 : 0), 0);
 
-  const initialOpen = React.useMemo(() => {
-    const open = new Set<string>();
-    for (const s of sections) {
-      const done = s.steps.filter((st) => customer.checklist[st.id]?.done).length;
-      if (done < s.steps.length) open.add(s.slug);
-    }
-    // If everything is complete, open the first section so it isn't all collapsed.
-    if (open.size === 0 && sections[0]) open.add(sections[0].slug);
-    return open;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const [openSections, setOpenSections] = React.useState<Set<string>>(initialOpen);
+  // Sections start collapsed; press a section header (or "Expand all") to open one.
+  const [openSections, setOpenSections] = React.useState<Set<string>>(() => new Set());
   const [hideCompleted, setHideCompleted] = React.useState(false);
   const allOpen = openSections.size === sections.length;
 
