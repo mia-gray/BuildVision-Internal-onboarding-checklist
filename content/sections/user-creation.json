@@ -3,7 +3,7 @@
   "title": "User Creation",
   "shortTitle": "User Creation",
   "icon": "UserPlus",
-  "order": 50,
+  "order": 25,
   "phase": "Phase 3",
   "badge": "Required",
   "estimatedTime": "30–45 min",
