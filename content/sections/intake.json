@@ -94,8 +94,5 @@
   "related": [
     { "label": "Organization Creation", "href": "/sections/organization-creation" },
     { "label": "Process Gaps: intake data model", "href": "/process-gaps" }
-  ],
-  "screenshots": [
-    { "caption": "Reference Sheet — capture all fields before build (see dashboard)." }
   ]
 }
