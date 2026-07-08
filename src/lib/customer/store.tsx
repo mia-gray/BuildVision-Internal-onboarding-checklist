@@ -33,6 +33,20 @@ const CURRENT_USER_KEY = "bv.currentUser.v1";
 const RECENT_KEY = "bv.recentCustomers.v1";
 const SEED_FLAG_KEY = "bv.seeded.v1";
 
+/** Legacy value normalizations applied to stored records on load. */
+const INDUSTRY_RENAMES: Record<string, string> = {
+  "Mechanical Contractor": "Contractor",
+};
+
+/** Returns an upgraded copy if anything changed, else null (no write needed). */
+function migrateCustomer(c: Customer): Customer | null {
+  const oldIndustry = c.intake?.industry;
+  if (oldIndustry && INDUSTRY_RENAMES[oldIndustry]) {
+    return { ...c, intake: { ...c.intake, industry: INDUSTRY_RENAMES[oldIndustry] } };
+  }
+  return null;
+}
+
 interface CustomerStore {
   loading: boolean;
   customers: Customer[];
@@ -88,6 +102,14 @@ export function CustomerStoreProvider({ children }: { children: React.ReactNode 
         for (const c of samples) await repo.save(c);
         localStorage.setItem(SEED_FLAG_KEY, "1");
         all = samples;
+      }
+      // Normalize any legacy stored values (persists the upgrade).
+      for (let i = 0; i < all.length; i++) {
+        const migrated = migrateCustomer(all[i]);
+        if (migrated) {
+          all[i] = migrated;
+          await repo.save(migrated);
+        }
       }
       if (!active) return;
       setCustomers(all);
