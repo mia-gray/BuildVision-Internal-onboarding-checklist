@@ -37,9 +37,10 @@ export interface IntakeSurvey {
   phone?: string;
   address?: string;
   industry?: string;
-  productsPurchased?: string;
-  implementationType?: string;
   crmSystem?: string;
+  /** "Email integration" | "Email Forwarding" — how BuildVision receives bids. */
+  emailMethod?: string;
+  /** The address bids are forwarded from (only when emailMethod = Email Forwarding). */
   bidInbox?: string;
   activeUsers?: string;
   requestedGoLiveDate?: string;

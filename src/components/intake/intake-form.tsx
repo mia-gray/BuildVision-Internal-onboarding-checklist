@@ -4,7 +4,7 @@ import * as React from "react";
 import { CheckCircle2, Loader2 } from "lucide-react";
 
 import type { Customer, IntakeSurvey } from "@/lib/customer/types";
-import { INTAKE_GROUPS, INTAKE_FIELDS, isFieldFilled, type IntakeField } from "@/lib/customer/intake-schema";
+import { INTAKE_GROUPS, INTAKE_FIELDS, isFieldFilled, isFieldVisible, type IntakeField } from "@/lib/customer/intake-schema";
 import { useCustomers } from "@/lib/customer/store";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -93,11 +93,13 @@ export function IntakeForm({ customer }: { customer: Customer }) {
     setErrors((e) => (e[key] ? { ...e, [key]: "" } : e));
   }
 
-  const requiredFields = INTAKE_FIELDS.filter((f) => f.required);
+  // Only count / validate fields that are currently visible (respects showIf).
+  const visibleFields = INTAKE_FIELDS.filter((f) => isFieldVisible(f, values));
+  const requiredFields = visibleFields.filter((f) => f.required);
   const filledRequired = requiredFields.filter((f) => isFieldFilled(values[f.key])).length;
-  const totalTracked = INTAKE_FIELDS.length;
-  const filledAll = INTAKE_FIELDS.filter((f) => isFieldFilled(values[f.key])).length;
-  const percent = Math.round((filledAll / totalTracked) * 100);
+  const totalTracked = visibleFields.length;
+  const filledAll = visibleFields.filter((f) => isFieldFilled(values[f.key])).length;
+  const percent = totalTracked === 0 ? 0 : Math.round((filledAll / totalTracked) * 100);
 
   function validate(): boolean {
     const next: Record<string, string> = {};
@@ -168,16 +170,18 @@ export function IntakeForm({ customer }: { customer: Customer }) {
             <h2 className="text-lg font-semibold tracking-tight">{group.title}</h2>
             {group.description && <p className="mt-1 text-sm text-muted-foreground">{group.description}</p>}
             <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
-              {group.fields.map((field) => (
-                <div key={field.key} id={`field-${field.key}`} className={field.type === "textarea" ? "sm:col-span-2" : ""}>
-                  <Field
-                    field={field}
-                    value={(values[field.key] as string) ?? ""}
-                    error={errors[field.key]}
-                    onChange={(v) => set(field.key, v)}
-                  />
-                </div>
-              ))}
+              {group.fields
+                .filter((field) => isFieldVisible(field, values))
+                .map((field) => (
+                  <div key={field.key} id={`field-${field.key}`} className={field.type === "textarea" ? "sm:col-span-2" : ""}>
+                    <Field
+                      field={field}
+                      value={(values[field.key] as string) ?? ""}
+                      error={errors[field.key]}
+                      onChange={(v) => set(field.key, v)}
+                    />
+                  </div>
+                ))}
             </div>
           </section>
         ))}

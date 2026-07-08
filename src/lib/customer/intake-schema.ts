@@ -17,6 +17,8 @@ export interface IntakeField {
   /** Regex (as string) for lightweight validation on text-like fields. */
   pattern?: string;
   helper?: string;
+  /** Only render this field when another field equals a given value (conditional). */
+  showIf?: { key: keyof IntakeSurvey; equals: string };
 }
 
 export interface IntakeGroup {
@@ -66,25 +68,21 @@ export const INTAKE_GROUPS: IntakeGroup[] = [
     description: "Details we need to configure your account.",
     fields: [
       {
-        key: "productsPurchased",
-        label: "Products Purchased",
-        type: "text",
-        placeholder: "e.g. Data Platform, Dashboard",
-      },
-      {
-        key: "implementationType",
-        label: "Implementation Type",
+        key: "emailMethod",
+        label: "How should BuildVision receive your bids?",
         type: "select",
-        options: ["Pilot", "Full License"],
+        options: ["Email integration", "Email Forwarding"],
+        helper: "Email integration connects your inbox directly. Email Forwarding sends bids from an address you choose.",
       },
-      { key: "crmSystem", label: "CRM System in Use", type: "text", placeholder: "e.g. Salesforce, HubSpot" },
       {
         key: "bidInbox",
-        label: "Bid-desk Inbox to Forward",
+        label: "Email you'll forward bids from",
         type: "email",
         placeholder: "bids@yourcompany.com",
-        helper: "The inbox you'll forward bids from to Bids@BuildVision.io.",
+        helper: "We'll forward from here to Bids@BuildVision.io.",
+        showIf: { key: "emailMethod", equals: "Email Forwarding" },
       },
+      { key: "crmSystem", label: "CRM System in Use", type: "text", placeholder: "e.g. Salesforce, HubSpot" },
       { key: "activeUsers", label: "Active Users (count)", type: "text", placeholder: "e.g. 12" },
       { key: "requestedGoLiveDate", label: "Requested Go-Live Date", type: "date" },
     ],
@@ -106,7 +104,15 @@ export function isFieldFilled(value: unknown): boolean {
   return typeof value === "string" ? value.trim().length > 0 : value != null;
 }
 
-/** Which fields are still missing among required ones. */
+/** Whether a field should render given the current values (respects showIf). */
+export function isFieldVisible(field: IntakeField, values: IntakeSurvey): boolean {
+  if (!field.showIf) return true;
+  return values[field.showIf.key] === field.showIf.equals;
+}
+
+/** Which fields are still missing among required ones (visible fields only). */
 export function missingRequired(intake: IntakeSurvey): IntakeField[] {
-  return INTAKE_FIELDS.filter((f) => f.required && !isFieldFilled(intake[f.key]));
+  return INTAKE_FIELDS.filter(
+    (f) => f.required && isFieldVisible(f, intake) && !isFieldFilled(intake[f.key]),
+  );
 }

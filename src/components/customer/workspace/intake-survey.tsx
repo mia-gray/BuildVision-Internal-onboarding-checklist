@@ -4,7 +4,7 @@ import * as React from "react";
 import { ClipboardList, Pencil, Check, X, Inbox } from "lucide-react";
 
 import type { Customer, IntakeSurvey as IntakeSurveyData } from "@/lib/customer/types";
-import { INTAKE_GROUPS, isFieldFilled, type IntakeField } from "@/lib/customer/intake-schema";
+import { INTAKE_GROUPS, isFieldFilled, isFieldVisible, type IntakeField } from "@/lib/customer/intake-schema";
 import { useCustomers } from "@/lib/customer/store";
 import { formatDate } from "@/lib/format";
 import { Button } from "@/components/ui/button";
@@ -126,7 +126,13 @@ export function IntakeSurvey({ customer }: { customer: Customer }) {
                 {group.title}
               </h3>
               <dl className="space-y-3">
-                {group.fields.map((field) => (
+                {group.fields
+                  .filter((field) =>
+                    editing
+                      ? isFieldVisible(field, draft)
+                      : isFieldVisible(field, customer.intake) || isFieldFilled(customer.intake[field.key]),
+                  )
+                  .map((field) => (
                   <div key={field.key} className="grid grid-cols-1 gap-1">
                     <dt className="text-xs text-muted-foreground">{field.label}</dt>
                     {editing ? (
