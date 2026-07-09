@@ -17,6 +17,7 @@ import {
   ImageOff,
   ArrowUpRight,
   Clock,
+  FileDown,
 } from "lucide-react";
 
 import type { RelatedLink, Section } from "@/lib/types";
@@ -25,10 +26,8 @@ import { getIcon } from "@/lib/icons";
 import { useProgress } from "@/components/providers/progress-provider";
 import { useCatalog } from "@/components/providers/catalog-provider";
 import { Button } from "@/components/ui/button";
-import { Markdown } from "@/components/markdown";
 import { StatusBadge } from "@/components/content-badges";
 import { BookmarkButton } from "@/components/bookmark-button";
-import { ClientGuideCard } from "./client-guide-card";
 import { StepItem } from "./step-item";
 
 function InfoList({
@@ -162,22 +161,18 @@ export function SectionView({ section }: { section: Section }) {
 
         <div className="mt-5 flex flex-wrap items-center gap-2 no-print">
           <BookmarkButton href={`/sections/${section.slug}`} />
+          {section.clientGuide && (
+            <Button asChild variant="outline" size="sm">
+              <a href={asset(section.clientGuide.href)} target="_blank" rel="noopener noreferrer">
+                <FileDown /> Client guide (PDF)
+              </a>
+            </Button>
+          )}
           <Button variant="outline" size="sm" onClick={() => window.print()}>
             <Printer /> Print
           </Button>
         </div>
       </div>
-
-      {/* Client-ready guide (prominent, top of section) */}
-      {section.clientGuide && (
-        <ClientGuideCard label={section.clientGuide.label} href={section.clientGuide.href} />
-      )}
-
-      {/* Overview */}
-      <section className="rounded-xl border border-border bg-card p-5 sm:p-6">
-        <h2 className="mb-2 text-sm font-semibold">Overview</h2>
-        <Markdown>{section.overview}</Markdown>
-      </section>
 
       {/* Prerequisites */}
       {section.prerequisites?.length ? (
