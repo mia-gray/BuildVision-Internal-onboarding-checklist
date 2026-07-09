@@ -143,8 +143,8 @@ export function IntakeForm({ customer }: { customer: Customer }) {
         </span>
         <h1 className="text-2xl font-semibold tracking-tight">Thank you!</h1>
         <p className="mt-2 text-muted-foreground">
-          Your intake details have been sent to the BuildVision team. {customer.assignedCsm} will be in
-          touch to kick off your onboarding.
+          Your intake details have been sent to the BuildVision team. Your customer success team will
+          be in touch to kick off your onboarding.
         </p>
       </div>
     );
