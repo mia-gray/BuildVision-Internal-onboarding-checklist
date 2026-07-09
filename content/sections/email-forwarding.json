@@ -58,6 +58,10 @@
       "verify": "Forwarding rule/filter shows active on the client side.",
       "callouts": [
         {
+          "type": "tip",
+          "text": "Send the client the [Email Forwarding Guide (PDF)](/guides/email-forwarding-guide.pdf) so they can follow these exact steps."
+        },
+        {
           "type": "warning",
           "text": "Gmail: create the filter right after adding the forwarding address, or **all** email forwards. Also apply to matching conversations to backfill existing project mail (extraction covers ~30 days or the pilot-agreed window)."
         }
@@ -87,8 +91,8 @@
       ]
     }
   ],
+  "clientGuide": { "label": "Email Forwarding Guide", "href": "/guides/email-forwarding-guide.pdf" },
   "related": [
-    { "label": "Download: Email Forwarding Guide (PDF)", "href": "/guides/email-forwarding-guide.pdf", "external": true },
     { "label": "Email Credentials", "href": "/sections/email-credentials" },
     { "label": "QA Checklist", "href": "/sections/qa-checklist" },
     { "label": "Troubleshooting: ingestion", "href": "/troubleshooting" }

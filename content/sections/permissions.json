@@ -43,7 +43,13 @@
       "description": "For parent-org users who cover multiple offices, confirm they can switch into child offices via My Profile → Other Accounts and via Settings → Company.",
       "owners": ["CS"],
       "time": "10 min",
-      "verify": "A test user can switch into a child office and back to their root account."
+      "verify": "A test user can switch into a child office and back to their root account.",
+      "callouts": [
+        {
+          "type": "tip",
+          "text": "Send users who cover multiple offices the [Access Other Offices guide (PDF)](/guides/access-other-offices.pdf)."
+        }
+      ]
     },
     {
       "id": "perm-least-privilege",
@@ -60,6 +66,7 @@
       ]
     }
   ],
+  "clientGuide": { "label": "Access Other Offices", "href": "/guides/access-other-offices.pdf" },
   "related": [
     { "label": "User Creation", "href": "/sections/user-creation" },
     { "label": "Organization Creation", "href": "/sections/organization-creation" },

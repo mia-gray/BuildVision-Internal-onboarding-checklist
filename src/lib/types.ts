@@ -74,6 +74,11 @@ export interface Section {
   warnings?: string[];
   commonMistakes?: string[];
   steps: Step[];
+  /**
+   * A client-ready PDF guide shown prominently at the top of the section, so CS
+   * can hand it to a customer to follow. `href` points to a file under /public.
+   */
+  clientGuide?: { label: string; href: string };
   related?: RelatedLink[];
   screenshots?: Screenshot[];
   /** Ordering within the workflow. Lower = earlier. */

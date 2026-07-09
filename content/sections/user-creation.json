@@ -74,7 +74,13 @@
       "description": "Have the primary contact (and one rep) log in at app.buildvision.io/login, set a password, and confirm the correct org is visible.",
       "owners": ["CS"],
       "time": "10 min",
-      "verify": "Successful login; correct org visible."
+      "verify": "Successful login; correct org visible.",
+      "callouts": [
+        {
+          "type": "tip",
+          "text": "Send new reps the [Quick Start guide (PDF)](/guides/quick-start.pdf) — home page to first sent bid in five steps."
+        }
+      ]
     },
     {
       "id": "user-support-chat",
@@ -85,6 +91,7 @@
       "verify": "Chat channel opens for the test user."
     }
   ],
+  "clientGuide": { "label": "Quick Start for Manufacturer Reps", "href": "/guides/quick-start.pdf" },
   "related": [
     { "label": "Permissions", "href": "/sections/permissions" },
     { "label": "Login Credentials & protected links", "href": "/sections/email-credentials" },
