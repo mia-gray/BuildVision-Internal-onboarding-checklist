@@ -152,6 +152,20 @@ export function IntakeForm({ customer }: { customer: Customer }) {
 
   return (
     <form onSubmit={submit} className="mx-auto max-w-2xl">
+      {/* Welcome heading — lives inside the form so it disappears on submit */}
+      <div className="mb-8">
+        <p className="text-sm font-medium text-primary">
+          Welcome{customer.name ? `, ${customer.name}` : ""}
+        </p>
+        <h1 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">
+          Let&apos;s set up your BuildVision account
+        </h1>
+        <p className="mt-2 text-[15px] leading-relaxed text-muted-foreground">
+          A few quick details help us configure everything before your kickoff. It takes about three
+          minutes, and your answers save as you go.
+        </p>
+      </div>
+
       {/* progress */}
       <div className="sticky top-0 z-10 -mx-4 mb-8 bg-background/85 px-4 py-3 backdrop-blur sm:-mx-6 sm:px-6">
         <div className="flex items-center justify-between text-xs text-muted-foreground">
