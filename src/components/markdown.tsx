@@ -1,7 +1,27 @@
-import ReactMarkdown from "react-markdown";
+import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
 
-import { cn } from "@/lib/utils";
+import { asset, cn } from "@/lib/utils";
+
+/**
+ * Custom link renderer:
+ * - internal absolute hrefs ("/…") get the base path (Markdown outputs a plain
+ *   <a>, which — unlike next/link — does NOT get the base path automatically),
+ * - PDFs, http(s), and mailto links open in a new tab.
+ */
+const markdownComponents: Components = {
+  a({ href, children }) {
+    const h = href ?? "";
+    const isInternal = h.startsWith("/");
+    const url = isInternal ? asset(h) : h;
+    const newTab = /^(https?:|mailto:)/.test(h) || h.endsWith(".pdf");
+    return (
+      <a href={url} {...(newTab ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
+        {children}
+      </a>
+    );
+  },
+};
 
 /**
  * Renders a Markdown string with a tight, docs-like typography scale.
@@ -27,7 +47,9 @@ export function Markdown({
         className,
       )}
     >
-      <ReactMarkdown remarkPlugins={[remarkGfm]}>{children}</ReactMarkdown>
+      <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
+        {children}
+      </ReactMarkdown>
     </div>
   );
 }

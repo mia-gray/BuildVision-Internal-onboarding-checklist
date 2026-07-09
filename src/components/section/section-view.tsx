@@ -67,7 +67,9 @@ function InfoList({
 }
 
 function RelatedLinkRow({ link }: { link: RelatedLink }) {
-  const external = link.external || link.href.startsWith("http");
+  const isHttp = /^(https?:|mailto:)/.test(link.href);
+  // Static files (e.g. PDF guides) need the base path since they aren't routes.
+  const isFile = link.href.startsWith("/") && link.href.endsWith(".pdf");
   const className =
     "group flex items-center gap-2 rounded-md border border-border/60 px-3 py-2 text-sm transition-colors hover:bg-accent";
   const inner = (
@@ -76,11 +78,14 @@ function RelatedLinkRow({ link }: { link: RelatedLink }) {
       <ArrowUpRight className="size-3.5 shrink-0 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100" />
     </>
   );
-  return external ? (
-    <a href={link.href} target="_blank" rel="noopener noreferrer" className={className}>
-      {inner}
-    </a>
-  ) : (
+  if (isHttp || isFile) {
+    return (
+      <a href={isFile ? asset(link.href) : link.href} target="_blank" rel="noopener noreferrer" className={className}>
+        {inner}
+      </a>
+    );
+  }
+  return (
     <Link href={link.href} className={className}>
       {inner}
     </Link>
