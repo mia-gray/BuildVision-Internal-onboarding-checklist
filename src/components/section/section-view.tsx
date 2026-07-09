@@ -28,6 +28,7 @@ import { Button } from "@/components/ui/button";
 import { Markdown } from "@/components/markdown";
 import { StatusBadge } from "@/components/content-badges";
 import { BookmarkButton } from "@/components/bookmark-button";
+import { ClientGuideCard } from "./client-guide-card";
 import { StepItem } from "./step-item";
 
 function InfoList({
@@ -161,6 +162,11 @@ export function SectionView({ section }: { section: Section }) {
           </Button>
         </div>
       </div>
+
+      {/* Client-ready guide (prominent, top of section) */}
+      {section.clientGuide && (
+        <ClientGuideCard label={section.clientGuide.label} href={section.clientGuide.href} />
+      )}
 
       {/* Overview */}
       <section className="rounded-xl border border-border bg-card p-5 sm:p-6">

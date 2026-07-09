@@ -87,8 +87,8 @@
       ]
     }
   ],
+  "clientGuide": { "label": "Email Forwarding Guide", "href": "/guides/email-forwarding-guide.pdf" },
   "related": [
-    { "label": "Download: Email Forwarding Guide (PDF)", "href": "/guides/email-forwarding-guide.pdf", "external": true },
     { "label": "Email Credentials", "href": "/sections/email-credentials" },
     { "label": "QA Checklist", "href": "/sections/qa-checklist" },
     { "label": "Troubleshooting: ingestion", "href": "/troubleshooting" }
