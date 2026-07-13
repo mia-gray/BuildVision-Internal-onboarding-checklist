@@ -1,0 +1,114 @@
+[
+  {
+    "id": "gs-quick-start",
+    "title": "Quick Start for Manufacturer Reps",
+    "description": "From your home page to your first sent bid in five steps — about ten minutes end to end.",
+    "category": "Getting Started",
+    "tags": ["home page", "first bid", "setup", "reps"],
+    "pdf": "/guides/quick-start.pdf",
+    "doc": "https://buildvision-docs.vercel.app/getting-started/manufacturer-reps/"
+  },
+  {
+    "id": "gs-welcome",
+    "title": "Welcome to BuildVision",
+    "description": "What BuildVision does: it turns the bids and documents in your inbox into structured project intelligence so you can quote faster.",
+    "category": "Getting Started",
+    "tags": ["overview", "intro", "what is buildvision"],
+    "doc": "https://buildvision-docs.vercel.app/"
+  },
+  {
+    "id": "bm-email-forwarding",
+    "title": "Email Forwarding",
+    "description": "Forward your bid-desk inbox to Bids@BuildVision.io so every bid, RFQ, and project document ingests automatically. Step-by-step for Gmail, Outlook on the web, and classic Outlook desktop.",
+    "category": "Bid Management",
+    "tags": ["email", "gmail", "outlook", "forwarding", "ingestion", "bids"],
+    "pdf": "/guides/email-forwarding-guide.pdf",
+    "doc": "https://buildvision-docs.vercel.app/getting-started/email-forwarding/"
+  },
+  {
+    "id": "bm-bid-nobid",
+    "title": "Understanding Bid / No-Bid Emails",
+    "description": "For every project we ingest, BuildVision sends a bid / no-bid recommendation based on fit to your line card, scope, equipment, engineer of record, and location — so reps can prioritize quickly.",
+    "category": "Bid Management",
+    "tags": ["bid", "no-bid", "recommendation", "prioritize"]
+  },
+  {
+    "id": "users-access-offices",
+    "title": "Access Other Offices",
+    "description": "Switch between your root account and any child office from My Profile, or from Settings → Company.",
+    "category": "Users",
+    "tags": ["offices", "switch", "child office", "profile"],
+    "pdf": "/guides/access-other-offices.pdf",
+    "doc": "https://buildvision-docs.vercel.app/getting-started/switching-offices/"
+  },
+  {
+    "id": "users-invite",
+    "title": "Inviting Teammates",
+    "description": "Add the people who need access. New users receive login credentials by email and set their own password on first sign-in at app.buildvision.io/login.",
+    "category": "Users",
+    "tags": ["invite", "teammates", "add users", "credentials"]
+  },
+  {
+    "id": "perm-roles",
+    "title": "Admin vs Member Permissions",
+    "description": "Admins manage account settings, users, and integrations. Members work day to day on projects and bids. Assign the lowest level that lets each person do their job.",
+    "category": "Permissions",
+    "tags": ["admin", "member", "roles", "access", "least privilege"]
+  },
+  {
+    "id": "perm-credentials",
+    "title": "Saved Login Credentials for Protected Files",
+    "description": "When bids link to documents behind a login (SharePoint, Google Drive, OneDrive), save credentials so BuildVision can open them automatically. Credentials are per user — one per platform.",
+    "category": "Permissions",
+    "tags": ["credentials", "sharepoint", "google drive", "onedrive", "protected links"],
+    "pdf": "/guides/login-credentials-guide.pdf",
+    "doc": "https://buildvision-docs.vercel.app/getting-started/login-credentials/"
+  },
+  {
+    "id": "proj-files",
+    "title": "Files, Schedules & Extraction",
+    "description": "Open a project's Files tab to see schedule tagging in action — each tag jumps to the right page in the plans — and review extracted equipment inline in the PDF viewer.",
+    "category": "Projects",
+    "tags": ["files", "schedules", "extraction", "equipment", "pdf viewer"],
+    "doc": "https://buildvision-docs.vercel.app/"
+  },
+  {
+    "id": "admin-company",
+    "title": "Company Settings & Organization Structure",
+    "description": "Manage your organization, offices, line cards, and user hierarchy under Settings → Company. This view shows every office with its type, users, timezone, and address.",
+    "category": "Administration",
+    "tags": ["settings", "company", "organization", "offices", "line card"]
+  },
+  {
+    "id": "ts-no-bids",
+    "title": "Bids Aren't Showing Up",
+    "description": "Usually the forwarding rule isn't active, the address wasn't verified, or the filter is too narrow. Confirm the rule is on, that Bids@BuildVision.io is verified, and widen the filter, then send a test bid.",
+    "category": "Troubleshooting",
+    "tags": ["troubleshoot", "not ingesting", "forwarding", "missing bids"],
+    "quickLinks": [{ "label": "Email Forwarding Guide (PDF)", "href": "/guides/email-forwarding-guide.pdf" }]
+  },
+  {
+    "id": "ts-protected",
+    "title": "Can't Open a Protected Document",
+    "description": "If BuildVision can't open a SharePoint or Google Drive link, add a saved credential for that provider under User Settings → Saved Credentials, then re-process the email.",
+    "category": "Troubleshooting",
+    "tags": ["troubleshoot", "protected", "sharepoint", "google drive", "credentials"],
+    "quickLinks": [{ "label": "Login Credentials Guide (PDF)", "href": "/guides/login-credentials-guide.pdf" }]
+  },
+  {
+    "id": "video-platform-tour",
+    "title": "Platform Tour",
+    "description": "A guided walkthrough of the BuildVision home page, projects, files, and settings.",
+    "category": "Training Videos",
+    "tags": ["video", "tour", "walkthrough"],
+    "videoComingSoon": true
+  },
+  {
+    "id": "video-first-bid",
+    "title": "Submitting Your First Bid",
+    "description": "Watch how to go from an ingested project to a submitted proposal.",
+    "category": "Training Videos",
+    "tags": ["video", "bid", "proposal"],
+    "videoComingSoon": true
+  }
+]

@@ -119,6 +119,25 @@ export interface Resource {
   placeholder?: boolean;
 }
 
+/** A customer-facing knowledge-base article / guide. */
+export interface KbArticle {
+  id: string;
+  title: string;
+  description: string;
+  /** e.g. "Getting Started", "Bid Management", "Training Videos". */
+  category: string;
+  tags?: string[];
+  /** Path to a PDF under /public (base-path applied at render). */
+  pdf?: string;
+  /** External video URL, if available. */
+  video?: string;
+  /** External documentation URL. */
+  doc?: string;
+  quickLinks?: RelatedLink[];
+  /** Flags a video article whose recording isn't published yet. */
+  videoComingSoon?: boolean;
+}
+
 export interface ProcessGap {
   id: string;
   code: string;

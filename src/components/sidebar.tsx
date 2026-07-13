@@ -11,6 +11,7 @@ import {
   Library,
   AlertTriangle,
   Plus,
+  LifeBuoy,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -69,6 +70,7 @@ export function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
     .slice(0, 4);
 
   const knowledge = [
+    { href: "/knowledge-base", label: "Knowledge Base", icon: LifeBuoy },
     { href: "/playbook", label: "Playbook", icon: BookOpen },
     { href: "/faq", label: "FAQ", icon: HelpCircle },
     { href: "/troubleshooting", label: "Troubleshooting", icon: Wrench },

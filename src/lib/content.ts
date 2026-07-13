@@ -14,6 +14,7 @@ import path from "node:path";
 import type {
   Catalog,
   FaqItem,
+  KbArticle,
   PlaybookMeta,
   ProcessGap,
   Resource,
@@ -76,6 +77,10 @@ export function getResources(): Resource[] {
 
 export function getGaps(): ProcessGap[] {
   return readJson<ProcessGap[]>("process-gaps.json");
+}
+
+export function getKb(): KbArticle[] {
+  return readJson<KbArticle[]>("knowledge-base.json");
 }
 
 /** The total number of individually checkable steps across all sections. */
