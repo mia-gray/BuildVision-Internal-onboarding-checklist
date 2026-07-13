@@ -23,6 +23,7 @@ export function seedCustomers(): Customer[] {
     name: "Sierra Air Partners",
     companyName: "Sierra Air Partners, LLC",
     assignedCsm: "Mia Gray",
+    portalToken: "demo-sierra-air-portal",
     status: "in_progress",
     intakeSubmitted: true,
     intake: {
@@ -100,6 +101,7 @@ export function seedCustomers(): Customer[] {
     name: "Cascade Mechanical Group",
     companyName: "Cascade Mechanical Group, Inc.",
     assignedCsm: "Mackenzie Hoover",
+    portalToken: "demo-cascade-mech-portal",
     status: "intake_received",
     intakeSubmitted: true,
     intake: {
@@ -148,6 +150,7 @@ export function seedCustomers(): Customer[] {
     name: "Vanguard HVAC Distributors",
     companyName: "Vanguard HVAC Distributors",
     assignedCsm: "Ben Lyddane",
+    portalToken: "demo-vanguard-hvac-portal",
     status: "not_started",
     intakeSubmitted: false,
     intake: {},

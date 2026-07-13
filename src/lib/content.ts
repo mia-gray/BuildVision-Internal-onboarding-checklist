@@ -191,6 +191,7 @@ export function getCatalog(): Catalog {
     troubleshooting,
     resources,
     gaps,
+    kb: getKb(),
     searchIndex: buildSearchIndex({ sections, faq, troubleshooting, resources, gaps }),
   };
 }

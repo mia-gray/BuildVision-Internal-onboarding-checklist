@@ -15,6 +15,7 @@ import {
   duplicateCustomer,
   markChecklistFinished,
   markIntakeSent,
+  makePortalToken,
   removeNote as svcRemoveNote,
   setChecklistItem,
   updateIntake as svcUpdateIntake,
@@ -40,11 +41,22 @@ const INDUSTRY_RENAMES: Record<string, string> = {
 
 /** Returns an upgraded copy if anything changed, else null (no write needed). */
 function migrateCustomer(c: Customer): Customer | null {
+  let next = c;
+  let changed = false;
+
   const oldIndustry = c.intake?.industry;
   if (oldIndustry && INDUSTRY_RENAMES[oldIndustry]) {
-    return { ...c, intake: { ...c.intake, industry: INDUSTRY_RENAMES[oldIndustry] } };
+    next = { ...next, intake: { ...next.intake, industry: INDUSTRY_RENAMES[oldIndustry] } };
+    changed = true;
   }
-  return null;
+
+  // Backfill a portal token for customers created before the portal existed.
+  if (!next.portalToken) {
+    next = { ...next, portalToken: makePortalToken() };
+    changed = true;
+  }
+
+  return changed ? next : null;
 }
 
 interface CustomerStore {

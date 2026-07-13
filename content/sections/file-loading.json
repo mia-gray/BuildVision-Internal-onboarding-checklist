@@ -3,11 +3,14 @@
   "title": "File Loading & Project Data",
   "shortTitle": "File Loading",
   "icon": "FolderUp",
+  "customerFacing": true,
   "order": 70,
   "phase": "Phase 4",
   "badge": "Required",
   "estimatedTime": "Variable (plan 1–2 hrs + processing)",
   "summary": "Load the “Representation” product catalog, validate it with reps, load project/historical files, and confirm processing finishes.",
+  "customerTitle": "Your catalog & project data",
+  "customerSummary": "We load your product catalog and project files, and you review them with your team to make sure everything is accurate.",
   "overview": "Files need orgs (for placement) and benefit from users (for ownership/visibility). Load the product catalog — labeled **“Representation”** — validate it against the client's current line card with the reps, then load project and (if in scope) historical files.\n\nProcessing/indexing can take time depending on file size; BuildVision notifies when extraction completes. Confirm nothing is stuck before handoff.",
   "prerequisites": [
     "Phase 1 (Organizations) complete — files need an org to attach to",
@@ -40,6 +43,7 @@
     },
     {
       "id": "file-validate-catalog",
+      "customerLabel": "Review your product catalog with your team",
       "title": "Review & validate the catalog with reps",
       "description": "Walk the catalog with reps against the client's current line card; log any add/remove/correct items and route to the CX Lead for a same-day update.",
       "owners": ["CS", "CUST"],

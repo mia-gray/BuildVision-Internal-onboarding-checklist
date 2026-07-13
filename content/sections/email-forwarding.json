@@ -3,11 +3,14 @@
   "title": "Email Forwarding",
   "shortTitle": "Email Forwarding",
   "icon": "Forward",
+  "customerFacing": true,
   "order": 30,
   "phase": "Phase 2",
   "badge": "Required",
   "estimatedTime": "35–45 min",
   "summary": "Forward the client's bid-desk inbox to Bids@BuildVision.io so bids ingest automatically — the backbone of the workflow.",
+  "customerTitle": "Email forwarding",
+  "customerSummary": "You forward your bid inbox to BuildVision so every bid, RFQ, and document flows in automatically.",
   "overview": "Email ingestion is the **backbone of the BuildVision workflow**. Once orgs exist and the IT/ops contact is engaged, forward the client's bid-desk inbox to **Bids@BuildVision.io** and prove ingestion end-to-end before moving on.\n\nThe full step-by-step for **Gmail / Google Workspace**, **Outlook on the web**, and **classic Outlook desktop** is in the *Configure email forwarding* step below (and in the [downloadable Email Forwarding Guide](/guides/email-forwarding-guide.pdf)).\n\n**Before you start:**\n- **Verification email** — the first time the address is added, Gmail/Outlook send a one-time verification message to Bids@BuildVision.io. Email your CX lead to confirm BuildVision received it.\n- **External forwarding may be blocked** — many Microsoft 365 / Google Workspace accounts disable external forwarding by default (this causes the **5.7.520 bounce**). Coordinate with the client's IT/admin to approve it before testing.\n\n> If a client prefers to connect their inbox directly instead of forwarding, use the **Email Credentials** section — pick one path, not both.",
   "prerequisites": [
     "Parent organization exists (ingestion attaches to an org)",
@@ -50,6 +53,7 @@
     },
     {
       "id": "fwd-configure",
+      "customerLabel": "Forward your bid inbox to BuildVision",
       "title": "Configure email forwarding",
       "description": "Set up forwarding from the client's bid-desk inbox to **Bids@BuildVision.io**, then add a filter/rule so only project emails forward. Follow the client's mail system:\n\n### Gmail / Google Workspace\nGmail forwards via a **filter** so only matching messages reach BuildVision. Desktop browser only.\n\n**Step 1 — Add & verify the forwarding address**\n1. Gear icon → **See all settings** → **Forwarding and POP/IMAP**.\n2. Under Forwarding → **Add a forwarding address** → enter `Bids@BuildVision.io` → Next → Proceed → OK.\n3. Gmail emails a verification message to Bids@BuildVision.io; your CX lead confirms it on our side. Once confirmed it shows as verified.\n\n**Step 2 — Filter project emails**\n1. Gear → See all settings → **Filters and Blocked Addresses** → **Create a new filter**.\n2. Criteria: **From** a contractor / distribution list / domain (e.g. `@contractordomain.com`), or **Subject** contains `Bid, RFQ, Proposal, Quote`.\n3. Check **Has attachment** so drawings, schedules, and specs come through.\n4. **Create filter** → check **Forward it to** → select `Bids@BuildVision.io`.\n5. Check **Also apply filter to matching conversations** to forward existing project emails too → **Create filter**.\n\n### Outlook on the web (Microsoft 365 / Outlook.com)\n1. Sign in at `outlook.office.com` (or `outlook.live.com` for personal accounts).\n2. **Settings → Mail → Rules → Add new rule**.\n3. Name it (e.g. *Forward bids to BuildVision*).\n4. Condition: **From** a contractor / domain, **Subject includes** `Bid, RFQ, Proposal, Quote`, or **Has attachment**.\n5. Action: **Forward to** → `Bids@BuildVision.io`. **Avoid Redirect to.**\n6. **Save** — applies to new mail immediately.\n\n### Classic Outlook desktop (Windows)\n1. **File → Manage Rules & Alerts → New Rule → Apply rule on messages I receive → Next**.\n2. Conditions: *from people or public group* (contractors) and/or *with specific words in the subject* (`Bid, RFQ, Proposal, Quote`); under actions check **forward it to people or public groups**.\n3. Click the underlined **people or public group**, enter `Bids@BuildVision.io` → OK.\n4. **Finish → Apply**.",
       "owners": ["ENG", "CUST"],

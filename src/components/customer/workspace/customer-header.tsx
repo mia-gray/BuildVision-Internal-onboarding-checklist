@@ -14,13 +14,15 @@ import {
   Send,
   Check,
   ChevronDown,
+  ExternalLink,
+  Share2,
 } from "lucide-react";
 
 import type { Customer } from "@/lib/customer/types";
 import { CUSTOMER_STATUSES } from "@/lib/customer/types";
 import { computeProgress } from "@/lib/customer/service";
 import { useCustomers } from "@/lib/customer/store";
-import { intakePath, customerPath } from "@/lib/customer/paths";
+import { intakePath, customerPath, portalPath } from "@/lib/customer/paths";
 import { asset, cn } from "@/lib/utils";
 import { formatDate, formatRelative } from "@/lib/format";
 import { Button } from "@/components/ui/button";
@@ -46,11 +48,14 @@ export function CustomerHeader({
   const { setStatus, duplicate, setArchived, remove, markIntakeSent } = useCustomers();
   const { done, total, percent } = computeProgress(customer, allStepIds);
   const [copied, setCopied] = React.useState(false);
+  const [portalCopied, setPortalCopied] = React.useState(false);
   const [intakeUrl, setIntakeUrl] = React.useState("");
+  const [portalUrl, setPortalUrl] = React.useState("");
 
   React.useEffect(() => {
     setIntakeUrl(`${window.location.origin}${asset(intakePath(customer.id))}`);
-  }, [customer.id]);
+    setPortalUrl(`${window.location.origin}${asset(portalPath(customer.portalToken))}`);
+  }, [customer.id, customer.portalToken]);
 
   async function copyIntake() {
     try {
@@ -58,6 +63,16 @@ export function CustomerHeader({
       markIntakeSent(customer.id);
       setCopied(true);
       setTimeout(() => setCopied(false), 1600);
+    } catch {
+      /* ignore */
+    }
+  }
+
+  async function copyPortal() {
+    try {
+      await navigator.clipboard.writeText(portalUrl);
+      setPortalCopied(true);
+      setTimeout(() => setPortalCopied(false), 1600);
     } catch {
       /* ignore */
     }
@@ -167,6 +182,22 @@ export function CustomerHeader({
         >
           <Send className="size-3.5" /> Open intake form
         </a>
+
+        <span aria-hidden className="mx-1 hidden h-5 w-px self-center bg-border sm:block" />
+
+        <Button variant="outline" size="sm" onClick={copyPortal}>
+          {portalCopied ? <Check className="text-[var(--success)]" /> : <Share2 />}
+          {portalCopied ? "Link copied" : "Copy portal link"}
+        </Button>
+        <a
+          href={asset(portalPath(customer.portalToken))}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex h-8 items-center gap-2 rounded-md border border-border px-3 text-xs font-medium shadow-sm transition-colors hover:bg-accent"
+        >
+          <ExternalLink className="size-3.5" /> Open portal
+        </a>
+
         <div className="ml-auto">
           <DropdownMenu>
             <DropdownMenuTrigger

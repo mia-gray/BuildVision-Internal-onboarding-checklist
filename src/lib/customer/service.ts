@@ -30,6 +30,14 @@ function shortId(): string {
   return id().replace(/-/g, "").slice(0, 10);
 }
 
+/**
+ * Longer, unguessable token for the shareable customer portal link. Distinct
+ * from the internal id so the id is never exposed in a link handed to a client.
+ */
+export function makePortalToken(): string {
+  return (id() + id()).replace(/-/g, "").slice(0, 24);
+}
+
 export function timelineEvent(
   type: TimelineEventType,
   label: string,
@@ -46,6 +54,7 @@ export function createCustomer(input: NewCustomerInput): Customer {
     companyName: (input.companyName || input.name).trim(),
     logoUrl: input.logoUrl,
     assignedCsm: input.assignedCsm,
+    portalToken: makePortalToken(),
     status: "not_started",
     intake: { ...input.intake },
     intakeSubmitted: false,
@@ -65,6 +74,7 @@ export function duplicateCustomer(source: Customer, by: string): Customer {
   return {
     ...source,
     id: shortId(),
+    portalToken: makePortalToken(),
     name: `${source.name} (copy)`,
     status: "not_started",
     checklist: {},
