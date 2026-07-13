@@ -4,10 +4,12 @@
  * this layer pure makes it trivially testable and backend-agnostic.
  */
 import type {
+  Attachment,
   Customer,
   CustomerNote,
   CustomerStatus,
   IntakeSurvey,
+  NewAttachmentInput,
   NewCustomerInput,
   NoteCategory,
   TimelineEvent,
@@ -36,6 +38,11 @@ function shortId(): string {
  */
 export function makePortalToken(): string {
   return (id() + id()).replace(/-/g, "").slice(0, 24);
+}
+
+/** Opaque per-document reference for a shared-document link (backend-ready). */
+export function makeShareRef(): string {
+  return (id() + id()).replace(/-/g, "").slice(0, 20);
 }
 
 export function timelineEvent(
@@ -156,6 +163,64 @@ export function addNote(
 
 export function removeNote(customer: Customer, noteId: string): Customer {
   return { ...touch(customer), notes: customer.notes.filter((n) => n.id !== noteId) };
+}
+
+export function addAttachment(
+  customer: Customer,
+  input: NewAttachmentInput,
+  by: string,
+): Customer {
+  const shared = input.sharedWithCustomer ?? false;
+  const attachment: Attachment = {
+    id: id(),
+    name: input.name.trim(),
+    kind: input.kind,
+    url: input.url,
+    description: input.description?.trim() || undefined,
+    mimeType: input.mimeType,
+    size: input.size,
+    sharedWithCustomer: shared,
+    shareRef: makeShareRef(),
+    addedAt: nowIso(),
+    addedBy: by,
+  };
+  const timeline = [
+    timelineEvent("document_added", `Document added: ${attachment.name}`, {
+      detail: shared ? "shared with customer" : "internal only",
+      by,
+    }),
+    ...customer.timeline,
+  ];
+  return { ...touch(customer), attachments: [attachment, ...customer.attachments], timeline };
+}
+
+export function removeAttachment(customer: Customer, attachmentId: string): Customer {
+  return {
+    ...touch(customer),
+    attachments: customer.attachments.filter((a) => a.id !== attachmentId),
+  };
+}
+
+export function setAttachmentShared(
+  customer: Customer,
+  attachmentId: string,
+  shared: boolean,
+  by: string,
+): Customer {
+  const target = customer.attachments.find((a) => a.id === attachmentId);
+  if (!target || target.sharedWithCustomer === shared) return customer;
+  const attachments = customer.attachments.map((a) =>
+    a.id === attachmentId ? { ...a, sharedWithCustomer: shared } : a,
+  );
+  const timeline = [
+    timelineEvent(
+      "document_shared",
+      `${shared ? "Shared" : "Unshared"} document: ${target.name}`,
+      { by },
+    ),
+    ...customer.timeline,
+  ];
+  return { ...touch(customer), attachments, timeline };
 }
 
 export function updateIntake(

@@ -9,6 +9,8 @@ import {
   MessageSquare,
   PencilLine,
   PartyPopper,
+  Paperclip,
+  Eye,
   Circle,
 } from "lucide-react";
 
@@ -25,6 +27,8 @@ const ICON: Record<TimelineEventType, typeof Circle> = {
   section_completed: CheckCircle2,
   note_added: MessageSquare,
   checklist_finished: PartyPopper,
+  document_added: Paperclip,
+  document_shared: Eye,
 };
 
 export function CustomerTimeline({ customer }: { customer: Customer }) {
