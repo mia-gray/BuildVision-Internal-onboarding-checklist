@@ -9,6 +9,8 @@
   "badge": "Required",
   "estimatedTime": "20–30 min",
   "summary": "Make sure the customer receives BuildVision's bid / no-bid recommendation emails and knows how to use them to decide which projects to pursue.",
+  "customerTitle": "Bid / no-bid recommendations",
+  "customerSummary": "You start receiving BuildVision’s bid / no-bid recommendation emails to help you decide which projects to pursue.",
   "overview": "For every project BuildVision ingests, we send a **bid / no-bid recommendation email** — a quick read on whether the project is worth pursuing, based on the extracted data (fit to the client's line card, scope, equipment, engineer of record, and location).\n\nThese emails are how reps prioritize their day, so confirm they're switched on, reaching the right people, and that the team trusts and acts on them.",
   "prerequisites": [
     "Ingestion live and validated (Email Forwarding / Email Credentials)",

@@ -9,6 +9,8 @@
   "badge": "Required",
   "estimatedTime": "30–45 min",
   "summary": "Create every user from the rep roster, place them in the right org node, send invitations, and confirm they can log in.",
+  "customerTitle": "Your team accounts",
+  "customerSummary": "We create an account for everyone on your team and send them an invitation to log in.",
   "overview": "With the org tree in place, create users so they land in the correct hierarchy. Users receive login credentials by email and **set their own password on first sign-in** at app.buildvision.io/login.\n\nCreate accounts, place each in the right office/line card, trigger invitations, and confirm at least the primary contact and one rep can actually log in. Role and permission detail is covered in the **Permissions** section.",
   "prerequisites": [
     "Phase 1 (Organization Creation) complete and CS-verified",

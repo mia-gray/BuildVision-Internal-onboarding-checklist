@@ -42,10 +42,11 @@ export function PortalJourney({
   const milestonesDone = milestones.filter((s) => statusOf(s, customer).status === "complete").length;
 
   // Things the customer still owns: incomplete steps whose owners include CUST.
+  // Prefer the customer-friendly label over the internal SOP title.
   const yourActions = milestones
     .flatMap((s) => s.steps)
     .filter((st) => st.owners?.includes("CUST") && !customer.checklist[st.id]?.done)
-    .map((st) => st.title);
+    .map((st) => st.customerLabel ?? st.title);
 
   const r = 34;
   const c = 2 * Math.PI * r;
@@ -166,7 +167,7 @@ function Milestone({
       <div className="min-w-0 flex-1 pt-0.5">
         <div className="flex items-center gap-2">
           <Icon className="size-3.5 shrink-0 text-muted-foreground" />
-          <p className="text-sm font-medium">{section.title}</p>
+          <p className="text-sm font-medium">{section.customerTitle ?? section.title}</p>
           <span
             className={cn(
               "ml-auto shrink-0 rounded-full px-2 py-0.5 text-[11px] font-medium",
@@ -178,7 +179,7 @@ function Milestone({
             {status === "complete" ? "Complete" : status === "active" ? "In progress" : "Upcoming"}
           </span>
         </div>
-        <p className="mt-1 text-sm text-muted-foreground">{section.summary}</p>
+        <p className="mt-1 text-sm text-muted-foreground">{section.customerSummary ?? section.summary}</p>
         {total > 0 && status !== "upcoming" && (
           <p className="mt-1 font-mono text-[11px] tabular-nums text-muted-foreground">
             {done}/{total} steps

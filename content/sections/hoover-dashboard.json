@@ -9,6 +9,8 @@
   "badge": "Required",
   "estimatedTime": "45–60 min + build time",
   "summary": "Stand up the customer's insight dashboard from their ingested files and extracted data — scope what they want to see, validate it, and set a date to make it live.",
+  "customerTitle": "Your insights dashboard",
+  "customerSummary": "We build your insights dashboard from your data — you tell us what you want to see, review it together, and we set a go-live date.",
   "overview": "The **Hoover Dashboard** turns the documents BuildVision ingests and the data we extract (projects, equipment, manufacturers, engineers of record, bid activity, and trends) into insight the customer can act on.\n\nThis section makes sure the dashboard actually reflects what *this* customer cares about, that the numbers are trustworthy, and that it's shared with their team on an agreed timeline — not left half-built.",
   "prerequisites": [
     "Files ingested and processing complete (File Loading)",
@@ -57,6 +59,7 @@
     },
     {
       "id": "dash-validate",
+      "customerLabel": "Review your dashboard and confirm the insights look right",
       "title": "Validate insights with the client (gate)",
       "description": "Spot-check the numbers and insights against something the client already knows to be true; correct any extraction/catalog issues before proceeding.",
       "owners": ["CS", "CUST"],

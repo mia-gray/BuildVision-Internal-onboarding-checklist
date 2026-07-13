@@ -9,6 +9,8 @@
   "badge": "Required",
   "estimatedTime": "45–60 min",
   "summary": "Connect the client's CRM so deals and contacts sync with BuildVision, then validate with a real test record.",
+  "customerTitle": "CRM integration",
+  "customerSummary": "We connect your CRM so your deals and contacts stay in sync with BuildVision.",
   "overview": "Wire up the client's CRM so **deals and contacts flow both ways** between their CRM and BuildVision. Authorize the connection, confirm it's healthy, and prove it end-to-end with a test record before moving on.\n\nCapture the CRM system name and how credentials/auth will be provided during Intake.",
   "prerequisites": [
     "Parent organization exists",
@@ -31,6 +33,7 @@
   "steps": [
     {
       "id": "conn-crm",
+      "customerLabel": "Connect your CRM (or share access so we can set it up)",
       "title": "Configure CRM integration",
       "description": "Connect the CRM integration and authorize the deals + contacts sync.",
       "owners": ["ENG", "CUST"],

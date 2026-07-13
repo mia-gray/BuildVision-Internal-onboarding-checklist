@@ -26,6 +26,12 @@ export interface Step {
   /** Stable id — used as the localStorage key for completion. Never reuse/rename. */
   id: string;
   title: string;
+  /**
+   * Customer-friendly, second-person phrasing of this task, shown in the
+   * external portal's "What we need from you" list. Falls back to `title`.
+   * Only worth setting on customer-owned (CUST) steps.
+   */
+  customerLabel?: string;
   /** Markdown-enabled longer description. */
   description?: string;
   owners?: Owner[];
@@ -59,6 +65,14 @@ export interface Section {
   title: string;
   /** Optional shorter label for the sidebar. */
   shortTitle?: string;
+  /**
+   * Customer-friendly title + summary shown as a milestone in the external
+   * onboarding portal. Both fall back to `title` / `summary`. Set these on
+   * customer-facing sections so the portal reads in the customer's voice
+   * without changing the internal SOP copy.
+   */
+  customerTitle?: string;
+  customerSummary?: string;
   /** Lucide icon name (see src/lib/icons.ts registry). */
   icon: string;
   /** One-line summary for nav, cards, and search. */
