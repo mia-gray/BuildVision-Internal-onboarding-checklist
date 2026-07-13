@@ -87,6 +87,8 @@ export interface CustomerNote {
   body: string;
   author: string;
   category: NoteCategory;
+  /** Teammates @mentioned in the note (full names from the team roster). */
+  mentions?: string[];
   createdAt: string;
 }
 

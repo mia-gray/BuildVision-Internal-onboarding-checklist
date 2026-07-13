@@ -77,9 +77,10 @@ export function seedCustomers(): Customer[] {
       },
       {
         id: "n2",
-        body: "Waiting on final line-card export before loading Representation catalog.",
+        body: "Waiting on final line-card export before loading Representation catalog. @Ben Lyddane can you nudge the rep team on the export?",
         category: "blocker",
         author: "Mia Gray",
+        mentions: ["Ben Lyddane"],
         createdAt: daysAgo(4),
       },
     ],

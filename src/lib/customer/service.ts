@@ -152,12 +152,21 @@ export function addNote(
   body: string,
   category: NoteCategory,
   author: string,
+  mentions: string[] = [],
 ): Customer {
-  const note: CustomerNote = { id: crypto.randomUUID?.() ?? `${Date.now()}`, body: body.trim(), category, author, createdAt: nowIso() };
+  const note: CustomerNote = {
+    id: crypto.randomUUID?.() ?? `${Date.now()}`,
+    body: body.trim(),
+    category,
+    author,
+    mentions: mentions.length ? mentions : undefined,
+    createdAt: nowIso(),
+  };
+  const detail = mentions.length ? `${category} · @${mentions.join(", @")}` : category;
   return {
     ...touch(customer),
     notes: [note, ...customer.notes],
-    timeline: [timelineEvent("note_added", "Note added", { detail: category, by: author }), ...customer.timeline],
+    timeline: [timelineEvent("note_added", "Note added", { detail, by: author }), ...customer.timeline],
   };
 }
 
