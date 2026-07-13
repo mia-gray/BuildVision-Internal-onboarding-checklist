@@ -82,7 +82,7 @@ interface CustomerStore {
     allStepIds: string[],
   ) => void;
   setStepNote: (id: string, stepId: string, note: string) => void;
-  addNote: (id: string, body: string, category: NoteCategory) => void;
+  addNote: (id: string, body: string, category: NoteCategory, mentions?: string[]) => void;
   removeNote: (id: string, noteId: string) => void;
   addAttachment: (id: string, input: NewAttachmentInput) => void;
   removeAttachment: (id: string, attachmentId: string) => void;
@@ -214,7 +214,8 @@ export function CustomerStoreProvider({ children }: { children: React.ReactNode 
         }),
       setStepNote: (id, stepId, note) =>
         mutate(id, (c) => setChecklistItem(c, stepId, "", { note }, currentUser)),
-      addNote: (id, body, category) => mutate(id, (c) => svcAddNote(c, body, category, currentUser)),
+      addNote: (id, body, category, mentions) =>
+        mutate(id, (c) => svcAddNote(c, body, category, currentUser, mentions)),
       removeNote: (id, noteId) => mutate(id, (c) => svcRemoveNote(c, noteId)),
       addAttachment: (id, input) => mutate(id, (c) => svcAddAttachment(c, input, currentUser)),
       removeAttachment: (id, attachmentId) => mutate(id, (c) => svcRemoveAttachment(c, attachmentId)),

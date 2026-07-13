@@ -47,6 +47,11 @@ export function CustomerPortal({ customer }: { customer: Customer }) {
   const facing = React.useMemo(() => sections.filter((s) => s.customerFacing), [sections]);
   const submitted = customer.intakeSubmitted;
 
+  // NOTE: the portal renders only customer-appropriate data — intake, journey,
+  // shared documents, and the knowledge base. Internal-only fields (notes,
+  // @mentions, the activity timeline, and unshared attachments) are deliberately
+  // never read here, so they cannot reach the customer.
+
   React.useEffect(() => {
     document.title = `${customer.name} · BuildVision Onboarding`;
   }, [customer.name]);
