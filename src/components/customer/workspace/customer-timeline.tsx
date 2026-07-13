@@ -1,35 +1,8 @@
 "use client";
 
-import {
-  UserPlus,
-  Send,
-  Inbox,
-  Flag,
-  CheckCircle2,
-  MessageSquare,
-  PencilLine,
-  PartyPopper,
-  Paperclip,
-  Eye,
-  Circle,
-} from "lucide-react";
-
-import type { Customer, TimelineEventType } from "@/lib/customer/types";
+import type { Customer } from "@/lib/customer/types";
 import { formatDateTime } from "@/lib/format";
-
-const ICON: Record<TimelineEventType, typeof Circle> = {
-  customer_created: UserPlus,
-  intake_sent: Send,
-  intake_submitted: Inbox,
-  intake_updated: PencilLine,
-  status_changed: Flag,
-  task_completed: CheckCircle2,
-  section_completed: CheckCircle2,
-  note_added: MessageSquare,
-  checklist_finished: PartyPopper,
-  document_added: Paperclip,
-  document_shared: Eye,
-};
+import { timelineIcon } from "@/lib/customer/timeline-icons";
 
 export function CustomerTimeline({ customer }: { customer: Customer }) {
   const events = customer.timeline;
@@ -47,7 +20,7 @@ export function CustomerTimeline({ customer }: { customer: Customer }) {
           <ol className="relative p-4">
             <span aria-hidden className="absolute bottom-6 left-[27px] top-8 w-px bg-border" />
             {events.map((e) => {
-              const Icon = ICON[e.type] ?? Circle;
+              const Icon = timelineIcon(e.type);
               const highlight = e.type === "checklist_finished" || e.type === "intake_submitted";
               return (
                 <li key={e.id} className="relative flex gap-3 pb-4 last:pb-0">

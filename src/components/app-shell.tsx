@@ -11,6 +11,7 @@ import { asset } from "@/lib/utils";
 import { Button } from "./ui/button";
 import { SidebarNav } from "./sidebar";
 import { ThemeToggle } from "./theme-toggle";
+import { NotificationsBell } from "./notifications-bell";
 import { useCommandPalette } from "./command-palette";
 import { Dialog, DialogContent, DialogTitle } from "./ui/dialog";
 
@@ -111,6 +112,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             >
               <Keyboard className="size-4" />
             </Button>
+            <NotificationsBell />
             <ThemeToggle />
           </div>
         </header>
