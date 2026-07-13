@@ -3,7 +3,7 @@
 import * as React from "react";
 import { ClipboardList, Pencil, Check, X, Inbox } from "lucide-react";
 
-import type { Customer, IntakeSurvey as IntakeSurveyData } from "@/lib/customer/types";
+import type { Customer, IntakeSurvey as IntakeSurveyData, TeamMember } from "@/lib/customer/types";
 import { INTAKE_GROUPS, isFieldFilled, isFieldVisible, type IntakeField } from "@/lib/customer/intake-schema";
 import { useCustomers } from "@/lib/customer/store";
 import { formatDate } from "@/lib/format";
@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { OfficeList } from "@/components/intake/office-list";
+import { TeamMemberList } from "@/components/intake/team-list";
 
 function displayValue(field: IntakeField, value?: string): string {
   if (!isFieldFilled(value)) return "—";
@@ -138,7 +139,12 @@ export function IntakeSurvey({ customer }: { customer: Customer }) {
                     <dt className="text-xs text-muted-foreground">{field.label}</dt>
                     {editing ? (
                       <dd>
-                        {field.type === "list" ? (
+                        {field.type === "team" ? (
+                          <TeamMemberList
+                            value={(draft[field.key] as TeamMember[]) ?? []}
+                            onChange={(arr) => setDraft((d) => ({ ...d, [field.key]: arr }))}
+                          />
+                        ) : field.type === "list" ? (
                           <OfficeList
                             value={(draft[field.key] as string[]) ?? []}
                             onChange={(arr) => setDraft((d) => ({ ...d, [field.key]: arr }))}
@@ -151,6 +157,28 @@ export function IntakeSurvey({ customer }: { customer: Customer }) {
                             value={(draft[field.key] as string) ?? ""}
                             onChange={(v) => setDraft((d) => ({ ...d, [field.key]: v }))}
                           />
+                        )}
+                      </dd>
+                    ) : field.type === "team" ? (
+                      <dd className="text-sm">
+                        {isFieldFilled(customer.intake[field.key]) ? (
+                          <ul className="space-y-1">
+                            {((customer.intake[field.key] as TeamMember[]) ?? [])
+                              .filter((m) => m && (m.name || m.email))
+                              .map((m, i) => (
+                                <li key={i} className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
+                                  <span className="text-foreground/90">{m.name || m.email}</span>
+                                  {m.name && m.email && (
+                                    <span className="text-muted-foreground">· {m.email}</span>
+                                  )}
+                                  <span className="rounded-md bg-muted px-1.5 py-0.5 text-[11px] text-foreground/80">
+                                    {m.role || "Member"}
+                                  </span>
+                                </li>
+                              ))}
+                          </ul>
+                        ) : (
+                          <span className="text-muted-foreground/60">—</span>
                         )}
                       </dd>
                     ) : field.type === "list" ? (

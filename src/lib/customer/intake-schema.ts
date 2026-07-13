@@ -5,7 +5,7 @@
  */
 import type { IntakeSurvey } from "./types";
 
-export type IntakeFieldType = "text" | "email" | "tel" | "textarea" | "select" | "date" | "list";
+export type IntakeFieldType = "text" | "email" | "tel" | "textarea" | "select" | "date" | "list" | "team";
 
 export interface IntakeField {
   key: keyof IntakeSurvey;
@@ -103,7 +103,12 @@ export const INTAKE_GROUPS: IntakeGroup[] = [
         showIf: { key: "emailMethod", equals: "Email Forwarding" },
       },
       { key: "crmSystem", label: "CRM System in Use", type: "text", placeholder: "e.g. Salesforce, HubSpot" },
-      { key: "activeUsers", label: "Active Users (count)", type: "text", placeholder: "e.g. 12" },
+      {
+        key: "teamMembers",
+        label: "Users & permissions",
+        type: "team",
+        helper: "Add each person who needs access, with their name, email, and permission level.",
+      },
       { key: "requestedGoLiveDate", label: "Requested Go-Live Date", type: "date" },
     ],
   },
@@ -121,7 +126,13 @@ export const INTAKE_GROUPS: IntakeGroup[] = [
 export const INTAKE_FIELDS: IntakeField[] = INTAKE_GROUPS.flatMap((g) => g.fields);
 
 export function isFieldFilled(value: unknown): boolean {
-  if (Array.isArray(value)) return value.some((v) => typeof v === "string" && v.trim().length > 0);
+  if (Array.isArray(value)) {
+    return value.some((v) =>
+      typeof v === "string"
+        ? v.trim().length > 0
+        : v != null && Object.values(v).some((x) => typeof x === "string" && x.trim().length > 0),
+    );
+  }
   return typeof value === "string" ? value.trim().length > 0 : value != null;
 }
 

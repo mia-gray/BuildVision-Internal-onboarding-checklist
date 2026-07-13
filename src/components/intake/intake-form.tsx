@@ -3,12 +3,13 @@
 import * as React from "react";
 import { CheckCircle2, Loader2 } from "lucide-react";
 
-import type { Customer, IntakeSurvey } from "@/lib/customer/types";
+import type { Customer, IntakeSurvey, TeamMember } from "@/lib/customer/types";
 import { INTAKE_GROUPS, INTAKE_FIELDS, isFieldFilled, isFieldVisible, type IntakeField } from "@/lib/customer/intake-schema";
 import { useCustomers } from "@/lib/customer/store";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { OfficeList } from "./office-list";
+import { TeamMemberList } from "./team-list";
 import { cn } from "@/lib/utils";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -80,7 +81,7 @@ export function IntakeForm({ customer }: { customer: Customer }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  function set(key: keyof IntakeSurvey, v: string | string[]) {
+  function set(key: keyof IntakeSurvey, v: string | string[] | TeamMember[]) {
     setValues((prev) => {
       const next = { ...prev, [key]: v };
       try {
@@ -188,7 +189,16 @@ export function IntakeForm({ customer }: { customer: Customer }) {
               {group.fields
                 .filter((field) => isFieldVisible(field, values))
                 .map((field) =>
-                  field.type === "list" ? (
+                  field.type === "team" ? (
+                    <div key={field.key} id={`field-${field.key}`} className="sm:col-span-2">
+                      <label className="mb-1.5 block text-sm font-medium">{field.label}</label>
+                      <TeamMemberList
+                        value={(values[field.key] as TeamMember[]) ?? []}
+                        onChange={(arr) => set(field.key, arr)}
+                      />
+                      {field.helper && <p className="mt-1.5 text-xs text-muted-foreground">{field.helper}</p>}
+                    </div>
+                  ) : field.type === "list" ? (
                     <div key={field.key} id={`field-${field.key}`} className="sm:col-span-2">
                       <label className="mb-1.5 block text-sm font-medium">{field.label}</label>
                       <OfficeList
