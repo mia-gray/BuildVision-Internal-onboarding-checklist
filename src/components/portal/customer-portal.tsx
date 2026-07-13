@@ -3,13 +3,25 @@
 /* eslint-disable @next/next/no-img-element -- static export logo, intentionally a plain <img> */
 
 import * as React from "react";
-import { LifeBuoy, CheckCircle2, CalendarClock, Building2, User, Sparkles } from "lucide-react";
+import {
+  LifeBuoy,
+  CheckCircle2,
+  CalendarClock,
+  Building2,
+  User,
+  Sparkles,
+  FileText,
+  Link2,
+  ExternalLink,
+  FolderOpen,
+} from "lucide-react";
 
 import type { Customer } from "@/lib/customer/types";
 import { labelForStatus } from "@/lib/customer/service";
 import { useCatalog } from "@/components/providers/catalog-provider";
 import { asset } from "@/lib/utils";
 import { formatDate } from "@/lib/format";
+import { resolveDocHref, formatBytes } from "@/lib/documents";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { IntakeForm } from "@/components/intake/intake-form";
 import { KnowledgeBase } from "@/components/kb/knowledge-base";
@@ -108,6 +120,9 @@ export function CustomerPortal({ customer }: { customer: Customer }) {
           </>
         )}
 
+        {/* Documents shared with the customer */}
+        <PortalDocuments customer={customer} />
+
         {/* Knowledge base */}
         <section>
           <div className="mb-4 flex items-start gap-3">
@@ -129,6 +144,59 @@ export function CustomerPortal({ customer }: { customer: Customer }) {
         Questions? <a className="text-primary hover:underline" href="mailto:support@buildvision.io">support@buildvision.io</a>
       </footer>
     </div>
+  );
+}
+
+/** Documents the internal team has explicitly shared with this customer. */
+function PortalDocuments({ customer }: { customer: Customer }) {
+  const docs = customer.attachments.filter((a) => a.sharedWithCustomer);
+  if (docs.length === 0) return null;
+
+  return (
+    <section>
+      <div className="mb-4 flex items-start gap-3">
+        <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+          <FolderOpen className="size-4" />
+        </span>
+        <div>
+          <h2 className="text-lg font-semibold tracking-tight">Documents shared with you</h2>
+          <p className="text-sm text-muted-foreground">
+            Files and links from your BuildVision onboarding team.
+          </p>
+        </div>
+      </div>
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        {docs.map((a) => {
+          const href = resolveDocHref(a.url);
+          const isFile = a.kind === "file";
+          const meta = [isFile ? "File" : "Link", formatBytes(a.size), formatDate(a.addedAt)]
+            .filter(Boolean)
+            .join(" · ");
+          return (
+            <a
+              key={a.id}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              {...(isFile ? { download: a.name } : {})}
+              className="group flex items-start gap-3 rounded-xl border border-border bg-card p-4 transition-colors hover:border-primary/40"
+            >
+              <span className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
+                {isFile ? <FileText className="size-4" /> : <Link2 className="size-4" />}
+              </span>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-1.5">
+                  <span className="truncate text-sm font-semibold group-hover:text-primary">{a.name}</span>
+                  <ExternalLink className="size-3 shrink-0 text-muted-foreground" />
+                </div>
+                {a.description && <p className="mt-1 text-sm text-muted-foreground">{a.description}</p>}
+                <p className="mt-1 text-[11px] text-muted-foreground">{meta}</p>
+              </div>
+            </a>
+          );
+        })}
+      </div>
+    </section>
   );
 }
 

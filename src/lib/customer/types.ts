@@ -99,7 +99,9 @@ export type TimelineEventType =
   | "section_completed"
   | "note_added"
   | "checklist_finished"
-  | "intake_updated";
+  | "intake_updated"
+  | "document_added"
+  | "document_shared";
 
 export interface TimelineEvent {
   id: string;
@@ -110,14 +112,48 @@ export interface TimelineEvent {
   by?: string;
 }
 
-/** Future-ready: attachments are modeled now, surfaced in the UI later. */
+/** How a document's contents are referenced. */
+export type AttachmentKind = "link" | "file";
+
+/**
+ * A document attached to a customer. Either an external `link` (a URL the
+ * customer can already reach — Drive, SharePoint, etc.) or an uploaded `file`.
+ *
+ * On the static/localStorage build a `file` is stored inline as a `data:` URL,
+ * so it works within a browser (great for demos) but is not delivered across
+ * devices — that requires the backend, at which point `url` becomes a hosted
+ * link and nothing else here changes.
+ */
 export interface Attachment {
   id: string;
   name: string;
+  kind: AttachmentKind;
+  /** For `link`: the external URL. For `file`: a data: URL (static) or hosted URL (backend). */
   url?: string;
+  /** Optional short description shown to internal staff and the customer. */
+  description?: string;
+  /** File metadata (kind = "file"). */
+  mimeType?: string;
+  size?: number;
+  /** When true, the document is visible to the customer in their portal. */
+  sharedWithCustomer: boolean;
+  /** Opaque per-document reference for the shared link (backend-ready). */
+  shareRef?: string;
+  /** Optional link to a specific checklist step. */
   stepId?: string;
   addedAt: string;
   addedBy?: string;
+}
+
+/** Input accepted when attaching a document. */
+export interface NewAttachmentInput {
+  name: string;
+  kind: AttachmentKind;
+  url?: string;
+  description?: string;
+  mimeType?: string;
+  size?: number;
+  sharedWithCustomer?: boolean;
 }
 
 /** The complete, self-contained onboarding workspace for one customer. */

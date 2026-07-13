@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { CustomerHeader } from "@/components/customer/workspace/customer-header";
 import { IntakeSurvey } from "@/components/customer/workspace/intake-survey";
 import { CustomerChecklist } from "@/components/customer/workspace/customer-checklist";
+import { CustomerDocuments } from "@/components/customer/workspace/customer-documents";
 import { CustomerNotes } from "@/components/customer/workspace/customer-notes";
 import { CustomerTimeline } from "@/components/customer/workspace/customer-timeline";
 import { ProgressSummary } from "@/components/customer/workspace/progress-summary";
@@ -72,6 +73,7 @@ function Workspace() {
         <div className="space-y-8 lg:col-span-2">
           <IntakeSurvey customer={customer} />
           <CustomerChecklist customer={customer} allStepIds={allStepIds} />
+          <CustomerDocuments customer={customer} />
         </div>
         <aside className="space-y-6">
           <ProgressSummary customer={customer} allStepIds={allStepIds} />

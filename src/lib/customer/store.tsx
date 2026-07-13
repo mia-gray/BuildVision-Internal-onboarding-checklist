@@ -9,6 +9,7 @@ import * as React from "react";
 
 import { customerRepository as repo, CUSTOMERS_STORAGE_KEY } from "./repository";
 import {
+  addAttachment as svcAddAttachment,
   addNote as svcAddNote,
   applyStatus,
   createCustomer as svcCreate,
@@ -16,7 +17,9 @@ import {
   markChecklistFinished,
   markIntakeSent,
   makePortalToken,
+  removeAttachment as svcRemoveAttachment,
   removeNote as svcRemoveNote,
+  setAttachmentShared as svcSetAttachmentShared,
   setChecklistItem,
   updateIntake as svcUpdateIntake,
   computeProgress,
@@ -25,6 +28,7 @@ import type {
   Customer,
   CustomerStatus,
   IntakeSurvey,
+  NewAttachmentInput,
   NewCustomerInput,
   NoteCategory,
 } from "./types";
@@ -80,6 +84,9 @@ interface CustomerStore {
   setStepNote: (id: string, stepId: string, note: string) => void;
   addNote: (id: string, body: string, category: NoteCategory) => void;
   removeNote: (id: string, noteId: string) => void;
+  addAttachment: (id: string, input: NewAttachmentInput) => void;
+  removeAttachment: (id: string, attachmentId: string) => void;
+  setAttachmentShared: (id: string, attachmentId: string, shared: boolean) => void;
   updateIntake: (id: string, intake: IntakeSurvey, opts?: { fromForm?: boolean }) => void;
   markIntakeSent: (id: string) => void;
   pushRecent: (id: string) => void;
@@ -209,6 +216,10 @@ export function CustomerStoreProvider({ children }: { children: React.ReactNode 
         mutate(id, (c) => setChecklistItem(c, stepId, "", { note }, currentUser)),
       addNote: (id, body, category) => mutate(id, (c) => svcAddNote(c, body, category, currentUser)),
       removeNote: (id, noteId) => mutate(id, (c) => svcRemoveNote(c, noteId)),
+      addAttachment: (id, input) => mutate(id, (c) => svcAddAttachment(c, input, currentUser)),
+      removeAttachment: (id, attachmentId) => mutate(id, (c) => svcRemoveAttachment(c, attachmentId)),
+      setAttachmentShared: (id, attachmentId, shared) =>
+        mutate(id, (c) => svcSetAttachmentShared(c, attachmentId, shared, currentUser)),
       updateIntake: (id, intake, opts) =>
         mutate(id, (c) => svcUpdateIntake(c, intake, currentUser, opts)),
       markIntakeSent: (id) => mutate(id, (c) => markIntakeSent(c, currentUser)),
