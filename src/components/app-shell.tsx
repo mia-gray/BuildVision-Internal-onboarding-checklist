@@ -34,8 +34,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     setMobileOpen(false);
   }, [pathname]);
 
-  // The public intake form is customer-facing: render it without app chrome.
-  if (pathname.startsWith("/intake")) {
+  // Customer-facing surfaces (public intake form + onboarding portal) render
+  // without any internal app chrome — no sidebar, no command palette.
+  if (pathname.startsWith("/intake") || pathname.startsWith("/onboarding")) {
     return <>{children}</>;
   }
 

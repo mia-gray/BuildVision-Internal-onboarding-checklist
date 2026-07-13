@@ -3,6 +3,7 @@
   "title": "User Creation",
   "shortTitle": "User Creation",
   "icon": "UserPlus",
+  "customerFacing": true,
   "order": 25,
   "phase": "Phase 3",
   "badge": "Required",

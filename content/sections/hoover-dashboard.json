@@ -3,6 +3,7 @@
   "title": "Hoover Dashboard",
   "shortTitle": "Hoover Dashboard",
   "icon": "LayoutDashboard",
+  "customerFacing": true,
   "order": 74,
   "phase": "Phase 4",
   "badge": "Required",

@@ -3,6 +3,7 @@
   "title": "CRM Integration",
   "shortTitle": "CRM Integration",
   "icon": "PlugZap",
+  "customerFacing": true,
   "order": 45,
   "phase": "Phase 2",
   "badge": "Required",

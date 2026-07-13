@@ -3,6 +3,7 @@
   "title": "Email Forwarding",
   "shortTitle": "Email Forwarding",
   "icon": "Forward",
+  "customerFacing": true,
   "order": 30,
   "phase": "Phase 2",
   "badge": "Required",

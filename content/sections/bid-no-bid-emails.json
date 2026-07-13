@@ -3,6 +3,7 @@
   "title": "Bid / No-Bid Emails",
   "shortTitle": "Bid / No-Bid Emails",
   "icon": "MailCheck",
+  "customerFacing": true,
   "order": 72,
   "phase": "Phase 4",
   "badge": "Required",

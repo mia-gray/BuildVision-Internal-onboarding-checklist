@@ -3,6 +3,7 @@
   "title": "Permissions & Access",
   "shortTitle": "Permissions",
   "icon": "ShieldCheck",
+  "customerFacing": true,
   "order": 27,
   "phase": "Phase 3",
   "badge": "Required",

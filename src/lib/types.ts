@@ -81,6 +81,12 @@ export interface Section {
   clientGuide?: { label: string; href: string };
   related?: RelatedLink[];
   screenshots?: Screenshot[];
+  /**
+   * When true, this section appears in the customer-facing onboarding portal as
+   * a milestone the customer can track. Internal-only sections (e.g. QA/handoff)
+   * omit it. Progress shown to customers is derived from the same checklist.
+   */
+  customerFacing?: boolean;
   /** Ordering within the workflow. Lower = earlier. */
   order: number;
 }
@@ -208,5 +214,7 @@ export interface Catalog {
   troubleshooting: TroubleshootingItem[];
   resources: Resource[];
   gaps: ProcessGap[];
+  /** Customer-facing knowledge-base articles (also rendered in the portal). */
+  kb: KbArticle[];
   searchIndex: SearchDoc[];
 }

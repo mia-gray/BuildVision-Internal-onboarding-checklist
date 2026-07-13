@@ -8,3 +8,5 @@
  */
 export const customerPath = (id: string) => `/customers/?id=${encodeURIComponent(id)}`;
 export const intakePath = (id: string) => `/intake/?customer=${encodeURIComponent(id)}`;
+/** The external, customer-facing onboarding portal (resolved by opaque token). */
+export const portalPath = (token: string) => `/onboarding/?token=${encodeURIComponent(token)}`;

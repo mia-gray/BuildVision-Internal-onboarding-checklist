@@ -128,6 +128,13 @@ export interface Customer {
   companyName: string;
   logoUrl?: string;
   assignedCsm: string;
+  /**
+   * Opaque token used to build the external customer portal link
+   * (`/onboarding/?token=…`). Kept separate from `id` so the internal id is
+   * never exposed in a shared link. On a real backend this maps to a revocable
+   * access grant; on static/localStorage it simply resolves the customer.
+   */
+  portalToken: string;
   status: CustomerStatus;
   intake: IntakeSurvey;
   intakeSubmitted: boolean;

@@ -3,6 +3,7 @@
   "title": "Organization Creation",
   "shortTitle": "Organizations",
   "icon": "Building2",
+  "customerFacing": true,
   "order": 20,
   "phase": "Phase 1",
   "badge": "Required",

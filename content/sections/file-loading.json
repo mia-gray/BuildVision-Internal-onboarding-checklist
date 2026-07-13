@@ -3,6 +3,7 @@
   "title": "File Loading & Project Data",
   "shortTitle": "File Loading",
   "icon": "FolderUp",
+  "customerFacing": true,
   "order": 70,
   "phase": "Phase 4",
   "badge": "Required",
