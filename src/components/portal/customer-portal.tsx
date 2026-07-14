@@ -141,7 +141,7 @@ export function CustomerPortal({ customer }: { customer: Customer }) {
               </p>
             </div>
           </div>
-          <KnowledgeBase articles={kb} />
+          <KnowledgeBase articles={kb} layout="sidebar" />
         </section>
       </main>
 
