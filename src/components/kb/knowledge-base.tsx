@@ -44,38 +44,63 @@ function matches(a: KbArticle, q: string): boolean {
   return hay.includes(q);
 }
 
-export function KnowledgeBase({ articles }: { articles: KbArticle[] }) {
-  const [query, setQuery] = React.useState("");
-  const [category, setCategory] = React.useState<string>("All");
-
-  const categories = React.useMemo(() => {
+/** Categories present in the data, in the deliberate order (extras appended). */
+function useCategories(articles: KbArticle[]): string[] {
+  return React.useMemo(() => {
     const present = new Set(articles.map((a) => a.category));
     const ordered = CATEGORY_ORDER.map((c) => c.name).filter((n) => present.has(n));
-    // append any categories not in the known order
     const extra = [...present].filter((n) => !ordered.includes(n));
     return [...ordered, ...extra];
   }, [articles]);
+}
+
+export function KnowledgeBase({
+  articles,
+  layout = "stacked",
+}: {
+  articles: KbArticle[];
+  /** "stacked" = all categories in one scroll; "sidebar" = left category rail. */
+  layout?: "stacked" | "sidebar";
+}) {
+  const categories = useCategories(articles);
+
+  if (layout === "sidebar") {
+    return <KnowledgeBaseSidebar articles={articles} categories={categories} />;
+  }
+
+  return <KnowledgeBaseStacked articles={articles} categories={categories} />;
+}
+
+/* ------------------------------- Stacked ------------------------------- */
+
+function KnowledgeBaseStacked({
+  articles,
+  categories,
+}: {
+  articles: KbArticle[];
+  categories: string[];
+}) {
+  const [query, setQuery] = React.useState("");
+  const [category, setCategory] = React.useState<string>("All");
 
   const q = query.trim().toLowerCase();
-  const filtered = articles.filter((a) => (category === "All" || a.category === category) && (!q || matches(a, q)));
+  const filtered = articles.filter(
+    (a) => (category === "All" || a.category === category) && (!q || matches(a, q)),
+  );
   const visibleCategories = categories.filter((c) => filtered.some((a) => a.category === c));
 
   return (
     <div className="space-y-6">
-      {/* Search + quick links */}
-      <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
-        <div className="relative lg:max-w-md lg:flex-1">
-          <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search guides, videos, topics…"
-            className="pl-9"
-          />
-        </div>
+      <div className="relative lg:max-w-md">
+        <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+        <Input
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search guides, videos, topics…"
+          className="pl-9"
+        />
       </div>
 
-      {/* Category filter */}
       <div className="flex flex-wrap gap-1.5">
         <Chip active={category === "All"} onClick={() => setCategory("All")}>
           All
@@ -88,9 +113,7 @@ export function KnowledgeBase({ articles }: { articles: KbArticle[] }) {
       </div>
 
       {filtered.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-border p-12 text-center text-sm text-muted-foreground">
-          No guides match “{query}”.
-        </div>
+        <EmptyState query={query} />
       ) : (
         <div className="space-y-8">
           {visibleCategories.map((cat) => {
@@ -113,6 +136,109 @@ export function KnowledgeBase({ articles }: { articles: KbArticle[] }) {
           })}
         </div>
       )}
+    </div>
+  );
+}
+
+/* ------------------------------- Sidebar ------------------------------- */
+
+function KnowledgeBaseSidebar({
+  articles,
+  categories,
+}: {
+  articles: KbArticle[];
+  categories: string[];
+}) {
+  const [query, setQuery] = React.useState("");
+  const [category, setCategory] = React.useState<string>(categories[0] ?? "");
+
+  const q = query.trim().toLowerCase();
+  const searching = q.length > 0;
+
+  const countFor = (c: string) => articles.filter((a) => a.category === c).length;
+  const results = searching ? articles.filter((a) => matches(a, q)) : articles.filter((a) => a.category === category);
+
+  const ActiveIcon = iconFor(category);
+
+  return (
+    <div className="flex flex-col gap-6 lg:flex-row">
+      {/* Left rail: search + category toolbar */}
+      <aside className="lg:sticky lg:top-4 lg:w-56 lg:shrink-0 lg:self-start">
+        <div className="relative mb-3">
+          <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search guides…"
+            className="pl-9"
+          />
+        </div>
+        <nav className="flex flex-wrap gap-1 lg:flex-col">
+          {categories.map((c) => {
+            const Icon = iconFor(c);
+            const active = !searching && c === category;
+            return (
+              <button
+                key={c}
+                onClick={() => {
+                  setCategory(c);
+                  setQuery("");
+                }}
+                aria-current={active ? "true" : undefined}
+                className={cn(
+                  "flex items-center gap-2 rounded-md px-2.5 py-1.5 text-left text-sm transition-colors lg:w-full",
+                  active
+                    ? "bg-primary/10 font-medium text-primary"
+                    : "text-muted-foreground hover:bg-accent hover:text-foreground",
+                )}
+              >
+                <Icon className="size-4 shrink-0" />
+                <span className="flex-1 truncate">{c}</span>
+                <span className="font-mono text-xs text-muted-foreground">{countFor(c)}</span>
+              </button>
+            );
+          })}
+        </nav>
+      </aside>
+
+      {/* Right pane: selected category, or search results */}
+      <div className="min-w-0 flex-1">
+        <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold">
+          {searching ? (
+            <>
+              <Search className="size-4 text-primary" />
+              Results for “{query.trim()}”
+              <span className="font-mono text-xs font-normal text-muted-foreground">{results.length}</span>
+            </>
+          ) : (
+            <>
+              <ActiveIcon className="size-4 text-primary" />
+              {category}
+              <span className="font-mono text-xs font-normal text-muted-foreground">{results.length}</span>
+            </>
+          )}
+        </h3>
+
+        {results.length === 0 ? (
+          <EmptyState query={query} />
+        ) : (
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+            {results.map((a) => (
+              <ArticleCard key={a.id} article={a} />
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------- Shared bits ------------------------------- */
+
+function EmptyState({ query }: { query: string }) {
+  return (
+    <div className="rounded-xl border border-dashed border-border p-12 text-center text-sm text-muted-foreground">
+      {query.trim() ? <>No guides match “{query.trim()}”.</> : "No guides here yet."}
     </div>
   );
 }
