@@ -16,9 +16,14 @@ import {
   FolderOpen,
 } from "lucide-react";
 
-import type { Customer } from "@/lib/customer/types";
+import type { Customer, ChecklistState } from "@/lib/customer/types";
+import type { Step } from "@/lib/types";
 import { labelForStatus } from "@/lib/customer/service";
 import { useCatalog } from "@/components/providers/catalog-provider";
+import { useCustomers } from "@/lib/customer/store";
+import { useAllStepIds } from "@/lib/customer/use-steps";
+import { isSupabaseConfigured } from "@/lib/supabase/client";
+import { togglePortalStep } from "@/lib/customer/public-access";
 import { asset } from "@/lib/utils";
 import { formatDate } from "@/lib/format";
 import { resolveDocHref, formatBytes } from "@/lib/documents";
@@ -44,6 +49,8 @@ function statusMessage(customer: Customer): string {
 
 export function CustomerPortal({ customer }: { customer: Customer }) {
   const { sections, kb } = useCatalog();
+  const store = useCustomers();
+  const allStepIds = useAllStepIds();
   const facing = React.useMemo(() => sections.filter((s) => s.customerFacing), [sections]);
   const submitted = customer.intakeSubmitted;
 
@@ -51,6 +58,33 @@ export function CustomerPortal({ customer }: { customer: Customer }) {
   // shared documents, and the knowledge base. Internal-only fields (notes,
   // @mentions, the activity timeline, and unshared attachments) are deliberately
   // never read here, so they cannot reach the customer.
+
+  // Local copy of the checklist so the customer's checks reflect instantly; each
+  // toggle also persists to the shared record (Supabase RPC, or the local store).
+  const [checklist, setChecklist] = React.useState<ChecklistState>(customer.checklist ?? {});
+  React.useEffect(() => {
+    setChecklist(customer.checklist ?? {});
+  }, [customer.id, customer.checklist]);
+
+  const toggleStep = React.useCallback(
+    (step: Step, done: boolean) => {
+      setChecklist((prev) => ({
+        ...prev,
+        [step.id]: done
+          ? { done: true, completedAt: new Date().toISOString(), completedBy: "Customer" }
+          : { done: false },
+      }));
+      if (isSupabaseConfigured) {
+        void togglePortalStep(customer.portalToken, step.id, done).catch(() => {
+          // Revert on failure.
+          setChecklist((prev) => ({ ...prev, [step.id]: customer.checklist?.[step.id] ?? { done: !done } }));
+        });
+      } else {
+        store.toggleStep(customer.id, { id: step.id, title: step.title }, done, allStepIds);
+      }
+    },
+    [customer.id, customer.portalToken, customer.checklist, store, allStepIds],
+  );
 
   React.useEffect(() => {
     document.title = `${customer.name} · BuildVision Onboarding`;
@@ -84,7 +118,7 @@ export function CustomerPortal({ customer }: { customer: Customer }) {
                 </span>
                 <span className="h-px flex-1 bg-border" />
               </div>
-              <PortalJourney customer={customer} sections={facing} />
+              <PortalJourney sections={facing} checklist={checklist} onToggle={toggleStep} />
             </div>
           </>
         ) : (
@@ -119,7 +153,7 @@ export function CustomerPortal({ customer }: { customer: Customer }) {
               </div>
             </section>
 
-            <PortalJourney customer={customer} sections={facing} />
+            <PortalJourney sections={facing} checklist={checklist} onToggle={toggleStep} />
 
             <IntakeSummary customer={customer} />
           </>

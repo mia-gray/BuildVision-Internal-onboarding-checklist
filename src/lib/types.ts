@@ -43,6 +43,8 @@ export interface Step {
   verify?: string;
   /** When true, this step is a hard gate: do not proceed until confirmed. */
   gate?: boolean;
+  /** Optional how-to guide for this specific task (shown in the customer portal). */
+  guide?: { label: string; href: string };
   callouts?: Callout[];
 }
 

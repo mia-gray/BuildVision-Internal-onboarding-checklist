@@ -55,6 +55,7 @@ set search_path = public
 as $$
   select jsonb_build_object(
     'id',              data->'id',
+    'portalToken',     to_jsonb(portal_token),
     'name',            data->'name',
     'companyName',     data->'companyName',
     'logoUrl',         data->'logoUrl',
@@ -111,7 +112,33 @@ begin
 end;
 $$;
 
+-- Portal: let the customer check a step on/off. Token-scoped; records that the
+-- customer completed it. Only touches that one customer's checklist.
+create or replace function public.portal_toggle_step(p_token text, p_step_id text, p_done boolean)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  update public.customers
+  set data = jsonb_set(
+        data,
+        array['checklist', p_step_id],
+        case when p_done then
+          jsonb_build_object('done', true, 'completedAt', to_jsonb(now()), 'completedBy', to_jsonb('Customer'::text))
+        else
+          jsonb_build_object('done', false)
+        end,
+        true
+      ),
+      updated_at = now()
+  where portal_token = p_token and archived = false;
+end;
+$$;
+
 -- Expose only the RPCs to anonymous visitors.
-grant execute on function public.portal_get(text)          to anon, authenticated;
-grant execute on function public.intake_get(text)          to anon, authenticated;
-grant execute on function public.intake_submit(text, jsonb) to anon, authenticated;
+grant execute on function public.portal_get(text)                         to anon, authenticated;
+grant execute on function public.intake_get(text)                         to anon, authenticated;
+grant execute on function public.intake_submit(text, jsonb)               to anon, authenticated;
+grant execute on function public.portal_toggle_step(text, text, boolean)  to anon, authenticated;

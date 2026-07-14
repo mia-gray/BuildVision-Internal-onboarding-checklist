@@ -1,52 +1,69 @@
 "use client";
 
 import * as React from "react";
-import { Check, Circle, Loader2, ClipboardList, ArrowRight } from "lucide-react";
+import { Check, ChevronDown, ClipboardList, ArrowUpRight, BookOpen } from "lucide-react";
 
-import type { Customer } from "@/lib/customer/types";
-import type { Section } from "@/lib/types";
+import type { Section, Step } from "@/lib/types";
+import type { ChecklistState } from "@/lib/customer/types";
 import { getIcon } from "@/lib/icons";
-import { cn } from "@/lib/utils";
+import { asset, cn } from "@/lib/utils";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
-type MilestoneStatus = "complete" | "active" | "upcoming";
+/** Fallback how-to link per section when a step/section has no explicit guide. */
+const SECTION_GUIDE_FALLBACK: Record<string, { label: string; href: string }> = {
+  intake: { label: "Getting started guide", href: "https://buildvision-docs.vercel.app/getting-started/" },
+  "organization-creation": { label: "Getting started guide", href: "https://buildvision-docs.vercel.app/getting-started/" },
+  "crm-integration": { label: "CRM integration docs", href: "https://buildvision-docs.vercel.app/getting-started/" },
+  "file-loading": { label: "Files & projects docs", href: "https://buildvision-docs.vercel.app/" },
+  "bid-no-bid-emails": { label: "Bid / no-bid docs", href: "https://buildvision-docs.vercel.app/getting-started/email-forwarding/" },
+  "hoover-dashboard": { label: "Dashboard docs", href: "https://buildvision-docs.vercel.app/" },
+};
 
-function statusOf(section: Section, customer: Customer): { status: MilestoneStatus; done: number; total: number } {
-  const total = section.steps.length;
-  const done = section.steps.filter((s) => customer.checklist[s.id]?.done).length;
-  const status: MilestoneStatus = total > 0 && done === total ? "complete" : done > 0 ? "active" : "upcoming";
-  return { status, done, total };
+function guideFor(section: Section, step: Step): { label: string; href: string } | undefined {
+  return step.guide ?? section.clientGuide ?? SECTION_GUIDE_FALLBACK[section.slug];
+}
+
+function resolveHref(href: string): string {
+  return href.startsWith("/") ? asset(href) : href;
+}
+
+function isDone(checklist: ChecklistState, id: string): boolean {
+  return Boolean(checklist[id]?.done);
 }
 
 /**
- * Customer-facing progress view. Shows a headline percentage over the
- * customer-facing milestones, the actions we still need from the customer, and
- * the onboarding journey as a milestone timeline. Read-only: it reflects the
- * progress the BuildVision team records internally (true two-way sync needs a
- * backend — see the portal page notes).
+ * Interactive, customer-facing onboarding checklist. The customer can check off
+ * any step; each task links to a how-to guide. Toggling persists to the shared
+ * record (so the BuildVision team sees the same progress). Read-only when
+ * `onToggle` is omitted.
  */
 export function PortalJourney({
-  customer,
   sections,
+  checklist,
+  onToggle,
 }: {
-  customer: Customer;
   sections: Section[];
+  checklist: ChecklistState;
+  onToggle?: (step: Step, done: boolean) => void;
 }) {
-  const milestones = sections; // already filtered to customerFacing by the caller
-
-  const totalSteps = milestones.reduce((n, s) => n + s.steps.length, 0);
-  const doneSteps = milestones.reduce(
-    (n, s) => n + s.steps.filter((st) => customer.checklist[st.id]?.done).length,
-    0,
-  );
+  const totalSteps = sections.reduce((n, s) => n + s.steps.length, 0);
+  const doneSteps = sections.reduce((n, s) => n + s.steps.filter((st) => isDone(checklist, st.id)).length, 0);
   const percent = totalSteps === 0 ? 0 : Math.round((doneSteps / totalSteps) * 100);
-  const milestonesDone = milestones.filter((s) => statusOf(s, customer).status === "complete").length;
 
-  // Things the customer still owns: incomplete steps whose owners include CUST.
-  // Prefer the customer-friendly label over the internal SOP title.
-  const yourActions = milestones
-    .flatMap((s) => s.steps)
-    .filter((st) => st.owners?.includes("CUST") && !customer.checklist[st.id]?.done)
-    .map((st) => st.customerLabel ?? st.title);
+  const yourActions = sections
+    .flatMap((s) => s.steps.map((st) => ({ section: s, step: st })))
+    .filter(({ step }) => step.owners?.includes("CUST") && !isDone(checklist, step.id));
+
+  // Open sections that still have work; collapse completed ones (once, on mount).
+  const [open, setOpen] = React.useState<Set<string>>(() => {
+    const set = new Set<string>();
+    for (const s of sections) {
+      const done = s.steps.filter((st) => isDone(checklist, st.id)).length;
+      if (s.steps.length === 0 || done < s.steps.length) set.add(s.slug);
+    }
+    return set;
+  });
 
   const r = 34;
   const c = 2 * Math.PI * r;
@@ -80,23 +97,25 @@ export function PortalJourney({
           <div className="min-w-0">
             <h2 className="text-base font-semibold">Your onboarding progress</h2>
             <p className="mt-0.5 text-sm text-muted-foreground">
-              {milestonesDone} of {milestones.length} milestones complete
+              {doneSteps} of {totalSteps} steps complete
               {percent === 100 && " — you're all set! 🎉"}
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Check off each step as you go — your BuildVision team sees your progress live.
             </p>
           </div>
         </div>
 
-        {/* What we need from you */}
         {yourActions.length > 0 && (
           <div className="mt-5 rounded-lg border border-primary/25 bg-primary/[0.06] p-4">
             <p className="flex items-center gap-2 text-sm font-semibold text-primary">
               <ClipboardList className="size-4" /> What we need from you
             </p>
             <ul className="mt-2 space-y-1.5">
-              {yourActions.map((title) => (
-                <li key={title} className="flex items-start gap-2 text-sm text-foreground/90">
-                  <ArrowRight className="mt-0.5 size-3.5 shrink-0 text-primary" />
-                  {title}
+              {yourActions.map(({ step }) => (
+                <li key={step.id} className="flex items-start gap-2 text-sm text-foreground/90">
+                  <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-primary" />
+                  {step.customerLabel ?? step.title}
                 </li>
               ))}
             </ul>
@@ -104,88 +123,117 @@ export function PortalJourney({
         )}
       </div>
 
-      {/* Milestone timeline */}
-      <div className="rounded-xl border border-border bg-card p-5 sm:p-6">
-        <h2 className="mb-4 text-base font-semibold">Onboarding journey</h2>
-        <ol className="relative space-y-1">
-          {milestones.map((section, i) => (
-            <Milestone
-              key={section.slug}
-              section={section}
-              customer={customer}
-              last={i === milestones.length - 1}
-            />
-          ))}
-        </ol>
+      {/* Checklist by section */}
+      <div className="space-y-2.5">
+        {sections.map((section) => {
+          const Icon = getIcon(section.icon);
+          const done = section.steps.filter((st) => isDone(checklist, st.id)).length;
+          const total = section.steps.length;
+          const allDone = total > 0 && done === total;
+          const isOpen = open.has(section.slug);
+          return (
+            <div key={section.slug} className="overflow-hidden rounded-xl border border-border bg-card">
+              <Collapsible
+                open={isOpen}
+                onOpenChange={(o) =>
+                  setOpen((prev) => {
+                    const next = new Set(prev);
+                    if (o) next.add(section.slug);
+                    else next.delete(section.slug);
+                    return next;
+                  })
+                }
+              >
+                <CollapsibleTrigger className="flex w-full items-center gap-3 px-4 py-3 text-left outline-none transition-colors hover:bg-accent/40">
+                  <span
+                    className={cn(
+                      "flex size-8 shrink-0 items-center justify-center rounded-lg",
+                      allDone ? "bg-[var(--success)] text-[var(--success-foreground)]" : "bg-primary/10 text-primary",
+                    )}
+                  >
+                    {allDone ? <Check className="size-4" strokeWidth={3} /> : <Icon className="size-4" />}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium">{section.customerTitle ?? section.title}</p>
+                    <p className="truncate text-xs text-muted-foreground">
+                      {section.customerSummary ?? section.summary}
+                    </p>
+                  </div>
+                  <span className="shrink-0 font-mono text-xs tabular-nums text-muted-foreground">
+                    {done}/{total}
+                  </span>
+                  <ChevronDown className={cn("size-4 shrink-0 text-muted-foreground transition-transform", isOpen && "rotate-180")} />
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <div className="space-y-1 border-t border-border/60 p-2">
+                    {section.steps.map((step) => (
+                      <StepRow
+                        key={step.id}
+                        step={step}
+                        section={section}
+                        done={isDone(checklist, step.id)}
+                        completedByCustomer={checklist[step.id]?.completedBy === "Customer"}
+                        onToggle={onToggle}
+                      />
+                    ))}
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
 }
 
-function Milestone({
+function StepRow({
+  step,
   section,
-  customer,
-  last,
+  done,
+  completedByCustomer,
+  onToggle,
 }: {
+  step: Step;
   section: Section;
-  customer: Customer;
-  last: boolean;
+  done: boolean;
+  completedByCustomer: boolean;
+  onToggle?: (step: Step, done: boolean) => void;
 }) {
-  const { status, done, total } = statusOf(section, customer);
-  const Icon = getIcon(section.icon);
-
+  const guide = guideFor(section, step);
+  const label = step.customerLabel ?? step.title;
   return (
-    <li className="relative flex gap-3.5 pb-5 last:pb-0">
-      {/* Connector line */}
-      {!last && (
-        <span
-          aria-hidden
-          className={cn(
-            "absolute left-[15px] top-8 h-[calc(100%-1.75rem)] w-px",
-            status === "complete" ? "bg-[var(--success)]/40" : "bg-border",
+    <div className={cn("flex items-start gap-3 rounded-lg p-2.5", done && "opacity-70")}>
+      <Checkbox
+        checked={done}
+        disabled={!onToggle}
+        onCheckedChange={(v) => onToggle?.(step, Boolean(v))}
+        className="mt-0.5"
+        aria-label={`Mark "${label}" ${done ? "not done" : "done"}`}
+      />
+      <div className="min-w-0 flex-1">
+        <p className={cn("text-sm leading-snug", done && "text-muted-foreground line-through decoration-muted-foreground/40")}>
+          {label}
+        </p>
+        <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
+          {guide && (
+            <a
+              href={resolveHref(guide.href)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+            >
+              <BookOpen className="size-3" /> How to do this
+              <ArrowUpRight className="size-3 text-muted-foreground" />
+            </a>
           )}
-        />
-      )}
-      {/* Status node */}
-      <span
-        className={cn(
-          "relative z-10 mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full border",
-          status === "complete" && "border-transparent bg-[var(--success)] text-[var(--success-foreground)]",
-          status === "active" && "border-primary bg-primary/10 text-primary",
-          status === "upcoming" && "border-border bg-muted text-muted-foreground",
-        )}
-      >
-        {status === "complete" ? (
-          <Check className="size-4" strokeWidth={3} />
-        ) : status === "active" ? (
-          <Loader2 className="size-4" />
-        ) : (
-          <Circle className="size-3" />
-        )}
-      </span>
-
-      <div className="min-w-0 flex-1 pt-0.5">
-        <div className="flex items-center gap-2">
-          <Icon className="size-3.5 shrink-0 text-muted-foreground" />
-          <p className="text-sm font-medium">{section.customerTitle ?? section.title}</p>
-          <span
-            className={cn(
-              "ml-auto shrink-0 rounded-full px-2 py-0.5 text-[11px] font-medium",
-              status === "complete" && "bg-[var(--success)]/12 text-[var(--success)]",
-              status === "active" && "bg-primary/10 text-primary",
-              status === "upcoming" && "bg-muted text-muted-foreground",
-            )}
-          >
-            {status === "complete" ? "Complete" : status === "active" ? "In progress" : "Upcoming"}
-          </span>
+          {done && completedByCustomer && (
+            <span className="inline-flex items-center gap-1 text-xs text-[var(--success)]">
+              <Check className="size-3" /> You marked this done
+            </span>
+          )}
         </div>
-        <p className="mt-1 text-sm text-muted-foreground">{section.customerSummary ?? section.summary}</p>
-        {total > 0 && status !== "upcoming" && (
-          <p className="mt-1 font-mono text-[11px] tabular-nums text-muted-foreground">
-            {done}/{total} steps
-          </p>
-        )}
       </div>
-    </li>
+    </div>
   );
 }
