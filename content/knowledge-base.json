@@ -9,14 +9,6 @@
     "doc": "https://buildvision-docs.vercel.app/getting-started/manufacturer-reps/"
   },
   {
-    "id": "gs-welcome",
-    "title": "Welcome to BuildVision",
-    "description": "What BuildVision does: it turns the bids and documents in your inbox into structured project intelligence so you can quote faster.",
-    "category": "Getting Started",
-    "tags": ["overview", "intro", "what is buildvision"],
-    "doc": "https://buildvision-docs.vercel.app/"
-  },
-  {
     "id": "bm-email-forwarding",
     "title": "Email Forwarding",
     "description": "Forward your bid-desk inbox to Bids@BuildVision.io so every bid, RFQ, and project document ingests automatically. Step-by-step for Gmail, Outlook on the web, and classic Outlook desktop.",
