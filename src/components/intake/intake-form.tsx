@@ -62,12 +62,20 @@ function Field({
   );
 }
 
-export function IntakeForm({ customer }: { customer: Customer }) {
+export function IntakeForm({
+  customer,
+  onSubmit,
+}: {
+  customer: Customer;
+  /** Custom submit handler (backend mode). Falls back to the local store. */
+  onSubmit?: (values: IntakeSurvey) => Promise<void>;
+}) {
   const { updateIntake } = useCustomers();
   const [values, setValues] = React.useState<IntakeSurvey>(customer.intake ?? {});
   const [errors, setErrors] = React.useState<Record<string, string>>({});
   const [submitting, setSubmitting] = React.useState(false);
   const [submitted, setSubmitted] = React.useState(false);
+  const [submitError, setSubmitError] = React.useState("");
   const [savedAt, setSavedAt] = React.useState<number | null>(null);
 
   // Load any autosaved draft on mount.
@@ -124,16 +132,24 @@ export function IntakeForm({ customer }: { customer: Customer }) {
       return;
     }
     setSubmitting(true);
-    updateIntake(customer.id, values, { fromForm: true });
-    try {
-      localStorage.removeItem(draftKey(customer.id));
-    } catch {
-      /* ignore */
-    }
-    setTimeout(() => {
+    setSubmitError("");
+    (async () => {
+      try {
+        if (onSubmit) await onSubmit(values);
+        else updateIntake(customer.id, values, { fromForm: true });
+      } catch {
+        setSubmitting(false);
+        setSubmitError("Something went wrong submitting your intake. Please try again.");
+        return;
+      }
+      try {
+        localStorage.removeItem(draftKey(customer.id));
+      } catch {
+        /* ignore */
+      }
       setSubmitting(false);
       setSubmitted(true);
-    }, 500);
+    })();
   }
 
   if (submitted) {
@@ -224,7 +240,11 @@ export function IntakeForm({ customer }: { customer: Customer }) {
         ))}
       </div>
 
-      <div className="mt-10 flex flex-col-reverse items-center justify-between gap-3 border-t border-border pt-6 sm:flex-row">
+      {submitError && (
+        <p className="mt-6 text-center text-sm text-destructive sm:text-right">{submitError}</p>
+      )}
+
+      <div className="mt-4 flex flex-col-reverse items-center justify-between gap-3 border-t border-border pt-6 sm:flex-row">
         <p className="text-xs text-muted-foreground">
           {savedAt ? "Draft saved automatically" : "Your progress saves automatically as you type."}
         </p>

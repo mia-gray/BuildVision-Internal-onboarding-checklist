@@ -8,6 +8,8 @@
 import * as React from "react";
 
 import { customerRepository as repo, CUSTOMERS_STORAGE_KEY } from "./repository";
+import { isSupabaseConfigured } from "@/lib/supabase/client";
+import { useAuth } from "@/lib/supabase/auth";
 import {
   addAttachment as svcAddAttachment,
   addNote as svcAddNote,
@@ -105,23 +107,40 @@ function readStringArray(key: string): string[] {
 }
 
 export function CustomerStoreProvider({ children }: { children: React.ReactNode }) {
+  const { ready: authReady, required: authRequired, userId, userEmail } = useAuth();
   const [loading, setLoading] = React.useState(true);
   const [customers, setCustomers] = React.useState<Customer[]>([]);
   const [currentUser, setCurrentUserState] = React.useState("Mia Gray");
   const [recentIds, setRecentIds] = React.useState<string[]>([]);
 
-  // Initial load (+ one-time seed for a non-empty first run).
+  // Load once auth is settled. Re-runs on sign-in / sign-out.
   React.useEffect(() => {
+    if (!authReady) return;
     let active = true;
+
+    // Signed out (backend mode): nothing to show until the team logs in.
+    if (authRequired && !userId) {
+      setCustomers([]);
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
     (async () => {
       let all = await repo.list();
-      const seeded = localStorage.getItem(SEED_FLAG_KEY);
-      if (all.length === 0 && !seeded) {
-        const samples = seedCustomers();
-        for (const c of samples) await repo.save(c);
-        localStorage.setItem(SEED_FLAG_KEY, "1");
-        all = samples;
+
+      // Seed sample data only for the single-browser localStorage build — never
+      // into the shared backend.
+      if (!isSupabaseConfigured) {
+        const seeded = localStorage.getItem(SEED_FLAG_KEY);
+        if (all.length === 0 && !seeded) {
+          const samples = seedCustomers();
+          for (const c of samples) await repo.save(c);
+          localStorage.setItem(SEED_FLAG_KEY, "1");
+          all = samples;
+        }
       }
+
       // Normalize any legacy stored values (persists the upgrade).
       for (let i = 0; i < all.length; i++) {
         const migrated = migrateCustomer(all[i]);
@@ -132,14 +151,17 @@ export function CustomerStoreProvider({ children }: { children: React.ReactNode 
       }
       if (!active) return;
       setCustomers(all);
-      setCurrentUserState(localStorage.getItem(CURRENT_USER_KEY) || "Mia Gray");
+      setCurrentUserState(
+        userEmail || localStorage.getItem(CURRENT_USER_KEY) || "Mia Gray",
+      );
       setRecentIds(readStringArray(RECENT_KEY));
       setLoading(false);
     })();
     return () => {
       active = false;
     };
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authReady, authRequired, userId]);
 
   // Cross-tab sync.
   React.useEffect(() => {

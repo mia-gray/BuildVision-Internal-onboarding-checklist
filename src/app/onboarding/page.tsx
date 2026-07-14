@@ -6,7 +6,7 @@ import * as React from "react";
 import { useSearchParams } from "next/navigation";
 import { Link2 } from "lucide-react";
 
-import { useCustomers } from "@/lib/customer/store";
+import { usePortalCustomer } from "@/lib/customer/public-access";
 import { asset } from "@/lib/utils";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { CustomerPortal } from "@/components/portal/customer-portal";
@@ -14,8 +14,7 @@ import { CustomerPortal } from "@/components/portal/customer-portal";
 function PortalInner() {
   const params = useSearchParams();
   const token = params.get("token") ?? "";
-  const { customers, loading } = useCustomers();
-  const customer = token ? customers.find((c) => c.portalToken === token) : undefined;
+  const { customer, loading } = usePortalCustomer(token);
 
   if (loading) {
     return (

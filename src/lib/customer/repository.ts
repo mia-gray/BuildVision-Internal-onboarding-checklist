@@ -7,6 +7,7 @@
  * and swap the instance exported at the bottom — no UI changes required.
  */
 import type { Customer } from "./types";
+import { supabase, isSupabaseConfigured } from "@/lib/supabase/client";
 
 export interface CustomerRepository {
   list(): Promise<Customer[]>;
@@ -59,9 +60,59 @@ export class LocalStorageCustomerRepository implements CustomerRepository {
 }
 
 /**
- * The single repository instance the app uses. Replace this line with e.g.
- * `new SupabaseCustomerRepository(client)` to go multi-user/cross-device.
+ * Supabase implementation — shared, multi-user, cross-device. Each customer is
+ * one row; the full Customer object is stored in the `data` jsonb column, with
+ * id / portal_token / archived lifted out for indexing and security.
+ * Direct table access is gated by row-level security to signed-in team members.
  */
-export const customerRepository: CustomerRepository = new LocalStorageCustomerRepository();
+export class SupabaseCustomerRepository implements CustomerRepository {
+  private get db() {
+    if (!supabase) throw new Error("Supabase client is not configured.");
+    return supabase;
+  }
+
+  async list(): Promise<Customer[]> {
+    const { data, error } = await this.db
+      .from("customers")
+      .select("data")
+      .order("updated_at", { ascending: false });
+    if (error) throw error;
+    return (data ?? []).map((r) => r.data as Customer);
+  }
+
+  async get(id: string): Promise<Customer | null> {
+    const { data, error } = await this.db
+      .from("customers")
+      .select("data")
+      .eq("id", id)
+      .maybeSingle();
+    if (error) throw error;
+    return (data?.data as Customer) ?? null;
+  }
+
+  async save(customer: Customer): Promise<void> {
+    const { error } = await this.db.from("customers").upsert({
+      id: customer.id,
+      portal_token: customer.portalToken,
+      archived: customer.archived,
+      data: customer,
+      updated_at: new Date().toISOString(),
+    });
+    if (error) throw error;
+  }
+
+  async remove(id: string): Promise<void> {
+    const { error } = await this.db.from("customers").delete().eq("id", id);
+    if (error) throw error;
+  }
+}
+
+/**
+ * The single repository instance the app uses: Supabase when configured,
+ * otherwise browser localStorage. The rest of the app is unaware which is live.
+ */
+export const customerRepository: CustomerRepository = isSupabaseConfigured
+  ? new SupabaseCustomerRepository()
+  : new LocalStorageCustomerRepository();
 
 export const CUSTOMERS_STORAGE_KEY = STORAGE_KEY;
