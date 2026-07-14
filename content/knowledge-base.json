@@ -36,7 +36,7 @@
     "id": "users-access-offices",
     "title": "Access Other Offices",
     "description": "Switch between your root account and any child office from My Profile, or from Settings → Company.",
-    "category": "Users",
+    "category": "Access Other Offices",
     "tags": ["offices", "switch", "child office", "profile"],
     "pdf": "/guides/access-other-offices.pdf",
     "doc": "https://buildvision-docs.vercel.app/getting-started/switching-offices/"
@@ -45,7 +45,7 @@
     "id": "users-invite",
     "title": "Inviting Teammates",
     "description": "Add the people who need access. New users receive login credentials by email and set their own password on first sign-in at app.buildvision.io/login.",
-    "category": "Users",
+    "category": "Inviting Teammates",
     "tags": ["invite", "teammates", "add users", "credentials"]
   },
   {
@@ -59,18 +59,10 @@
     "id": "perm-credentials",
     "title": "Saved Login Credentials for Protected Files",
     "description": "When bids link to documents behind a login (SharePoint, Google Drive, OneDrive), save credentials so BuildVision can open them automatically. Credentials are per user — one per platform.",
-    "category": "Permissions",
+    "category": "Login Credentials",
     "tags": ["credentials", "sharepoint", "google drive", "onedrive", "protected links"],
     "pdf": "/guides/login-credentials-guide.pdf",
     "doc": "https://buildvision-docs.vercel.app/getting-started/login-credentials/"
-  },
-  {
-    "id": "proj-files",
-    "title": "Files, Schedules & Extraction",
-    "description": "Open a project's Files tab to see schedule tagging in action — each tag jumps to the right page in the plans — and review extracted equipment inline in the PDF viewer.",
-    "category": "Projects",
-    "tags": ["files", "schedules", "extraction", "equipment", "pdf viewer"],
-    "doc": "https://buildvision-docs.vercel.app/"
   },
   {
     "id": "admin-company",
