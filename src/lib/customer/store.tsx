@@ -34,7 +34,7 @@ import type {
   NewCustomerInput,
   NoteCategory,
 } from "./types";
-import { seedCustomers } from "./seed";
+import { seedCustomers, SEED_CUSTOMER_IDS } from "./seed";
 
 const CURRENT_USER_KEY = "bv.currentUser.v1";
 const RECENT_KEY = "bv.recentCustomers.v1";
@@ -92,6 +92,8 @@ interface CustomerStore {
   updateIntake: (id: string, intake: IntakeSurvey, opts?: { fromForm?: boolean }) => void;
   markIntakeSent: (id: string) => void;
   pushRecent: (id: string) => void;
+  /** One-time: push customers saved only in this browser into the backend. */
+  importLocalCustomers: () => Promise<{ imported: number }>;
 }
 
 const Ctx = React.createContext<CustomerStore | null>(null);
@@ -252,6 +254,26 @@ export function CustomerStoreProvider({ children }: { children: React.ReactNode 
           localStorage.setItem(RECENT_KEY, JSON.stringify(next));
           return next;
         }),
+      importLocalCustomers: async () => {
+        let local: Customer[] = [];
+        try {
+          const raw = localStorage.getItem(CUSTOMERS_STORAGE_KEY);
+          local = raw ? (JSON.parse(raw) as Customer[]) : [];
+        } catch {
+          local = [];
+        }
+        // Skip the built-in demo customers; import everything else.
+        const toImport = local.filter(
+          (c) => c && c.id && !SEED_CUSTOMER_IDS.includes(c.id),
+        );
+        for (const c of toImport) {
+          const fixed = c.portalToken ? c : { ...c, portalToken: makePortalToken() };
+          await repo.save(fixed);
+        }
+        const all = await repo.list();
+        setCustomers(all);
+        return { imported: toImport.length };
+      },
     };
   }, [loading, customers, currentUser, recentIds, mutate, persist]);
 
