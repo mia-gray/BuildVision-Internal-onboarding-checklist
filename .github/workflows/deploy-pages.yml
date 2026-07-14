@@ -45,6 +45,12 @@ jobs:
 
       - name: Build static export
         run: npm run build
+        env:
+          # Optional backend. Set these as repo secrets to enable Supabase
+          # (Settings → Secrets and variables → Actions). When absent, the app
+          # builds as the single-browser localStorage tool.
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
 
       - name: Disable Jekyll (serve _next/ as-is)
         run: touch out/.nojekyll

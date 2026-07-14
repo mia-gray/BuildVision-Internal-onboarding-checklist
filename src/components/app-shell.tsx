@@ -5,13 +5,15 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, Search, Keyboard } from "lucide-react";
+import { Menu, Search, Keyboard, LogOut } from "lucide-react";
 
 import { asset } from "@/lib/utils";
+import { useAuth } from "@/lib/supabase/auth";
 import { Button } from "./ui/button";
 import { SidebarNav } from "./sidebar";
 import { ThemeToggle } from "./theme-toggle";
 import { NotificationsBell } from "./notifications-bell";
+import { LoginScreen } from "./auth/login-screen";
 import { useCommandPalette } from "./command-palette";
 import { Dialog, DialogContent, DialogTitle } from "./ui/dialog";
 
@@ -29,6 +31,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const { setOpen } = useCommandPalette();
   const pathname = usePathname();
+  const { ready, required, userId, userEmail, signOut } = useAuth();
 
   // Close the mobile drawer whenever the route changes.
   React.useEffect(() => {
@@ -36,9 +39,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   }, [pathname]);
 
   // Customer-facing surfaces (public intake form + onboarding portal) render
-  // without any internal app chrome — no sidebar, no command palette.
+  // without any internal app chrome — no sidebar, no command palette, no login.
   if (pathname.startsWith("/intake") || pathname.startsWith("/onboarding")) {
     return <>{children}</>;
+  }
+
+  // The internal dashboard is private when a backend is configured: require a
+  // team login before rendering anything.
+  if (required) {
+    if (!ready) return <div className="min-h-[100dvh] bg-background" />;
+    if (!userId) return <LoginScreen />;
   }
 
   return (
@@ -114,6 +124,17 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             </Button>
             <NotificationsBell />
             <ThemeToggle />
+            {required && userId && (
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label={`Sign out${userEmail ? ` (${userEmail})` : ""}`}
+                title={userEmail ? `Sign out — ${userEmail}` : "Sign out"}
+                onClick={() => void signOut()}
+              >
+                <LogOut className="size-4" />
+              </Button>
+            )}
           </div>
         </header>
 

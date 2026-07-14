@@ -6,16 +6,25 @@ import * as React from "react";
 import { useSearchParams } from "next/navigation";
 import { Link2 } from "lucide-react";
 
-import { useCustomers } from "@/lib/customer/store";
+import { isSupabaseConfigured } from "@/lib/supabase/client";
+import { useIntakeCustomer, submitIntakePublic } from "@/lib/customer/public-access";
 import { asset } from "@/lib/utils";
+import type { IntakeSurvey } from "@/lib/customer/types";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { IntakeForm } from "@/components/intake/intake-form";
 
 function IntakeInner() {
   const params = useSearchParams();
   const id = params.get("customer") ?? "";
-  const { getCustomer, loading } = useCustomers();
-  const customer = getCustomer(id);
+  const { customer, loading } = useIntakeCustomer(id);
+
+  // In backend mode, anonymous clients submit via the token-scoped RPC.
+  const onSubmit = isSupabaseConfigured
+    ? async (values: IntakeSurvey) => {
+        const err = await submitIntakePublic(id, values);
+        if (err) throw new Error(err);
+      }
+    : undefined;
 
   return (
     <div className="min-h-[100dvh] bg-background">
@@ -48,7 +57,7 @@ function IntakeInner() {
             </p>
           </div>
         ) : (
-          <IntakeForm customer={customer} />
+          <IntakeForm customer={customer} onSubmit={onSubmit} />
         )}
       </main>
 
