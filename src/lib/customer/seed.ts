@@ -7,6 +7,9 @@
 import type { ChecklistState, Customer } from "./types";
 import { timelineEvent } from "./service";
 
+/** Ids of the built-in demo customers — excluded from the localStorage import. */
+export const SEED_CUSTOMER_IDS = ["sierra-air", "cascade-mech", "vanguard-hvac"];
+
 function daysAgo(n: number): string {
   return new Date(Date.now() - n * 86_400_000).toISOString();
 }

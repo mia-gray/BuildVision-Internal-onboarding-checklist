@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils";
 import { CustomerRow } from "./customer-row";
 import { CreateCustomerDialog } from "./create-customer-dialog";
 import { CustomerAvatar } from "./avatar";
+import { LocalImportBanner } from "./local-import-banner";
 
 type SortKey = "updated" | "created" | "name" | "progress" | "status";
 
@@ -94,6 +95,9 @@ export function CustomerDashboard() {
         </div>
         <CreateCustomerDialog />
       </div>
+
+      {/* One-time import of browser-only customers into the shared backend */}
+      <LocalImportBanner />
 
       {/* Recently viewed */}
       {recent.length > 0 && (
