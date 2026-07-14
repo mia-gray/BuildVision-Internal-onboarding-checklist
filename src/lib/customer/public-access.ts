@@ -25,7 +25,7 @@ function hydrate(d: Record<string, unknown>): Customer {
     companyName: String(d.companyName ?? ""),
     logoUrl: (d.logoUrl as string) ?? undefined,
     assignedCsm: String(d.assignedCsm ?? ""),
-    portalToken: "",
+    portalToken: String(d.portalToken ?? ""),
     status: (d.status as Customer["status"]) ?? "not_started",
     intake: (d.intake as IntakeSurvey) ?? {},
     intakeSubmitted: Boolean(d.intakeSubmitted),
@@ -104,4 +104,15 @@ export async function submitIntakePublic(id: string, intake: IntakeSurvey): Prom
   if (!supabase) return "Backend is not configured.";
   const { error } = await supabase.rpc("intake_submit", { p_id: id, p_intake: intake });
   return error ? error.message : null;
+}
+
+/** Check/uncheck a checklist step from the portal (backend mode). Throws on error. */
+export async function togglePortalStep(token: string, stepId: string, done: boolean): Promise<void> {
+  if (!supabase) throw new Error("Backend is not configured.");
+  const { error } = await supabase.rpc("portal_toggle_step", {
+    p_token: token,
+    p_step_id: stepId,
+    p_done: done,
+  });
+  if (error) throw new Error(error.message);
 }
