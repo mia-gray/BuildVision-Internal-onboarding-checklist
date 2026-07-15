@@ -94,21 +94,41 @@ as $$
   where id = p_id and archived = false;
 $$;
 
--- Intake: submit the form — merge answers and mark submitted. Returns nothing.
+-- Intake: submit the form — merge answers, mark submitted, advance status,
+-- stamp submittedAt/updatedAt, and add a timeline entry so the submission
+-- clearly surfaces on the employee dashboard.
 create or replace function public.intake_submit(p_id text, p_intake jsonb)
 returns void
 language plpgsql
 security definer
 set search_path = public
 as $$
+declare
+  v_now timestamptz := now();
+  v_data jsonb;
+  v_event jsonb;
 begin
-  update public.customers
-  set data = jsonb_set(
-               jsonb_set(data, '{intake}', p_intake, true),
-               '{intakeSubmitted}', 'true'::jsonb, true
-             ),
-      updated_at = now()
-  where id = p_id and archived = false;
+  select data into v_data from public.customers where id = p_id and archived = false;
+  if v_data is null then return; end if;
+
+  v_data := jsonb_set(v_data, '{intake}', p_intake || jsonb_build_object('submittedAt', to_jsonb(v_now)), true);
+  v_data := jsonb_set(v_data, '{intakeSubmitted}', 'true'::jsonb, true);
+  v_data := jsonb_set(v_data, '{updatedAt}', to_jsonb(v_now), true);
+  if (v_data->>'status') = 'not_started' then
+    v_data := jsonb_set(v_data, '{status}', '"intake_received"'::jsonb, true);
+  end if;
+
+  v_event := jsonb_build_object(
+    'id',    gen_random_uuid()::text,
+    'type',  'intake_submitted',
+    'label', 'Intake form submitted',
+    'by',    coalesce(v_data->>'name', 'Customer'),
+    'at',    to_jsonb(v_now)
+  );
+  v_data := jsonb_set(v_data, '{timeline}',
+              jsonb_build_array(v_event) || coalesce(v_data->'timeline', '[]'::jsonb), true);
+
+  update public.customers set data = v_data, updated_at = v_now where id = p_id;
 end;
 $$;
 
@@ -120,19 +140,24 @@ language plpgsql
 security definer
 set search_path = public
 as $$
+declare
+  v_now timestamptz := now();
 begin
   update public.customers
   set data = jsonb_set(
-        data,
-        array['checklist', p_step_id],
-        case when p_done then
-          jsonb_build_object('done', true, 'completedAt', to_jsonb(now()), 'completedBy', to_jsonb('Customer'::text))
-        else
-          jsonb_build_object('done', false)
-        end,
-        true
+        jsonb_set(
+          data,
+          array['checklist', p_step_id],
+          case when p_done then
+            jsonb_build_object('done', true, 'completedAt', to_jsonb(v_now), 'completedBy', to_jsonb('Customer'::text))
+          else
+            jsonb_build_object('done', false)
+          end,
+          true
+        ),
+        '{updatedAt}', to_jsonb(v_now), true
       ),
-      updated_at = now()
+      updated_at = v_now
   where portal_token = p_token and archived = false;
 end;
 $$;
