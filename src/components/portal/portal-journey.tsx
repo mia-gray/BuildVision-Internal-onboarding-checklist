@@ -55,15 +55,31 @@ export function PortalJourney({
     .flatMap((s) => s.steps.map((st) => ({ section: s, step: st })))
     .filter(({ step }) => step.owners?.includes("CUST") && !isDone(checklist, step.id));
 
-  // Open sections that still have work; collapse completed ones (once, on mount).
-  const [open, setOpen] = React.useState<Set<string>>(() => {
-    const set = new Set<string>();
+  // The section currently being worked through = the first one that isn't fully
+  // complete (in order). Everything before it is done; everything after is upcoming.
+  const activeSlug = React.useMemo(() => {
     for (const s of sections) {
       const done = s.steps.filter((st) => isDone(checklist, st.id)).length;
-      if (s.steps.length === 0 || done < s.steps.length) set.add(s.slug);
+      if (s.steps.length === 0 || done < s.steps.length) return s.slug;
     }
-    return set;
-  });
+    return null; // all complete
+  }, [sections, checklist]);
+
+  // Guided accordion: expand only the active section; collapse completed and
+  // upcoming ones. When the customer finishes the active section, it collapses and
+  // the next one opens automatically. Manual expand/collapse still works.
+  const [open, setOpen] = React.useState<Set<string>>(() => new Set(activeSlug ? [activeSlug] : []));
+  const prevActive = React.useRef(activeSlug);
+  React.useEffect(() => {
+    if (prevActive.current === activeSlug) return;
+    setOpen((prev) => {
+      const next = new Set(prev);
+      if (prevActive.current) next.delete(prevActive.current);
+      if (activeSlug) next.add(activeSlug);
+      return next;
+    });
+    prevActive.current = activeSlug;
+  }, [activeSlug]);
 
   const r = 34;
   const c = 2 * Math.PI * r;
