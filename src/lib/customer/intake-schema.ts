@@ -102,13 +102,6 @@ export const INTAKE_GROUPS: IntakeGroup[] = [
         helper: "We'll forward from here to Bids@BuildVision.io.",
         showIf: { key: "emailMethod", equals: "Email Forwarding" },
       },
-      { key: "crmSystem", label: "CRM System in Use", type: "text", placeholder: "e.g. Salesforce, HubSpot" },
-      {
-        key: "teamMembers",
-        label: "Users & permissions",
-        type: "team",
-        helper: "Add each person who needs access, with their name, email, and permission level.",
-      },
       { key: "requestedGoLiveDate", label: "Requested Go-Live Date", type: "date" },
     ],
   },

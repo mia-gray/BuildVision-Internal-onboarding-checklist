@@ -35,67 +35,32 @@
       "id": "intake-account-details",
       "title": "Collect account details",
       "description": "Capture Company, Account Type, Start Date, Primary Contact, Contract Term, and Active Users from the signed contract.",
-      "owners": ["CS"],
+      "owners": [
+        "CS"
+      ],
       "time": "15 min",
       "dependsOn": "signed contract",
       "verify": "No Reference Sheet field left blank; Account Type explicitly marked Pilot or Full License."
     },
     {
-      "id": "intake-signer",
-      "title": "Confirm signer name & title",
-      "description": "Record the signer's name and title exactly as it should appear on the welcome letter.",
-      "owners": ["CS"],
-      "time": "5 min",
-      "verify": "Spelling and title confirmed with CS."
-    },
-    {
-      "id": "intake-it-contact",
-      "title": "Identify the client's IT/ops contact",
-      "description": "Get name, email, and phone for the person who will help with email forwarding and CRM setup.",
-      "owners": ["CS"],
-      "time": "5 min",
-      "verify": "Contact has acknowledged they'll help with email + CRM setup.",
-      "callouts": [
-        {
-          "type": "blocker",
-          "text": "Integration steps (email forwarding, CRM) require coordination with the client's IT/ops team. Do not start Phase 2 without this contact."
-        }
-      ]
-    },
-    {
-      "id": "intake-org-structure",
-      "title": "Gather organizational structure inputs",
-      "description": "Document the full org structure: offices, line cards, the hierarchy tree, and a rep roster with the intended permission level for each person.",
-      "owners": ["CS"],
-      "time": "20 min",
-      "dependsOn": "intake call",
-      "verify": "Rep count matches “Active Users.”",
-      "callouts": [
-        {
-          "type": "tip",
-          "text": "Per the Welcome Package: offices, line cards, user hierarchies, and individual rep accounts each with the correct permissions."
-        }
-      ]
-    },
-    {
-      "id": "intake-integration-details",
-      "title": "Gather integration details",
-      "description": "Capture the CRM system name and how credentials/auth will be provided, plus the exact client bid-desk inbox to forward.",
-      "owners": ["CS", "ENG"],
-      "time": "15 min",
-      "verify": "You have a path to authenticate the CRM and access the mailbox."
-    },
-    {
       "id": "intake-catalog-source",
       "title": "Confirm product / line-card data source",
       "description": "Identify the source for the product catalog (labeled “Representation” in the platform).",
-      "owners": ["CS"],
+      "owners": [
+        "CS"
+      ],
       "time": "10 min",
       "verify": "You know where the current line card lives and who can validate it."
     }
   ],
   "related": [
-    { "label": "Organization Creation", "href": "/sections/organization-creation" },
-    { "label": "Process Gaps: intake data model", "href": "/process-gaps" }
+    {
+      "label": "Organization Creation",
+      "href": "/sections/organization-creation"
+    },
+    {
+      "label": "Process Gaps: intake data model",
+      "href": "/process-gaps"
+    }
   ]
 }

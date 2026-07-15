@@ -32,19 +32,12 @@
   ],
   "steps": [
     {
-      "id": "perm-assign-roles",
-      "title": "Assign roles, permissions, and hierarchy",
-      "description": "Assign role and permission level, and place each user in the correct office / line card / hierarchy node per the intake structure.",
-      "owners": ["OPS", "CS"],
-      "time": "15 min",
-      "dependsOn": "users created",
-      "verify": "Spot-check 2–3 users across different orgs; each sees exactly what their level should allow."
-    },
-    {
       "id": "perm-multi-office",
       "title": "Confirm multi-office access",
       "description": "For parent-org users who cover multiple offices, confirm they can switch into child offices via My Profile → Other Accounts and via Settings → Company.",
-      "owners": ["CS"],
+      "owners": [
+        "CS"
+      ],
       "time": "10 min",
       "verify": "A test user can switch into a child office and back to their root account.",
       "callouts": [
@@ -53,27 +46,25 @@
           "text": "Send users who cover multiple offices the [Access Other Offices guide (PDF)](/guides/access-other-offices.pdf)."
         }
       ]
-    },
-    {
-      "id": "perm-least-privilege",
-      "title": "Review for least privilege",
-      "description": "Confirm no user has more access than their role requires; downgrade any over-grants.",
-      "owners": ["CS"],
-      "time": "5 min",
-      "verify": "No standard rep holds admin-level access without a documented reason.",
-      "callouts": [
-        {
-          "type": "warning",
-          "text": "There is no documented least-privilege / offboarding standard in the source — see Process Gaps C-3. Use judgment and record decisions."
-        }
-      ]
     }
   ],
-  "clientGuide": { "label": "Access Other Offices", "href": "/guides/access-other-offices.pdf" },
+  "clientGuide": {
+    "label": "Access Other Offices",
+    "href": "/guides/access-other-offices.pdf"
+  },
   "related": [
-    { "label": "User Creation", "href": "/sections/user-creation" },
-    { "label": "Organization Creation", "href": "/sections/organization-creation" },
-    { "label": "Process Gaps: role/permission catalog", "href": "/process-gaps" }
+    {
+      "label": "User Creation",
+      "href": "/sections/user-creation"
+    },
+    {
+      "label": "Organization Creation",
+      "href": "/sections/organization-creation"
+    },
+    {
+      "label": "Process Gaps: role/permission catalog",
+      "href": "/process-gaps"
+    }
   ],
   "screenshots": [
     {

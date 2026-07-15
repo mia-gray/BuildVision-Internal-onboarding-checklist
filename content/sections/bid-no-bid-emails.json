@@ -34,26 +34,22 @@
   "steps": [
     {
       "id": "bid-confirm-enabled",
-      "title": "Confirm bid / no-bid emails are enabled",
+      "title": "Confirm bid / no-bid emails are enabled with BuildVision Customer Success team",
       "description": "Verify bid/no-bid recommendation emails are switched on for the organization.",
-      "owners": ["ENG"],
+      "owners": [
+        "ENG"
+      ],
       "time": "5 min",
       "dependsOn": "ingestion live",
       "verify": "Bid/no-bid emails are enabled for the account."
     },
     {
-      "id": "bid-recipients",
-      "title": "Set the right recipients",
-      "description": "Confirm the emails go to the decision-makers / reps for each office, matching the intake roster and hierarchy.",
-      "owners": ["CS"],
-      "time": "5 min",
-      "verify": "Recipient list matches the intended people per office."
-    },
-    {
       "id": "bid-review-criteria",
-      "title": "Review the recommendation criteria with the client",
+      "title": "Review the recommendation criteria with the BuildVision Customer Success team",
       "description": "Walk the client through what drives a bid vs no-bid signal — line-card fit, scope/equipment, engineer of record, and location — so they understand and trust it.",
-      "owners": ["CS"],
+      "owners": [
+        "CS"
+      ],
       "time": "10 min",
       "verify": "Client understands the signals and agrees they reflect how they bid."
     },
@@ -61,31 +57,36 @@
       "id": "bid-cadence",
       "title": "Confirm cadence & format",
       "description": "Agree how the emails arrive (per project as bids come in, or a daily digest) so they fit the team's workflow.",
-      "owners": ["CS", "ENG"],
+      "owners": [
+        "CS",
+        "ENG"
+      ],
       "time": "5 min",
       "verify": "Cadence and format agreed with the client."
     },
     {
       "id": "bid-test-email",
-      "title": "Confirm a real bid / no-bid email lands (gate)",
+      "title": "Confirm a real bid / no-bid email lands",
       "description": "Trigger or wait for a real recommendation email and confirm it arrives, is readable, and points to the right project.",
-      "owners": ["ENG"],
+      "owners": [
+        "ENG"
+      ],
       "time": "10 min",
-      "gate": true,
       "verify": "A real bid/no-bid email is received by the intended recipients."
-    },
-    {
-      "id": "bid-enablement",
-      "title": "Enable reps to act on the emails",
-      "description": "Show reps how to read a recommendation and act on it (open the project, mark bid/no-bid, follow up).",
-      "owners": ["CS"],
-      "time": "10 min",
-      "verify": "A rep can open a recommendation and act on it confidently."
     }
   ],
   "related": [
-    { "label": "File Loading & Project Data", "href": "/sections/file-loading" },
-    { "label": "Hoover Dashboard", "href": "/sections/hoover-dashboard" },
-    { "label": "Email Forwarding", "href": "/sections/email-forwarding" }
+    {
+      "label": "File Loading & Project Data",
+      "href": "/sections/file-loading"
+    },
+    {
+      "label": "Hoover Dashboard",
+      "href": "/sections/hoover-dashboard"
+    },
+    {
+      "label": "Email Forwarding",
+      "href": "/sections/email-forwarding"
+    }
   ]
 }

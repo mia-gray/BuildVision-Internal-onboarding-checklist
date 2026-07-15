@@ -38,25 +38,14 @@
   ],
   "steps": [
     {
-      "id": "fwd-prereq",
-      "title": "Prerequisite check",
-      "description": "Confirm the IT/ops contact is confirmed and available, an org exists to attach ingestion to, and external forwarding is approved by the client's IT/admin.",
-      "owners": ["CS", "ENG"],
-      "time": "5 min",
-      "verify": "All true, or stop.",
-      "callouts": [
-        {
-          "type": "info",
-          "text": "If external forwarding is disabled: **Google** — https://support.google.com/a/answer/14724207 · **Microsoft 365** — https://learn.microsoft.com/en-us/defender-office-365/outbound-spam-policies-external-email-forwarding"
-        }
-      ]
-    },
-    {
       "id": "fwd-configure",
       "customerLabel": "Forward your bid inbox to BuildVision",
       "title": "Configure email forwarding",
       "description": "Set up forwarding from the client's bid-desk inbox to **Bids@BuildVision.io**, then add a filter/rule so only project emails forward. Follow the client's mail system:\n\n### Gmail / Google Workspace\nGmail forwards via a **filter** so only matching messages reach BuildVision. Desktop browser only.\n\n**Step 1 — Add & verify the forwarding address**\n1. Gear icon → **See all settings** → **Forwarding and POP/IMAP**.\n2. Under Forwarding → **Add a forwarding address** → enter `Bids@BuildVision.io` → Next → Proceed → OK.\n3. Gmail emails a verification message to Bids@BuildVision.io; your CX lead confirms it on our side. Once confirmed it shows as verified.\n\n**Step 2 — Filter project emails**\n1. Gear → See all settings → **Filters and Blocked Addresses** → **Create a new filter**.\n2. Criteria: **From** a contractor / distribution list / domain (e.g. `@contractordomain.com`), or **Subject** contains `Bid, RFQ, Proposal, Quote`.\n3. Check **Has attachment** so drawings, schedules, and specs come through.\n4. **Create filter** → check **Forward it to** → select `Bids@BuildVision.io`.\n5. Check **Also apply filter to matching conversations** to forward existing project emails too → **Create filter**.\n\n### Outlook on the web (Microsoft 365 / Outlook.com)\n1. Sign in at `outlook.office.com` (or `outlook.live.com` for personal accounts).\n2. **Settings → Mail → Rules → Add new rule**.\n3. Name it (e.g. *Forward bids to BuildVision*).\n4. Condition: **From** a contractor / domain, **Subject includes** `Bid, RFQ, Proposal, Quote`, or **Has attachment**.\n5. Action: **Forward to** → `Bids@BuildVision.io`. **Avoid Redirect to.**\n6. **Save** — applies to new mail immediately.\n\n### Classic Outlook desktop (Windows)\n1. **File → Manage Rules & Alerts → New Rule → Apply rule on messages I receive → Next**.\n2. Conditions: *from people or public group* (contractors) and/or *with specific words in the subject* (`Bid, RFQ, Proposal, Quote`); under actions check **forward it to people or public groups**.\n3. Click the underlined **people or public group**, enter `Bids@BuildVision.io` → OK.\n4. **Finish → Apply**.",
-      "owners": ["ENG", "CUST"],
+      "owners": [
+        "ENG",
+        "CUST"
+      ],
       "time": "30 min",
       "dependsOn": "IT/ops access + external forwarding approved",
       "verify": "Forwarding rule/filter shows active on the client side.",
@@ -75,31 +64,30 @@
       "id": "fwd-verify-live",
       "title": "Verify the forwarding rule is live",
       "description": "Confirm the forwarding rule/filter is active on the client side and the verification message was confirmed by the CX lead.",
-      "owners": ["ENG"],
+      "owners": [
+        "ENG"
+      ],
       "time": "5 min",
       "verify": "Rule status shows active; verification confirmed by CX; no 5.7.520 bounce."
-    },
-    {
-      "id": "fwd-test-ingestion",
-      "title": "Test ingestion end-to-end (gate)",
-      "description": "Send a test bid to the forwarded inbox and confirm it lands in BuildVision within the expected window.",
-      "owners": ["ENG"],
-      "time": "15 min",
-      "gate": true,
-      "verify": "Test bid appears in BuildVision, attached to the correct org.",
-      "callouts": [
-        {
-          "type": "blocker",
-          "text": "Do not advance to go-live QA until a real forwarded message has been ingested successfully."
-        }
-      ]
     }
   ],
-  "clientGuide": { "label": "Email Forwarding Guide", "href": "/guides/email-forwarding-guide.pdf" },
+  "clientGuide": {
+    "label": "Email Forwarding Guide",
+    "href": "/guides/email-forwarding-guide.pdf"
+  },
   "related": [
-    { "label": "Email Credentials", "href": "/sections/email-credentials" },
-    { "label": "QA Checklist", "href": "/sections/qa-checklist" },
-    { "label": "Troubleshooting: ingestion", "href": "/troubleshooting" }
+    {
+      "label": "Email Credentials",
+      "href": "/sections/email-credentials"
+    },
+    {
+      "label": "QA Checklist",
+      "href": "/sections/qa-checklist"
+    },
+    {
+      "label": "Troubleshooting: ingestion",
+      "href": "/troubleshooting"
+    }
   ],
   "screenshots": [
     {

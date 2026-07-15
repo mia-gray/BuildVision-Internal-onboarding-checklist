@@ -35,7 +35,9 @@
       "id": "user-create-all",
       "title": "Create all required users",
       "description": "Create each user from the rep roster; match the Active Users count from intake.",
-      "owners": ["OPS"],
+      "owners": [
+        "OPS"
+      ],
       "time": "3 min per user",
       "dependsOn": "Phase 1",
       "verify": "User count = Active Users."
@@ -44,7 +46,10 @@
       "id": "user-place-hierarchy",
       "title": "Place each user in the correct org node",
       "description": "Assign each user to the correct office / line card / hierarchy node per the intake structure. (Role & permission level detail: see Permissions section.)",
-      "owners": ["OPS", "CS"],
+      "owners": [
+        "OPS",
+        "CS"
+      ],
       "time": "15 min",
       "verify": "Spot-check 2–3 users across different orgs."
     },
@@ -52,7 +57,9 @@
       "id": "user-send-invites",
       "title": "Send invitations / trigger credential emails",
       "description": "Trigger the invitation / credential emails so users can set their password.",
-      "owners": ["OPS"],
+      "owners": [
+        "OPS"
+      ],
       "time": "5 min",
       "verify": "Send queue shows all delivered, no bounces.",
       "callouts": [
@@ -61,44 +68,21 @@
           "text": "The exact internal step that triggers the credential email is a known gap — see Process Gaps B-5."
         }
       ]
-    },
-    {
-      "id": "user-verify-invites",
-      "title": "Verify invitations were sent (gate)",
-      "description": "Confirm every user received an invitation with no bounces or stuck sends.",
-      "owners": ["OPS"],
-      "time": "5 min",
-      "gate": true,
-      "verify": "All invitations delivered; no bounces."
-    },
-    {
-      "id": "user-confirm-access",
-      "title": "Confirm users have proper access",
-      "description": "Have the primary contact (and one rep) log in at app.buildvision.io/login, set a password, and confirm the correct org is visible.",
-      "owners": ["CS"],
-      "time": "10 min",
-      "verify": "Successful login; correct org visible.",
-      "callouts": [
-        {
-          "type": "tip",
-          "text": "Send new reps the [Quick Start guide (PDF)](/guides/quick-start.pdf) — home page to first sent bid in five steps."
-        }
-      ]
-    },
-    {
-      "id": "user-support-chat",
-      "title": "Confirm in-platform support chat access",
-      "description": "Confirm the in-platform support chat is reachable for a test user.",
-      "owners": ["CS"],
-      "time": "5 min",
-      "verify": "Chat channel opens for the test user."
     }
   ],
-  "clientGuide": { "label": "Quick Start for Manufacturer Reps", "href": "/guides/quick-start.pdf" },
   "related": [
-    { "label": "Permissions", "href": "/sections/permissions" },
-    { "label": "Login Credentials & protected links", "href": "/sections/email-credentials" },
-    { "label": "Troubleshooting: invitations", "href": "/troubleshooting" }
+    {
+      "label": "Permissions",
+      "href": "/sections/permissions"
+    },
+    {
+      "label": "Login Credentials & protected links",
+      "href": "/sections/email-credentials"
+    },
+    {
+      "label": "Troubleshooting: invitations",
+      "href": "/troubleshooting"
+    }
   ],
   "screenshots": [
     {
