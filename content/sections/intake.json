@@ -3,7 +3,6 @@
   "title": "Intake & Prerequisites",
   "shortTitle": "Intake",
   "icon": "ClipboardList",
-  "customerFacing": true,
   "order": 10,
   "phase": "Phase 0",
   "badge": "Required",
