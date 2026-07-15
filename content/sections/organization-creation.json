@@ -34,7 +34,9 @@
       "id": "org-create-parent",
       "title": "Create the parent organization",
       "description": "Create the parent org using the Company name from intake.",
-      "owners": ["OPS"],
+      "owners": [
+        "OPS"
+      ],
       "time": "10 min",
       "dependsOn": "Phase 0 complete",
       "verify": "Name matches the Reference Sheet exactly."
@@ -43,7 +45,9 @@
       "id": "org-create-children",
       "title": "Create child organizations",
       "description": "Create offices / line cards as child orgs nested under the parent, if applicable.",
-      "owners": ["OPS"],
+      "owners": [
+        "OPS"
+      ],
       "time": "5 min each",
       "dependsOn": "parent org exists",
       "verify": "Hierarchy renders as intended; no orphaned orgs."
@@ -52,7 +56,9 @@
       "id": "org-apply-settings",
       "title": "Apply organization settings & account type",
       "description": "Configure organization settings and apply the account type — Pilot vs Full License.",
-      "owners": ["OPS"],
+      "owners": [
+        "OPS"
+      ],
       "time": "10 min",
       "verify": "Feature/seat configuration matches the contract tier.",
       "callouts": [
@@ -61,32 +67,30 @@
           "text": "Pilot vs Full License may drive different feature/seat settings — set this before inviting users."
         }
       ]
-    },
-    {
-      "id": "org-verify",
-      "title": "Verify organization details (gate)",
-      "description": "CS reviews the whole org tree and settings — name spelling, hierarchy nesting, and settings against the Reference Sheet.",
-      "owners": ["CS"],
-      "time": "10 min",
-      "gate": true,
-      "verify": "CS signs off before any users or data are added.",
-      "callouts": [
-        {
-          "type": "verify",
-          "text": "Verification gate — do not proceed until CS confirms the org tree is correct."
-        }
-      ]
     }
   ],
   "related": [
-    { "label": "User Creation", "href": "/sections/user-creation" },
-    { "label": "Access Other Offices (switching)", "href": "/sections/permissions" },
-    { "label": "Process Gaps: org creation mechanics", "href": "/process-gaps" }
+    {
+      "label": "User Creation",
+      "href": "/sections/user-creation"
+    },
+    {
+      "label": "Access Other Offices (switching)",
+      "href": "/sections/permissions"
+    },
+    {
+      "label": "Process Gaps: org creation mechanics",
+      "href": "/process-gaps"
+    }
   ],
   "screenshots": [
     {
       "src": "/screenshots/settings-company.png",
       "caption": "Settings → Company shows every office and subsidiary under the root account — with type, users, phone, and address."
     }
-  ]
+  ],
+  "clientGuide": {
+    "label": "Account setup guide (PDF)",
+    "href": "/guides/quick-start.pdf"
+  }
 }

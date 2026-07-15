@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Check, ChevronDown, ClipboardList, ArrowUpRight, BookOpen } from "lucide-react";
+import { Check, ChevronDown, ClipboardList, FileText, ArrowUpRight } from "lucide-react";
 
 import type { Section, Step } from "@/lib/types";
 import type { ChecklistState } from "@/lib/customer/types";
@@ -10,18 +10,13 @@ import { asset, cn } from "@/lib/utils";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
-/** Fallback how-to link per section when a step/section has no explicit guide. */
-const SECTION_GUIDE_FALLBACK: Record<string, { label: string; href: string }> = {
-  intake: { label: "Getting started guide", href: "https://buildvision-docs.vercel.app/getting-started/" },
-  "organization-creation": { label: "Getting started guide", href: "https://buildvision-docs.vercel.app/getting-started/" },
-  "crm-integration": { label: "CRM integration docs", href: "https://buildvision-docs.vercel.app/getting-started/" },
-  "file-loading": { label: "Files & projects docs", href: "https://buildvision-docs.vercel.app/" },
-  "bid-no-bid-emails": { label: "Bid / no-bid docs", href: "https://buildvision-docs.vercel.app/getting-started/email-forwarding/" },
-  "hoover-dashboard": { label: "Dashboard docs", href: "https://buildvision-docs.vercel.app/" },
-};
-
-function guideFor(section: Section, step: Step): { label: string; href: string } | undefined {
-  return step.guide ?? section.clientGuide ?? SECTION_GUIDE_FALLBACK[section.slug];
+/**
+ * The guide for a section: an explicit, real resource only (the section's PDF
+ * guide, or a per-step override). No auto-generated fallback links — a section
+ * without a real guide simply shows none.
+ */
+function sectionGuide(section: Section): { label: string; href: string } | undefined {
+  return section.clientGuide;
 }
 
 function resolveHref(href: string): string {
@@ -182,11 +177,22 @@ export function PortalJourney({
                 </CollapsibleTrigger>
                 <CollapsibleContent>
                   <div className="space-y-1 border-t border-border/60 p-2">
+                    {sectionGuide(section) && (
+                      <a
+                        href={resolveHref(sectionGuide(section)!.href)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mx-1 mb-1 inline-flex items-center gap-1.5 rounded-md border border-border px-2.5 py-1 text-xs font-medium text-primary transition-colors hover:bg-accent"
+                      >
+                        <FileText className="size-3.5" />
+                        {sectionGuide(section)!.label}
+                        <ArrowUpRight className="size-3 text-muted-foreground" />
+                      </a>
+                    )}
                     {section.steps.map((step) => (
                       <StepRow
                         key={step.id}
                         step={step}
-                        section={section}
                         done={isDone(checklist, step.id)}
                         completedByCustomer={checklist[step.id]?.completedBy === "Customer"}
                         onToggle={onToggle}
@@ -205,18 +211,15 @@ export function PortalJourney({
 
 function StepRow({
   step,
-  section,
   done,
   completedByCustomer,
   onToggle,
 }: {
   step: Step;
-  section: Section;
   done: boolean;
   completedByCustomer: boolean;
   onToggle?: (step: Step, done: boolean) => void;
 }) {
-  const guide = guideFor(section, step);
   const label = step.customerLabel ?? step.title;
   return (
     <div className={cn("flex items-start gap-3 rounded-lg p-2.5", done && "opacity-70")}>
@@ -231,24 +234,11 @@ function StepRow({
         <p className={cn("text-sm leading-snug", done && "text-muted-foreground line-through decoration-muted-foreground/40")}>
           {label}
         </p>
-        <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
-          {guide && (
-            <a
-              href={resolveHref(guide.href)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
-            >
-              <BookOpen className="size-3" /> How to do this
-              <ArrowUpRight className="size-3 text-muted-foreground" />
-            </a>
-          )}
-          {done && completedByCustomer && (
-            <span className="inline-flex items-center gap-1 text-xs text-[var(--success)]">
-              <Check className="size-3" /> You marked this done
-            </span>
-          )}
-        </div>
+        {done && completedByCustomer && (
+          <span className="mt-1 inline-flex items-center gap-1 text-xs text-[var(--success)]">
+            <Check className="size-3" /> You marked this done
+          </span>
+        )}
       </div>
     </div>
   );
