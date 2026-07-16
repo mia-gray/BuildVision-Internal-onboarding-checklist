@@ -58,7 +58,11 @@
           "type": "warning",
           "text": "Gmail: create the filter right after adding the forwarding address, or **all** email forwards. Also apply to matching conversations to backfill existing project mail (extraction covers ~30 days or the pilot-agreed window)."
         }
-      ]
+      ],
+      "guide": {
+        "label": "Email forwarding — guide (PDF)",
+        "href": "/guides/forward-bid-inbox-guide.pdf"
+      }
     },
     {
       "id": "fwd-verify-live",
@@ -71,10 +75,6 @@
       "verify": "Rule status shows active; verification confirmed by CX; no 5.7.520 bounce."
     }
   ],
-  "clientGuide": {
-    "label": "Email Forwarding Guide",
-    "href": "/guides/email-forwarding-guide.pdf"
-  },
   "related": [
     {
       "label": "Email Credentials",
