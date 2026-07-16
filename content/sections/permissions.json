@@ -45,13 +45,13 @@
           "type": "tip",
           "text": "Send users who cover multiple offices the [Access Other Offices guide (PDF)](/guides/access-other-offices.pdf)."
         }
-      ]
+      ],
+      "guide": {
+        "label": "Access other offices — guide (PDF)",
+        "href": "/guides/multi-office-access-guide.pdf"
+      }
     }
   ],
-  "clientGuide": {
-    "label": "Access Other Offices",
-    "href": "/guides/access-other-offices.pdf"
-  },
   "related": [
     {
       "label": "User Creation",
