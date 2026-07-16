@@ -71,7 +71,11 @@
         "CS"
       ],
       "time": "15 min",
-      "verify": "Spot-check 2–3 users across different orgs."
+      "verify": "Spot-check 2–3 users across different orgs.",
+      "guide": {
+        "label": "Place users in the correct org node — guide (PDF)",
+        "href": "/guides/place-users-org-node-guide.pdf"
+      }
     }
   ],
   "related": [
