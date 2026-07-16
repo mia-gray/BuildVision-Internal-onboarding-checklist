@@ -47,17 +47,6 @@
       }
     },
     {
-      "id": "user-place-hierarchy",
-      "title": "Place each user in the correct org node",
-      "description": "Assign each user to the correct office / line card / hierarchy node per the intake structure. (Role & permission level detail: see Permissions section.)",
-      "owners": [
-        "OPS",
-        "CS"
-      ],
-      "time": "15 min",
-      "verify": "Spot-check 2–3 users across different orgs."
-    },
-    {
       "id": "user-send-invites",
       "title": "Send invitations / trigger credential emails",
       "description": "Trigger the invitation / credential emails so users can set their password.",
@@ -72,6 +61,17 @@
           "text": "The exact internal step that triggers the credential email is a known gap — see Process Gaps B-5."
         }
       ]
+    },
+    {
+      "id": "user-place-hierarchy",
+      "title": "Place each user in the correct org node",
+      "description": "Assign each user to the correct office / line card / hierarchy node per the intake structure. (Role & permission level detail: see Permissions section.)",
+      "owners": [
+        "OPS",
+        "CS"
+      ],
+      "time": "15 min",
+      "verify": "Spot-check 2–3 users across different orgs."
     }
   ],
   "related": [
