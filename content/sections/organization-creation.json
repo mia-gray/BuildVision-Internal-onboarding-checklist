@@ -58,7 +58,11 @@
           "type": "warning",
           "text": "Pilot vs Full License may drive different feature/seat settings — set this before inviting users."
         }
-      ]
+      ],
+      "guide": {
+        "label": "Apply settings & account type — guide (PDF)",
+        "href": "/guides/apply-settings-account-type-guide.pdf"
+      }
     },
     {
       "id": "org-create-children",
@@ -91,9 +95,5 @@
       "src": "/screenshots/settings-company.png",
       "caption": "Settings → Company shows every office and subsidiary under the root account — with type, users, phone, and address."
     }
-  ],
-  "clientGuide": {
-    "label": "Account setup guide (PDF)",
-    "href": "/guides/quick-start.pdf"
-  }
+  ]
 }
