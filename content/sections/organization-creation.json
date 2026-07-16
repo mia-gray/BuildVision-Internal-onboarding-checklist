@@ -73,7 +73,11 @@
       ],
       "time": "5 min each",
       "dependsOn": "parent org exists",
-      "verify": "Hierarchy renders as intended; no orphaned orgs."
+      "verify": "Hierarchy renders as intended; no orphaned orgs.",
+      "guide": {
+        "label": "Create a child organization — guide (PDF)",
+        "href": "/guides/create-child-organization-guide.pdf"
+      }
     }
   ],
   "related": [
