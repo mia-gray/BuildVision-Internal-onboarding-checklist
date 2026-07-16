@@ -40,18 +40,11 @@
       ],
       "time": "3 min per user",
       "dependsOn": "Phase 1",
-      "verify": "User count = Active Users."
-    },
-    {
-      "id": "user-place-hierarchy",
-      "title": "Place each user in the correct org node",
-      "description": "Assign each user to the correct office / line card / hierarchy node per the intake structure. (Role & permission level detail: see Permissions section.)",
-      "owners": [
-        "OPS",
-        "CS"
-      ],
-      "time": "15 min",
-      "verify": "Spot-check 2–3 users across different orgs."
+      "verify": "User count = Active Users.",
+      "guide": {
+        "label": "Create new users — guide (PDF)",
+        "href": "/guides/create-new-users-guide.pdf"
+      }
     },
     {
       "id": "user-send-invites",
@@ -68,6 +61,21 @@
           "text": "The exact internal step that triggers the credential email is a known gap — see Process Gaps B-5."
         }
       ]
+    },
+    {
+      "id": "user-place-hierarchy",
+      "title": "Place each user in the correct org node",
+      "description": "Assign each user to the correct office / line card / hierarchy node per the intake structure. (Role & permission level detail: see Permissions section.)",
+      "owners": [
+        "OPS",
+        "CS"
+      ],
+      "time": "15 min",
+      "verify": "Spot-check 2–3 users across different orgs.",
+      "guide": {
+        "label": "Place users in the correct org node — guide (PDF)",
+        "href": "/guides/place-users-org-node-guide.pdf"
+      }
     }
   ],
   "related": [
