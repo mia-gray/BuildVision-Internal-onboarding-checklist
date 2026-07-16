@@ -234,10 +234,25 @@ function StepRow({
         <p className={cn("text-sm leading-snug", done && "text-muted-foreground line-through decoration-muted-foreground/40")}>
           {label}
         </p>
-        {done && completedByCustomer && (
-          <span className="mt-1 inline-flex items-center gap-1 text-xs text-[var(--success)]">
-            <Check className="size-3" /> You marked this done
-          </span>
+        {(step.guide || (done && completedByCustomer)) && (
+          <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
+            {step.guide && (
+              <a
+                href={resolveHref(step.guide.href)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+              >
+                {step.guide.label}
+                <ArrowUpRight className="size-3 text-muted-foreground" />
+              </a>
+            )}
+            {done && completedByCustomer && (
+              <span className="inline-flex items-center gap-1 text-xs text-[var(--success)]">
+                <Check className="size-3" /> You marked this done
+              </span>
+            )}
+          </div>
         )}
       </div>
     </div>
