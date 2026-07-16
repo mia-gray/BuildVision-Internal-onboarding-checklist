@@ -32,25 +32,17 @@
   "steps": [
     {
       "id": "org-create-parent",
-      "title": "Create the parent organization",
-      "description": "Create the parent org using the Company name from intake.",
+      "title": "Log into BuildVision",
+      "description": "Log in to your BuildVision account to get started.",
       "owners": [
-        "OPS"
+        "CUST"
       ],
-      "time": "10 min",
-      "dependsOn": "Phase 0 complete",
-      "verify": "Name matches the Reference Sheet exactly."
-    },
-    {
-      "id": "org-create-children",
-      "title": "Create child organizations",
-      "description": "Create offices / line cards as child orgs nested under the parent, if applicable.",
-      "owners": [
-        "OPS"
-      ],
-      "time": "5 min each",
-      "dependsOn": "parent org exists",
-      "verify": "Hierarchy renders as intended; no orphaned orgs."
+      "time": "2 min",
+      "verify": "You can sign in and reach your dashboard.",
+      "guide": {
+        "label": "Log in at BuildVision.io",
+        "href": "https://buildvision.io"
+      }
     },
     {
       "id": "org-apply-settings",
@@ -67,6 +59,17 @@
           "text": "Pilot vs Full License may drive different feature/seat settings — set this before inviting users."
         }
       ]
+    },
+    {
+      "id": "org-create-children",
+      "title": "Create child organizations",
+      "description": "Create offices / line cards as child orgs nested under the parent, if applicable.",
+      "owners": [
+        "OPS"
+      ],
+      "time": "5 min each",
+      "dependsOn": "parent org exists",
+      "verify": "Hierarchy renders as intended; no orphaned orgs."
     }
   ],
   "related": [
