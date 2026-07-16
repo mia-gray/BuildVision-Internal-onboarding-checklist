@@ -40,7 +40,11 @@
       ],
       "time": "3 min per user",
       "dependsOn": "Phase 1",
-      "verify": "User count = Active Users."
+      "verify": "User count = Active Users.",
+      "guide": {
+        "label": "Create new users — guide (PDF)",
+        "href": "/guides/create-new-users-guide.pdf"
+      }
     },
     {
       "id": "user-place-hierarchy",
