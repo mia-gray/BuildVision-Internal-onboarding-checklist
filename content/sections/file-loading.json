@@ -42,7 +42,11 @@
       ],
       "time": "20–30 min",
       "dependsOn": "Phase 1",
-      "verify": "Catalog appears under the correct organization."
+      "verify": "Catalog appears under the correct organization.",
+      "guide": {
+        "label": "Load the product catalog — guide (PDF)",
+        "href": "/guides/product-catalog-representation-guide.pdf"
+      }
     },
     {
       "id": "file-current-projects",
