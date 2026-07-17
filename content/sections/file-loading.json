@@ -49,23 +49,6 @@
       }
     },
     {
-      "id": "file-current-projects",
-      "title": "Load current project files",
-      "description": "Load current project files (e.g. drag a PDF — plans, specs, schedules, addenda — onto the upload zone to start extraction).",
-      "owners": [
-        "OPS",
-        "CS"
-      ],
-      "time": "variable",
-      "verify": "Files attach to the correct org/project.",
-      "callouts": [
-        {
-          "type": "warning",
-          "text": "The internal project-file loading procedure is not defined in the source (Process Gaps B-2)."
-        }
-      ]
-    },
-    {
       "id": "file-verify-visible",
       "title": "Verify files appear correctly",
       "description": "Confirm files show up in the right org/project.",
