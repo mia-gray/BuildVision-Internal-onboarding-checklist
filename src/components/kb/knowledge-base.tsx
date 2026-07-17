@@ -3,13 +3,12 @@
 import * as React from "react";
 import {
   Search,
-  Rocket,
   MailCheck,
   Building2,
   UserPlus,
   ShieldCheck,
-  KeyRound,
-  Settings,
+  FolderOpen,
+  Inbox,
   Wrench,
   Video,
   FileDown,
@@ -24,15 +23,17 @@ import { asset, cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 
-/** Deliberate category order + icon per category. */
+/**
+ * Category order + icon. Mirrors the onboarding-checklist sections so Help &
+ * guides lines up with the journey, plus Troubleshooting and Training Videos.
+ */
 const CATEGORY_ORDER: { name: string; icon: LucideIcon }[] = [
-  { name: "Getting Started", icon: Rocket },
-  { name: "Bid Management", icon: MailCheck },
-  { name: "Access Other Offices", icon: Building2 },
-  { name: "Inviting Teammates", icon: UserPlus },
-  { name: "Permissions", icon: ShieldCheck },
-  { name: "Login Credentials", icon: KeyRound },
-  { name: "Administration", icon: Settings },
+  { name: "Your organization setup", icon: Building2 },
+  { name: "Your team accounts", icon: UserPlus },
+  { name: "Roles & access", icon: ShieldCheck },
+  { name: "Email forwarding", icon: MailCheck },
+  { name: "Catalog & project data", icon: FolderOpen },
+  { name: "Bid / no-bid recommendations", icon: Inbox },
   { name: "Troubleshooting", icon: Wrench },
   { name: "Training Videos", icon: Video },
 ];

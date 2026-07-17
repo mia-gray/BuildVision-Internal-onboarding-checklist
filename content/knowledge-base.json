@@ -1,67 +1,98 @@
 [
   {
-    "id": "gs-quick-start",
-    "title": "Quick Start for Manufacturer Reps",
-    "description": "From your home page to your first sent bid in five steps — about ten minutes end to end.",
-    "category": "Getting Started",
-    "tags": ["home page", "first bid", "setup", "reps"],
-    "pdf": "/guides/quick-start.pdf",
-    "doc": "https://buildvision-docs.vercel.app/getting-started/manufacturer-reps/"
+    "id": "org-login",
+    "title": "Log into BuildVision",
+    "description": "Sign in to your BuildVision account to get started.",
+    "category": "Your organization setup",
+    "tags": ["login", "sign in", "access"],
+    "doc": "https://buildvision.io"
   },
   {
-    "id": "bm-email-forwarding",
-    "title": "Email Forwarding",
+    "id": "org-apply-settings",
+    "title": "Apply organization settings & account type",
+    "description": "Configure your organization settings and apply your account type.",
+    "category": "Your organization setup",
+    "tags": ["settings", "account type", "organization"],
+    "pdf": "/guides/apply-settings-account-type-guide.pdf"
+  },
+  {
+    "id": "org-child",
+    "title": "Create a child organization",
+    "description": "Add offices or line cards as child organizations under your parent org.",
+    "category": "Your organization setup",
+    "tags": ["child organization", "offices", "hierarchy"],
+    "pdf": "/guides/create-child-organization-guide.pdf"
+  },
+  {
+    "id": "org-company-settings",
+    "title": "Company Settings & Organization Structure",
+    "description": "Manage your organization, offices, line cards, and user hierarchy under Settings → Company.",
+    "category": "Your organization setup",
+    "tags": ["settings", "company", "organization", "offices", "line card"]
+  },
+  {
+    "id": "team-create-users",
+    "title": "Create new users",
+    "description": "Add the people who need access. New users receive login credentials by email and set their own password on first sign-in.",
+    "category": "Your team accounts",
+    "tags": ["users", "invite", "create users", "credentials"],
+    "pdf": "/guides/create-new-users-guide.pdf"
+  },
+  {
+    "id": "team-place-users",
+    "title": "Place users in the correct org node",
+    "description": "Assign each user to the right office / node in your organization hierarchy.",
+    "category": "Your team accounts",
+    "tags": ["users", "hierarchy", "org node", "offices"],
+    "pdf": "/guides/place-users-org-node-guide.pdf"
+  },
+  {
+    "id": "roles-multi-office",
+    "title": "Access other offices",
+    "description": "Switch between your root account and any child office from My Profile, or Settings → Company.",
+    "category": "Roles & access",
+    "tags": ["offices", "switch", "multi-office", "access", "profile"],
+    "pdf": "/guides/multi-office-access-guide.pdf"
+  },
+  {
+    "id": "roles-admin-member",
+    "title": "Admin vs Member Permissions",
+    "description": "Admins manage account settings, users, and integrations. Members work day to day on projects and bids. Assign the lowest level that lets each person do their job.",
+    "category": "Roles & access",
+    "tags": ["admin", "member", "roles", "permissions", "least privilege"]
+  },
+  {
+    "id": "email-forwarding",
+    "title": "Forward your bid inbox to BuildVision",
     "description": "Forward your bid-desk inbox to Bids@BuildVision.io so every bid, RFQ, and project document ingests automatically. Step-by-step for Gmail, Outlook on the web, and classic Outlook desktop.",
-    "category": "Bid Management",
+    "category": "Email forwarding",
     "tags": ["email", "gmail", "outlook", "forwarding", "ingestion", "bids"],
-    "pdf": "/guides/email-forwarding-guide.pdf",
+    "pdf": "/guides/forward-bid-inbox-guide.pdf",
     "doc": "https://buildvision-docs.vercel.app/getting-started/email-forwarding/"
   },
   {
-    "id": "bm-bid-nobid",
-    "title": "Understanding Bid / No-Bid Emails",
-    "description": "For every project we ingest, BuildVision sends a bid / no-bid recommendation based on fit to your line card, scope, equipment, engineer of record, and location — so reps can prioritize quickly.",
-    "category": "Bid Management",
-    "tags": ["bid", "no-bid", "recommendation", "prioritize"]
+    "id": "catalog-load",
+    "title": "Load the product catalog (Representation)",
+    "description": "Load your “Representation” product catalog so bids can be matched to your line card.",
+    "category": "Catalog & project data",
+    "tags": ["catalog", "representation", "line card", "products"],
+    "pdf": "/guides/product-catalog-representation-guide.pdf"
   },
   {
-    "id": "users-access-offices",
-    "title": "Access Other Offices",
-    "description": "Switch between your root account and any child office from My Profile, or from Settings → Company.",
-    "category": "Access Other Offices",
-    "tags": ["offices", "switch", "child office", "profile"],
-    "pdf": "/guides/access-other-offices.pdf",
-    "doc": "https://buildvision-docs.vercel.app/getting-started/switching-offices/"
-  },
-  {
-    "id": "users-invite",
-    "title": "Inviting Teammates",
-    "description": "Add the people who need access. New users receive login credentials by email and set their own password on first sign-in at app.buildvision.io/login.",
-    "category": "Inviting Teammates",
-    "tags": ["invite", "teammates", "add users", "credentials"]
-  },
-  {
-    "id": "perm-roles",
-    "title": "Admin vs Member Permissions",
-    "description": "Admins manage account settings, users, and integrations. Members work day to day on projects and bids. Assign the lowest level that lets each person do their job.",
-    "category": "Permissions",
-    "tags": ["admin", "member", "roles", "access", "least privilege"]
-  },
-  {
-    "id": "perm-credentials",
+    "id": "catalog-credentials",
     "title": "Saved Login Credentials for Protected Files",
     "description": "When bids link to documents behind a login (SharePoint, Google Drive, OneDrive), save credentials so BuildVision can open them automatically. Credentials are per user — one per platform.",
-    "category": "Login Credentials",
+    "category": "Catalog & project data",
     "tags": ["credentials", "sharepoint", "google drive", "onedrive", "protected links"],
     "pdf": "/guides/login-credentials-guide.pdf",
     "doc": "https://buildvision-docs.vercel.app/getting-started/login-credentials/"
   },
   {
-    "id": "admin-company",
-    "title": "Company Settings & Organization Structure",
-    "description": "Manage your organization, offices, line cards, and user hierarchy under Settings → Company. This view shows every office with its type, users, timezone, and address.",
-    "category": "Administration",
-    "tags": ["settings", "company", "organization", "offices", "line card"]
+    "id": "bid-nobid",
+    "title": "Understanding Bid / No-Bid Emails",
+    "description": "For every project we ingest, BuildVision sends a bid / no-bid recommendation based on fit to your line card, scope, equipment, engineer of record, and location — so reps can prioritize quickly.",
+    "category": "Bid / no-bid recommendations",
+    "tags": ["bid", "no-bid", "recommendation", "prioritize"]
   },
   {
     "id": "ts-no-bids",
@@ -69,7 +100,7 @@
     "description": "Usually the forwarding rule isn't active, the address wasn't verified, or the filter is too narrow. Confirm the rule is on, that Bids@BuildVision.io is verified, and widen the filter, then send a test bid.",
     "category": "Troubleshooting",
     "tags": ["troubleshoot", "not ingesting", "forwarding", "missing bids"],
-    "quickLinks": [{ "label": "Email Forwarding Guide (PDF)", "href": "/guides/email-forwarding-guide.pdf" }]
+    "quickLinks": [{ "label": "Email forwarding guide (PDF)", "href": "/guides/forward-bid-inbox-guide.pdf" }]
   },
   {
     "id": "ts-protected",
