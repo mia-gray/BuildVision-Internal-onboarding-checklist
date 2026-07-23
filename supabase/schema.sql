@@ -64,6 +64,7 @@ as $$
     'intake',          data->'intake',
     'intakeSubmitted', data->'intakeSubmitted',
     'checklist',       data->'checklist',
+    'reward',          data->'reward',
     'createdAt',       data->'createdAt',
     'updatedAt',       data->'updatedAt',
     'attachments', (
@@ -162,8 +163,52 @@ begin
 end;
 $$;
 
+-- Portal: claim the onboarding reward. Token-scoped; stores the selection +
+-- fulfillment details and adds a timeline event so the CX team is notified.
+create or replace function public.portal_claim_reward(p_token text, p_reward jsonb)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_now timestamptz := now();
+  v_data jsonb;
+  v_choice text;
+  v_label text;
+  v_event jsonb;
+begin
+  select data into v_data from public.customers where portal_token = p_token and archived = false;
+  if v_data is null then return; end if;
+
+  v_choice := coalesce(p_reward->>'choice', 'reward');
+  v_label := case v_choice
+    when 'hat' then 'BuildVision Hat'
+    when 'tumbler' then 'BuildVision Tumbler'
+    when 'doordash' then '$15 DoorDash Gift Card'
+    else 'reward' end;
+
+  v_data := jsonb_set(v_data, '{reward}', p_reward || jsonb_build_object('submittedAt', to_jsonb(v_now)), true);
+  v_data := jsonb_set(v_data, '{updatedAt}', to_jsonb(v_now), true);
+
+  v_event := jsonb_build_object(
+    'id',     gen_random_uuid()::text,
+    'type',   'reward_claimed',
+    'label',  'Reward claimed: ' || v_label,
+    'detail', coalesce(p_reward->>'email', p_reward->>'name'),
+    'by',     coalesce(v_data->>'name', 'Customer'),
+    'at',     to_jsonb(v_now)
+  );
+  v_data := jsonb_set(v_data, '{timeline}',
+              jsonb_build_array(v_event) || coalesce(v_data->'timeline', '[]'::jsonb), true);
+
+  update public.customers set data = v_data, updated_at = v_now where portal_token = p_token;
+end;
+$$;
+
 -- Expose only the RPCs to anonymous visitors.
 grant execute on function public.portal_get(text)                         to anon, authenticated;
 grant execute on function public.intake_get(text)                         to anon, authenticated;
 grant execute on function public.intake_submit(text, jsonb)               to anon, authenticated;
 grant execute on function public.portal_toggle_step(text, text, boolean)  to anon, authenticated;
+grant execute on function public.portal_claim_reward(text, jsonb)         to anon, authenticated;

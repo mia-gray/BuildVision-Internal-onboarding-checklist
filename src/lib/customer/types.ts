@@ -103,7 +103,8 @@ export type TimelineEventType =
   | "checklist_finished"
   | "intake_updated"
   | "document_added"
-  | "document_shared";
+  | "document_shared"
+  | "reward_claimed";
 
 export interface TimelineEvent {
   id: string;
@@ -158,6 +159,24 @@ export interface NewAttachmentInput {
   sharedWithCustomer?: boolean;
 }
 
+/** Which onboarding-completion reward the customer chose. */
+export type RewardChoice = "hat" | "tumbler" | "doordash";
+
+/** A claimed onboarding reward + fulfillment details. */
+export interface RewardClaim {
+  choice: RewardChoice;
+  /** Physical reward (hat / tumbler) shipping details. */
+  name?: string;
+  address?: string;
+  city?: string;
+  state?: string;
+  zip?: string;
+  phone?: string;
+  /** Digital reward (DoorDash) delivery email. */
+  email?: string;
+  submittedAt: string;
+}
+
 /** The complete, self-contained onboarding workspace for one customer. */
 export interface Customer {
   id: string;
@@ -180,6 +199,8 @@ export interface Customer {
   notes: CustomerNote[];
   timeline: TimelineEvent[];
   attachments: Attachment[];
+  /** Set when the customer unlocks + claims their onboarding reward. */
+  reward?: RewardClaim;
   archived: boolean;
   createdAt: string;
   updatedAt: string;

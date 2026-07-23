@@ -14,6 +14,7 @@ import {
   addAttachment as svcAddAttachment,
   addNote as svcAddNote,
   applyStatus,
+  claimReward as svcClaimReward,
   createCustomer as svcCreate,
   duplicateCustomer,
   markChecklistFinished,
@@ -33,6 +34,7 @@ import type {
   NewAttachmentInput,
   NewCustomerInput,
   NoteCategory,
+  RewardClaim,
 } from "./types";
 import { seedCustomers, SEED_CUSTOMER_IDS } from "./seed";
 
@@ -91,6 +93,7 @@ interface CustomerStore {
   setAttachmentShared: (id: string, attachmentId: string, shared: boolean) => void;
   updateIntake: (id: string, intake: IntakeSurvey, opts?: { fromForm?: boolean }) => void;
   markIntakeSent: (id: string) => void;
+  claimReward: (id: string, claim: RewardClaim) => void;
   pushRecent: (id: string) => void;
   /** One-time: push customers saved only in this browser into the backend. */
   importLocalCustomers: () => Promise<{ imported: number }>;
@@ -248,6 +251,7 @@ export function CustomerStoreProvider({ children }: { children: React.ReactNode 
       updateIntake: (id, intake, opts) =>
         mutate(id, (c) => svcUpdateIntake(c, intake, currentUser, opts)),
       markIntakeSent: (id) => mutate(id, (c) => markIntakeSent(c, currentUser)),
+      claimReward: (id, claim) => mutate(id, (c) => svcClaimReward(c, claim)),
       pushRecent: (id) =>
         setRecentIds((prev) => {
           const next = [id, ...prev.filter((x) => x !== id)].slice(0, 6);

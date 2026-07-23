@@ -13,6 +13,7 @@ import {
   PartyPopper,
   Paperclip,
   Eye,
+  Gift,
   Circle,
   type LucideIcon,
 } from "lucide-react";
@@ -31,6 +32,7 @@ const ICON: Record<TimelineEventType, LucideIcon> = {
   checklist_finished: PartyPopper,
   document_added: Paperclip,
   document_shared: Eye,
+  reward_claimed: Gift,
 };
 
 export function timelineIcon(type: TimelineEventType): LucideIcon {
