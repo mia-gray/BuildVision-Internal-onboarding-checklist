@@ -12,9 +12,17 @@ import type {
   NewAttachmentInput,
   NewCustomerInput,
   NoteCategory,
+  RewardClaim,
   TimelineEvent,
   TimelineEventType,
 } from "./types";
+
+/** Display label for each reward choice (used in timeline + dashboard). */
+export const REWARD_LABELS: Record<RewardClaim["choice"], string> = {
+  hat: "BuildVision Hat",
+  tumbler: "BuildVision Tumbler",
+  doordash: "$15 DoorDash Gift Card",
+};
 
 export const CSM_OPTIONS = ["Mia Gray", "Ben Lyddane", "Mackenzie Hoover"];
 
@@ -201,6 +209,21 @@ export function addAttachment(
     ...customer.timeline,
   ];
   return { ...touch(customer), attachments: [attachment, ...customer.attachments], timeline };
+}
+
+/** Record a claimed onboarding reward + fulfillment details, with a timeline event. */
+export function claimReward(customer: Customer, claim: RewardClaim): Customer {
+  return {
+    ...touch(customer),
+    reward: claim,
+    timeline: [
+      timelineEvent("reward_claimed", `Reward claimed: ${REWARD_LABELS[claim.choice]}`, {
+        by: customer.name,
+        detail: claim.choice === "doordash" ? claim.email : claim.name,
+      }),
+      ...customer.timeline,
+    ],
+  };
 }
 
 export function removeAttachment(customer: Customer, attachmentId: string): Customer {

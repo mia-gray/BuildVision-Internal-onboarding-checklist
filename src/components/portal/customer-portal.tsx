@@ -32,6 +32,7 @@ import { IntakeForm } from "@/components/intake/intake-form";
 import { KnowledgeBase } from "@/components/kb/knowledge-base";
 import { CustomerAvatar } from "@/components/customer/avatar";
 import { PortalJourney } from "./portal-journey";
+import { RewardVault } from "./reward-vault";
 
 /** A short, friendly status line shown in the welcome-back hero. */
 function statusMessage(customer: Customer): string {
@@ -53,6 +54,7 @@ export function CustomerPortal({ customer }: { customer: Customer }) {
   const allStepIds = useAllStepIds();
   const facing = React.useMemo(() => sections.filter((s) => s.customerFacing), [sections]);
   const submitted = customer.intakeSubmitted;
+  const facingStepIds = React.useMemo(() => facing.flatMap((s) => s.steps.map((st) => st.id)), [facing]);
 
   // NOTE: the portal renders only customer-appropriate data — intake, journey,
   // shared documents, and the knowledge base. Internal-only fields (notes,
@@ -90,6 +92,18 @@ export function CustomerPortal({ customer }: { customer: Customer }) {
     document.title = `${customer.name} · BuildVision Onboarding`;
   }, [customer.name]);
 
+  const rewardTotal = facingStepIds.length;
+  const rewardDone = facingStepIds.filter((id) => checklist[id]?.done).length;
+  const rewardVault = (
+    <RewardVault
+      done={rewardDone}
+      total={rewardTotal}
+      reward={customer.reward}
+      portalToken={customer.portalToken}
+      customerId={customer.id}
+    />
+  );
+
   return (
     <div className="min-h-[100dvh] bg-background">
       {/* Branded top bar */}
@@ -120,6 +134,7 @@ export function CustomerPortal({ customer }: { customer: Customer }) {
               </div>
               <PortalJourney sections={facing} checklist={checklist} onToggle={toggleStep} />
             </div>
+            {rewardVault}
           </>
         ) : (
           <>
@@ -154,6 +169,8 @@ export function CustomerPortal({ customer }: { customer: Customer }) {
             </section>
 
             <PortalJourney sections={facing} checklist={checklist} onToggle={toggleStep} />
+
+            {rewardVault}
 
             <IntakeSummary customer={customer} />
           </>

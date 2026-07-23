@@ -15,7 +15,7 @@ import * as React from "react";
 
 import { supabase, isSupabaseConfigured } from "@/lib/supabase/client";
 import { useCustomers } from "./store";
-import type { Customer, IntakeSurvey } from "./types";
+import type { Customer, IntakeSurvey, RewardClaim } from "./types";
 
 /** Build a full Customer from a sanitized RPC payload (missing fields default). */
 function hydrate(d: Record<string, unknown>): Customer {
@@ -33,6 +33,7 @@ function hydrate(d: Record<string, unknown>): Customer {
     notes: [],
     timeline: [],
     attachments: (d.attachments as Customer["attachments"]) ?? [],
+    reward: (d.reward as RewardClaim) ?? undefined,
     archived: false,
     createdAt: String(d.createdAt ?? ""),
     updatedAt: String(d.updatedAt ?? ""),
@@ -114,5 +115,12 @@ export async function togglePortalStep(token: string, stepId: string, done: bool
     p_step_id: stepId,
     p_done: done,
   });
+  if (error) throw new Error(error.message);
+}
+
+/** Claim the onboarding reward from the portal (backend mode). Throws on error. */
+export async function claimRewardPublic(token: string, claim: RewardClaim): Promise<void> {
+  if (!supabase) throw new Error("Backend is not configured.");
+  const { error } = await supabase.rpc("portal_claim_reward", { p_token: token, p_reward: claim });
   if (error) throw new Error(error.message);
 }

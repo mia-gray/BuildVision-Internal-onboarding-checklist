@@ -13,6 +13,7 @@ import { IntakeSurvey } from "@/components/customer/workspace/intake-survey";
 import { CustomerChecklist } from "@/components/customer/workspace/customer-checklist";
 import { CustomerDocuments } from "@/components/customer/workspace/customer-documents";
 import { CustomerNotes } from "@/components/customer/workspace/customer-notes";
+import { CustomerReward } from "@/components/customer/workspace/customer-reward";
 import { CustomerTimeline } from "@/components/customer/workspace/customer-timeline";
 import { ProgressSummary } from "@/components/customer/workspace/progress-summary";
 
@@ -76,6 +77,7 @@ function Workspace() {
           <CustomerDocuments customer={customer} />
         </div>
         <aside className="space-y-6">
+          <CustomerReward customer={customer} />
           <ProgressSummary customer={customer} allStepIds={allStepIds} />
           <CustomerTimeline customer={customer} />
           <CustomerNotes customer={customer} />

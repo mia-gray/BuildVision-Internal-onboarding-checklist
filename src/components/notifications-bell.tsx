@@ -24,6 +24,7 @@ const NOTIFY_TYPES = new Set<TimelineEventType>([
   "note_added",
   "document_added",
   "document_shared",
+  "reward_claimed",
 ]);
 
 interface Notification {
