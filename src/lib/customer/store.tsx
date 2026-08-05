@@ -38,6 +38,9 @@ import type {
 } from "./types";
 import { seedCustomers, SEED_CUSTOMER_IDS } from "./seed";
 
+/** Ids of local-only customers the user dismissed from the import banner. */
+export const IMPORT_DISMISSED_KEY = "bv.importDismissed.v1";
+
 const CURRENT_USER_KEY = "bv.currentUser.v1";
 const RECENT_KEY = "bv.recentCustomers.v1";
 const SEED_FLAG_KEY = "bv.seeded.v1";
@@ -266,9 +269,10 @@ export function CustomerStoreProvider({ children }: { children: React.ReactNode 
         } catch {
           local = [];
         }
-        // Skip the built-in demo customers; import everything else.
+        // Skip the built-in demo customers + anything the user dismissed.
+        const dismissed = new Set(readStringArray(IMPORT_DISMISSED_KEY));
         const toImport = local.filter(
-          (c) => c && c.id && !SEED_CUSTOMER_IDS.includes(c.id),
+          (c) => c && c.id && !SEED_CUSTOMER_IDS.includes(c.id) && !dismissed.has(c.id),
         );
         for (const c of toImport) {
           const fixed = c.portalToken ? c : { ...c, portalToken: makePortalToken() };
