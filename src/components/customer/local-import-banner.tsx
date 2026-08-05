@@ -1,25 +1,36 @@
 "use client";
 
 import * as React from "react";
-import { UploadCloud, Loader2, Check } from "lucide-react";
+import { UploadCloud, Loader2, Check, X } from "lucide-react";
 
 import { isSupabaseConfigured } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/supabase/auth";
-import { useCustomers } from "@/lib/customer/store";
+import { useCustomers, IMPORT_DISMISSED_KEY } from "@/lib/customer/store";
 import { CUSTOMERS_STORAGE_KEY } from "@/lib/customer/repository";
 import { SEED_CUSTOMER_IDS } from "@/lib/customer/seed";
 import type { Customer } from "@/lib/customer/types";
 import { Button } from "@/components/ui/button";
 
+function readDismissed(): Set<string> {
+  try {
+    const raw = localStorage.getItem(IMPORT_DISMISSED_KEY);
+    const arr = raw ? (JSON.parse(raw) as string[]) : [];
+    return new Set(Array.isArray(arr) ? arr : []);
+  } catch {
+    return new Set();
+  }
+}
+
 /**
  * Shown only in backend mode when this browser holds customers that aren't in
  * the shared database yet (e.g. created before the backend was turned on). One
- * click pushes them to Supabase so the whole team can see them.
+ * click pushes them to Supabase; Dismiss silences it for this browser (e.g. for
+ * a stale/deleted local-only record you don't want re-imported).
  */
 export function LocalImportBanner() {
   const { required, userId } = useAuth();
   const { customers, loading, importLocalCustomers } = useCustomers();
-  const [pending, setPending] = React.useState<string[]>([]);
+  const [pending, setPending] = React.useState<{ id: string; name: string }[]>([]);
   const [busy, setBusy] = React.useState(false);
   const [importedCount, setImportedCount] = React.useState<number | null>(null);
 
@@ -33,10 +44,18 @@ export function LocalImportBanner() {
     try {
       const raw = localStorage.getItem(CUSTOMERS_STORAGE_KEY);
       const local = (raw ? (JSON.parse(raw) as Customer[]) : []) ?? [];
-      const names = local
-        .filter((c) => c && c.id && !SEED_CUSTOMER_IDS.includes(c.id) && !backendIds.has(c.id))
-        .map((c) => c.name || "(unnamed)");
-      setPending(names);
+      const dismissed = readDismissed();
+      const rows = local
+        .filter(
+          (c) =>
+            c &&
+            c.id &&
+            !SEED_CUSTOMER_IDS.includes(c.id) &&
+            !backendIds.has(c.id) &&
+            !dismissed.has(c.id),
+        )
+        .map((c) => ({ id: c.id, name: c.name || "(unnamed)" }));
+      setPending(rows);
     } catch {
       setPending([]);
     }
@@ -47,6 +66,16 @@ export function LocalImportBanner() {
     const { imported } = await importLocalCustomers();
     setBusy(false);
     setImportedCount(imported);
+    setPending([]);
+  }
+
+  function dismiss() {
+    try {
+      const next = new Set([...readDismissed(), ...pending.map((p) => p.id)]);
+      localStorage.setItem(IMPORT_DISMISSED_KEY, JSON.stringify([...next]));
+    } catch {
+      /* ignore */
+    }
     setPending([]);
   }
 
@@ -72,15 +101,26 @@ export function LocalImportBanner() {
           {pending.length} customer{pending.length === 1 ? "" : "s"} saved only in this browser
         </p>
         <p className="text-xs text-muted-foreground">
-          {pending.slice(0, 6).join(", ")}
+          {pending.slice(0, 6).map((p) => p.name).join(", ")}
           {pending.length > 6 ? `, +${pending.length - 6} more` : ""} — not in the shared database
           yet, so teammates and client links can&apos;t see {pending.length === 1 ? "it" : "them"}.
         </p>
       </div>
-      <Button onClick={runImport} disabled={busy} size="sm" className="shrink-0">
-        {busy ? <Loader2 className="animate-spin" /> : <UploadCloud />}
-        {busy ? "Importing…" : "Import to shared database"}
-      </Button>
+      <div className="flex shrink-0 items-center gap-2">
+        <Button onClick={runImport} disabled={busy} size="sm">
+          {busy ? <Loader2 className="animate-spin" /> : <UploadCloud />}
+          {busy ? "Importing…" : "Import to shared database"}
+        </Button>
+        <Button
+          onClick={dismiss}
+          disabled={busy}
+          variant="ghost"
+          size="sm"
+          title="Hide this — won't import or re-add these records on this browser"
+        >
+          <X /> Dismiss
+        </Button>
+      </div>
     </div>
   );
 }
