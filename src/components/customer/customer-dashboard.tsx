@@ -2,15 +2,16 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { Search, Users, ArrowUpDown, Clock } from "lucide-react";
+import { Search, Users, ArrowUpDown, Clock, Link2, Check } from "lucide-react";
 
 import { useCustomers } from "@/lib/customer/store";
 import { computeProgress } from "@/lib/customer/service";
 import { CUSTOMER_STATUSES, type CustomerStatus } from "@/lib/customer/types";
 import { useAllStepIds } from "@/lib/customer/use-steps";
-import { customerPath } from "@/lib/customer/paths";
+import { customerPath, salesIntakePath } from "@/lib/customer/paths";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { asset, cn } from "@/lib/utils";
 import { CustomerRow } from "./customer-row";
 import { CreateCustomerDialog } from "./create-customer-dialog";
 import { CustomerAvatar } from "./avatar";
@@ -40,6 +41,7 @@ export function CustomerDashboard() {
 
   const [query, setQuery] = React.useState("");
   const [status, setStatus] = React.useState<"all" | CustomerStatus>("all");
+  const [onlyNew, setOnlyNew] = React.useState(false);
   const [sort, setSort] = React.useState<SortKey>("updated");
   const [showArchived, setShowArchived] = React.useState(false);
 
@@ -47,6 +49,7 @@ export function CustomerDashboard() {
     const q = query.trim().toLowerCase();
     const list = customers.filter((c) => {
       if (!showArchived && c.archived) return false;
+      if (onlyNew && c.reviewed !== false) return false;
       if (status !== "all" && c.status !== status) return false;
       if (
         q &&
@@ -76,9 +79,10 @@ export function CustomerDashboard() {
       }
     });
     return list;
-  }, [customers, query, status, sort, showArchived, allStepIds]);
+  }, [customers, query, status, onlyNew, sort, showArchived, allStepIds]);
 
   const activeCount = customers.filter((c) => !c.archived).length;
+  const newCount = customers.filter((c) => !c.archived && c.reviewed === false).length;
   const recent = recentIds.map(getCustomer).filter(Boolean).slice(0, 5);
 
   return (
@@ -91,9 +95,26 @@ export function CustomerDashboard() {
             {loading
               ? "Loading…"
               : `${activeCount} customer${activeCount === 1 ? "" : "s"} onboarding`}
+            {!loading && newCount > 0 && (
+              <>
+                {" · "}
+                <button
+                  onClick={() => {
+                    setOnlyNew(true);
+                    setStatus("all");
+                  }}
+                  className="font-medium text-primary underline-offset-2 hover:underline"
+                >
+                  {newCount} new to review
+                </button>
+              </>
+            )}
           </p>
         </div>
-        <CreateCustomerDialog />
+        <div className="flex items-center gap-2">
+          <SalesIntakeLinkButton />
+          <CreateCustomerDialog />
+        </div>
       </div>
 
       {/* One-time import of browser-only customers into the shared backend */}
@@ -135,11 +156,19 @@ export function CustomerDashboard() {
 
         <div className="flex flex-1 flex-wrap items-center gap-2">
           <div className="flex flex-wrap gap-1.5">
-            <FilterChip active={status === "all"} onClick={() => setStatus("all")}>
+            <FilterChip active={!onlyNew && status === "all"} onClick={() => { setOnlyNew(false); setStatus("all"); }}>
               All
             </FilterChip>
+            {newCount > 0 && (
+              <FilterChip active={onlyNew} onClick={() => { setOnlyNew(true); setStatus("all"); }}>
+                New{" "}
+                <span className={cn("ml-1 rounded-full px-1.5 text-[10px]", onlyNew ? "bg-primary/20" : "bg-primary/10 text-primary")}>
+                  {newCount}
+                </span>
+              </FilterChip>
+            )}
             {CUSTOMER_STATUSES.map((s) => (
-              <FilterChip key={s.value} active={status === s.value} onClick={() => setStatus(s.value)}>
+              <FilterChip key={s.value} active={!onlyNew && status === s.value} onClick={() => { setOnlyNew(false); setStatus(s.value); }}>
                 {s.label}
               </FilterChip>
             ))}
@@ -201,6 +230,31 @@ export function CustomerDashboard() {
         </button>
       )}
     </div>
+  );
+}
+
+/** Copies the one permanent, reusable Sales Intake link for the sales team. */
+function SalesIntakeLinkButton() {
+  const [copied, setCopied] = React.useState(false);
+  async function copy() {
+    try {
+      await navigator.clipboard.writeText(`${window.location.origin}${asset(salesIntakePath())}`);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1600);
+    } catch {
+      /* ignore */
+    }
+  }
+  return (
+    <Button
+      variant="outline"
+      size="sm"
+      onClick={copy}
+      title="Copy the permanent Sales Intake link — sales fills it out to auto-create a customer"
+    >
+      {copied ? <Check className="text-[var(--success)]" /> : <Link2 />}
+      {copied ? "Link copied" : "Sales intake link"}
+    </Button>
   );
 }
 

@@ -16,11 +16,13 @@ import {
   ChevronDown,
   ExternalLink,
   Share2,
+  Eye,
+  UserCog,
 } from "lucide-react";
 
 import type { Customer } from "@/lib/customer/types";
 import { CUSTOMER_STATUSES } from "@/lib/customer/types";
-import { computeProgress } from "@/lib/customer/service";
+import { computeProgress, CSM_OPTIONS } from "@/lib/customer/service";
 import { useCustomers } from "@/lib/customer/store";
 import { intakePath, customerPath, portalPath } from "@/lib/customer/paths";
 import { asset, cn } from "@/lib/utils";
@@ -45,8 +47,10 @@ export function CustomerHeader({
   allStepIds: string[];
 }) {
   const router = useRouter();
-  const { setStatus, duplicate, setArchived, remove, markIntakeSent } = useCustomers();
+  const { setStatus, duplicate, setArchived, remove, markIntakeSent, setReviewed, setAssignedCsm } =
+    useCustomers();
   const { done, total, percent } = computeProgress(customer, allStepIds);
+  const isNew = customer.reviewed === false;
   const [copied, setCopied] = React.useState(false);
   const [portalCopied, setPortalCopied] = React.useState(false);
   const [intakeUrl, setIntakeUrl] = React.useState("");
@@ -113,12 +117,37 @@ export function CustomerHeader({
         <div className="flex items-start gap-4">
           <CustomerAvatar name={customer.name} logoUrl={customer.logoUrl} size="lg" />
           <div className="min-w-0">
-            <h1 className="text-xl font-semibold tracking-tight sm:text-2xl">{customer.name}</h1>
+            <div className="flex flex-wrap items-center gap-2">
+              <h1 className="text-xl font-semibold tracking-tight sm:text-2xl">{customer.name}</h1>
+              {isNew && (
+                <span className="rounded-full bg-primary px-2 py-0.5 text-[10px] font-semibold uppercase leading-none tracking-wide text-primary-foreground">
+                  New
+                </span>
+              )}
+            </div>
             <p className="text-sm text-muted-foreground">{customer.companyName}</p>
             <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
-              <span>
-                CSM <span className="text-foreground/80">{customer.assignedCsm}</span>
-              </span>
+              <DropdownMenu>
+                <DropdownMenuTrigger className="inline-flex items-center gap-1 rounded outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring">
+                  <UserCog className="size-3.5" /> CSM{" "}
+                  <span className="text-foreground/80">{customer.assignedCsm}</span>
+                  <ChevronDown className="size-3" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start">
+                  <DropdownMenuLabel>Assign CSM</DropdownMenuLabel>
+                  {CSM_OPTIONS.map((name) => (
+                    <DropdownMenuItem key={name} onClick={() => setAssignedCsm(customer.id, name)}>
+                      {name}
+                      {customer.assignedCsm === name && <Check className="ml-auto size-3.5 text-primary" />}
+                    </DropdownMenuItem>
+                  ))}
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => setAssignedCsm(customer.id, "Unassigned")}>
+                    Unassigned
+                    {customer.assignedCsm === "Unassigned" && <Check className="ml-auto size-3.5 text-primary" />}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
               <span>
                 Started <span className="text-foreground/80">{formatDate(customer.createdAt)}</span>
               </span>
@@ -131,6 +160,11 @@ export function CustomerHeader({
 
         {/* Status control */}
         <div className="flex shrink-0 items-center gap-2">
+          {isNew && (
+            <Button size="sm" onClick={() => setReviewed(customer.id, true)}>
+              <Eye /> Mark reviewed
+            </Button>
+          )}
           <DropdownMenu>
             <DropdownMenuTrigger className="inline-flex items-center gap-1.5 rounded-md outline-none focus-visible:ring-2 focus-visible:ring-ring">
               <CustomerStatusBadge status={customer.status} />

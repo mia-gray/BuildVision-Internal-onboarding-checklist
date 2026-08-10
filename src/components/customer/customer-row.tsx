@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { MoreHorizontal, Copy, Archive, ArchiveRestore, Trash2, ExternalLink } from "lucide-react";
+import { MoreHorizontal, Copy, Archive, ArchiveRestore, Trash2, ExternalLink, Eye } from "lucide-react";
 
 import type { Customer } from "@/lib/customer/types";
 import { computeProgress } from "@/lib/customer/service";
@@ -28,8 +28,9 @@ export function CustomerRow({
   allStepIds: string[];
 }) {
   const router = useRouter();
-  const { duplicate, setArchived, remove } = useCustomers();
+  const { duplicate, setArchived, remove, setReviewed } = useCustomers();
   const { done, total, percent } = computeProgress(customer, allStepIds);
+  const isNew = customer.reviewed === false;
 
   function onDuplicate() {
     const copy = duplicate(customer.id);
@@ -48,6 +49,7 @@ export function CustomerRow({
         "group relative grid grid-cols-1 gap-3 rounded-xl border border-border bg-card p-4 transition-colors hover:border-primary/40 hover:bg-accent/30",
         "sm:grid-cols-[1.6fr_0.9fr_1.2fr_1fr_auto] sm:items-center",
         customer.archived && "opacity-60",
+        isNew && "border-primary/40 ring-1 ring-primary/20",
       )}
     >
       {/* name + avatar (whole row is a link via overlay) */}
@@ -58,7 +60,14 @@ export function CustomerRow({
       >
         <CustomerAvatar name={customer.name} logoUrl={customer.logoUrl} />
         <div className="min-w-0">
-          <p className="truncate text-sm font-semibold">{customer.name}</p>
+          <p className="flex items-center gap-1.5 truncate text-sm font-semibold">
+            <span className="truncate">{customer.name}</span>
+            {isNew && (
+              <span className="shrink-0 rounded-full bg-primary px-1.5 py-0.5 text-[10px] font-semibold uppercase leading-none tracking-wide text-primary-foreground">
+                New
+              </span>
+            )}
+          </p>
           <p className="truncate text-xs text-muted-foreground">{customer.companyName}</p>
         </div>
       </Link>
@@ -104,6 +113,11 @@ export function CustomerRow({
                 <ExternalLink /> Open
               </Link>
             </DropdownMenuItem>
+            {isNew && (
+              <DropdownMenuItem onClick={() => setReviewed(customer.id, true)}>
+                <Eye /> Mark reviewed
+              </DropdownMenuItem>
+            )}
             <DropdownMenuItem onClick={onDuplicate}>
               <Copy /> Duplicate
             </DropdownMenuItem>

@@ -62,26 +62,46 @@ function Field({
   );
 }
 
+/** Optional custom copy shown on the success screen after submit. */
+export interface SubmitNotice {
+  title: string;
+  body: string;
+}
+
 export function IntakeForm({
   customer,
   onSubmit,
+  heading,
+  subheading,
+  submitLabel = "Submit intake",
 }: {
-  customer: Customer;
-  /** Custom submit handler (backend mode). Falls back to the local store. */
-  onSubmit?: (values: IntakeSurvey) => Promise<void>;
+  /** The customer being filled in. Omit for a blank "new customer" form. */
+  customer?: Customer;
+  /**
+   * Custom submit handler (backend mode / sales intake). Falls back to the local
+   * store when omitted. May return a {@link SubmitNotice} to customize the
+   * success screen (e.g. the Sales Intake "created" vs "duplicate" message).
+   */
+  onSubmit?: (values: IntakeSurvey) => Promise<void | { notice?: SubmitNotice }>;
+  /** Heading override (e.g. for the Sales Intake link). */
+  heading?: string;
+  subheading?: string;
+  submitLabel?: string;
 }) {
   const { updateIntake } = useCustomers();
-  const [values, setValues] = React.useState<IntakeSurvey>(customer.intake ?? {});
+  const dkey = draftKey(customer?.id ?? "sales-new");
+  const [values, setValues] = React.useState<IntakeSurvey>(customer?.intake ?? {});
   const [errors, setErrors] = React.useState<Record<string, string>>({});
   const [submitting, setSubmitting] = React.useState(false);
   const [submitted, setSubmitted] = React.useState(false);
+  const [notice, setNotice] = React.useState<SubmitNotice | null>(null);
   const [submitError, setSubmitError] = React.useState("");
   const [savedAt, setSavedAt] = React.useState<number | null>(null);
 
   // Load any autosaved draft on mount.
   React.useEffect(() => {
     try {
-      const raw = localStorage.getItem(draftKey(customer.id));
+      const raw = localStorage.getItem(dkey);
       if (raw) setValues((prev) => ({ ...prev, ...(JSON.parse(raw) as IntakeSurvey) }));
     } catch {
       /* ignore */
@@ -93,7 +113,7 @@ export function IntakeForm({
     setValues((prev) => {
       const next = { ...prev, [key]: v };
       try {
-        localStorage.setItem(draftKey(customer.id), JSON.stringify(next));
+        localStorage.setItem(dkey, JSON.stringify(next));
         setSavedAt(Date.now());
       } catch {
         /* ignore */
@@ -134,20 +154,22 @@ export function IntakeForm({
     setSubmitting(true);
     setSubmitError("");
     (async () => {
+      let result: void | { notice?: SubmitNotice } = undefined;
       try {
-        if (onSubmit) await onSubmit(values);
-        else updateIntake(customer.id, values, { fromForm: true });
+        if (onSubmit) result = await onSubmit(values);
+        else if (customer) updateIntake(customer.id, values, { fromForm: true });
       } catch {
         setSubmitting(false);
         setSubmitError("Something went wrong submitting your intake. Please try again.");
         return;
       }
       try {
-        localStorage.removeItem(draftKey(customer.id));
+        localStorage.removeItem(dkey);
       } catch {
         /* ignore */
       }
       setSubmitting(false);
+      setNotice(result?.notice ?? null);
       setSubmitted(true);
     })();
   }
@@ -158,10 +180,10 @@ export function IntakeForm({
         <span className="mx-auto mb-4 flex size-14 items-center justify-center rounded-2xl bg-[color-mix(in_oklch,var(--success)_16%,transparent)] text-[var(--success)]">
           <CheckCircle2 className="size-7" />
         </span>
-        <h1 className="text-2xl font-semibold tracking-tight">Thank you!</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">{notice?.title ?? "Thank you!"}</h1>
         <p className="mt-2 text-muted-foreground">
-          Your intake details have been sent to the BuildVision team. Your customer success team will
-          be in touch to kick off your onboarding.
+          {notice?.body ??
+            "Your intake details have been sent to the BuildVision team. Your customer success team will be in touch to kick off your onboarding."}
         </p>
       </div>
     );
@@ -172,14 +194,14 @@ export function IntakeForm({
       {/* Welcome heading — lives inside the form so it disappears on submit */}
       <div className="mb-8">
         <p className="text-sm font-medium text-primary">
-          Welcome{customer.name ? `, ${customer.name}` : ""}
+          {customer ? `Welcome${customer.name ? `, ${customer.name}` : ""}` : "BuildVision"}
         </p>
         <h1 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">
-          Let&apos;s set up your BuildVision account
+          {heading ?? "Let's set up your BuildVision account"}
         </h1>
         <p className="mt-2 text-[15px] leading-relaxed text-muted-foreground">
-          A few quick details help us configure everything before your kickoff. It takes about three
-          minutes, and your answers save as you go.
+          {subheading ??
+            "A few quick details help us configure everything before your kickoff. It takes about three minutes, and your answers save as you go."}
         </p>
       </div>
 
@@ -250,7 +272,7 @@ export function IntakeForm({
         </p>
         <Button type="submit" size="lg" disabled={submitting} className="w-full sm:w-auto">
           {submitting ? <Loader2 className="animate-spin" /> : null}
-          {submitting ? "Submitting…" : "Submit intake"}
+          {submitting ? "Submitting…" : submitLabel}
         </Button>
       </div>
     </form>

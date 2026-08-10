@@ -100,6 +100,21 @@ export function useIntakeCustomer(id: string): PublicResult {
   return { customer: id ? (store.getCustomer(id) ?? null) : null, loading: store.loading };
 }
 
+/**
+ * Submit the permanent Sales Intake form (backend mode). Anonymous: runs the
+ * `sales_intake_create` RPC, which auto-creates the customer account server-side
+ * (or flags an existing match). Returns the outcome, or an error message.
+ */
+export async function salesIntakeCreate(
+  intake: IntakeSurvey,
+): Promise<{ status: "created" | "duplicate"; id?: string; error?: string }> {
+  if (!supabase) return { status: "created", error: "Backend is not configured." };
+  const { data, error } = await supabase.rpc("sales_intake_create", { p_intake: intake });
+  if (error) return { status: "created", error: error.message };
+  const d = (data as { status?: string; id?: string } | null) ?? {};
+  return { status: d.status === "duplicate" ? "duplicate" : "created", id: d.id };
+}
+
 /** Submit intake answers for the public form. Returns an error message or null. */
 export async function submitIntakePublic(id: string, intake: IntakeSurvey): Promise<string | null> {
   if (!supabase) return "Backend is not configured.";

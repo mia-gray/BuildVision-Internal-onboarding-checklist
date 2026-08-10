@@ -195,6 +195,15 @@ export interface Customer {
   status: CustomerStatus;
   intake: IntakeSurvey;
   intakeSubmitted: boolean;
+  /**
+   * Whether a team member has reviewed this account. Auto-created accounts
+   * (from the permanent Sales Intake link) start `false` and surface a "New"
+   * badge until someone marks them reviewed. Undefined on legacy/manually
+   * created records means "already reviewed" (no badge).
+   */
+  reviewed?: boolean;
+  /** When a team member marked the account reviewed. */
+  reviewedAt?: string;
   checklist: ChecklistState;
   notes: CustomerNote[];
   timeline: TimelineEvent[];

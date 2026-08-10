@@ -10,3 +10,5 @@ export const customerPath = (id: string) => `/customers/?id=${encodeURIComponent
 export const intakePath = (id: string) => `/intake/?customer=${encodeURIComponent(id)}`;
 /** The external, customer-facing onboarding portal (resolved by opaque token). */
 export const portalPath = (token: string) => `/onboarding/?token=${encodeURIComponent(token)}`;
+/** The permanent, reusable Sales Intake link (one link, auto-creates accounts). */
+export const salesIntakePath = () => `/sales-intake/`;
