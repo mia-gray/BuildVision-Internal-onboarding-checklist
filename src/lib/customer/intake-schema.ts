@@ -36,6 +36,13 @@ export const INTAKE_GROUPS: IntakeGroup[] = [
     fields: [
       { key: "companyName", label: "Company Name", type: "text", required: true, placeholder: "Acme Mechanical" },
       {
+        key: "website",
+        label: "Company Website",
+        type: "text",
+        placeholder: "https://acme.com",
+        helper: "The customer's website URL.",
+      },
+      {
         key: "organizationName",
         label: "How should your organization name appear in BuildVision?",
         type: "text",

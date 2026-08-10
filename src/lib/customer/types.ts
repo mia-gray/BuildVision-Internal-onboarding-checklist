@@ -38,6 +38,8 @@ export interface TeamMember {
 /** The customer's intake survey responses. All optional until submitted. */
 export interface IntakeSurvey {
   companyName?: string;
+  /** The customer's website URL. */
+  website?: string;
   /** How the org name should appear in BuildVision. */
   organizationName?: string;
   /** "Yes" | "No" — whether to create child offices. */
