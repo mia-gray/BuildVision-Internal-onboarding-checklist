@@ -73,6 +73,8 @@ export function createCustomer(input: NewCustomerInput): Customer {
     status: "not_started",
     intake: { ...input.intake },
     intakeSubmitted: false,
+    // Manually created accounts don't need a review — the creator saw them.
+    reviewed: true,
     checklist: {},
     notes: [],
     timeline: [timelineEvent("customer_created", "Customer created", { by: input.assignedCsm, at })],
@@ -81,6 +83,82 @@ export function createCustomer(input: NewCustomerInput): Customer {
     createdAt: at,
     updatedAt: at,
   };
+}
+
+/** Normalized key used to detect a duplicate intake (company name or email). */
+function normalize(s: string | undefined): string {
+  return (s ?? "").trim().toLowerCase();
+}
+
+/**
+ * Find an existing (non-archived) customer that appears to match a new intake,
+ * to avoid creating duplicates from the permanent Sales Intake link. Matches on
+ * company name (case-insensitive) OR primary-contact email.
+ */
+export function findIntakeDuplicate(
+  customers: Customer[],
+  intake: IntakeSurvey,
+): Customer | undefined {
+  const company = normalize(intake.companyName);
+  const email = normalize(intake.email);
+  return customers.find((c) => {
+    if (c.archived) return false;
+    const cCompany = normalize(c.companyName || c.intake.companyName);
+    const cEmail = normalize(c.intake.email);
+    return (
+      (!!company && cCompany === company) || (!!email && cEmail === email)
+    );
+  });
+}
+
+/**
+ * Build a new customer from a submitted Sales Intake form. Unlike a manual
+ * create, this is populated from the intake, marked submitted + unreviewed, and
+ * defaults to an unassigned CSM until the team reviews it.
+ */
+export function createCustomerFromIntake(intake: IntakeSurvey): Customer {
+  const at = nowIso();
+  const company = (intake.companyName || "New customer").trim();
+  return {
+    id: shortId(),
+    name: company,
+    companyName: company,
+    assignedCsm: "Unassigned",
+    portalToken: makePortalToken(),
+    status: "intake_received",
+    intake: { ...intake, submittedAt: at },
+    intakeSubmitted: true,
+    reviewed: false,
+    checklist: {},
+    notes: [],
+    timeline: [
+      timelineEvent("customer_created", "New account from Sales intake", {
+        by: "Sales intake",
+        detail: intake.primaryContact,
+        at,
+      }),
+      timelineEvent("intake_submitted", "Intake form submitted", { by: company, at }),
+    ],
+    attachments: [],
+    archived: false,
+    createdAt: at,
+    updatedAt: at,
+  };
+}
+
+/** Mark an account as reviewed (or clear it), stamping who/when. */
+export function setReviewed(customer: Customer, reviewed: boolean): Customer {
+  return {
+    ...touch(customer),
+    reviewed,
+    reviewedAt: reviewed ? nowIso() : undefined,
+  };
+}
+
+/** Reassign the customer's CSM (e.g. after reviewing a Sales-intake account). */
+export function setAssignedCsm(customer: Customer, csm: string): Customer {
+  if (customer.assignedCsm === csm) return customer;
+  return { ...touch(customer), assignedCsm: csm };
 }
 
 /** Deep-ish clone for a duplicated customer with a fresh id and reset progress. */
@@ -96,6 +174,7 @@ export function duplicateCustomer(source: Customer, by: string): Customer {
     notes: [],
     intakeSubmitted: source.intakeSubmitted,
     intake: { ...source.intake },
+    reviewed: true,
     timeline: [timelineEvent("customer_created", "Customer duplicated", { by, at })],
     attachments: [],
     archived: false,

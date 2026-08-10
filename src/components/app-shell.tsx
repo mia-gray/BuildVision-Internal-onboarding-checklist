@@ -40,7 +40,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   // Customer-facing surfaces (public intake form + onboarding portal) render
   // without any internal app chrome — no sidebar, no command palette, no login.
-  if (pathname.startsWith("/intake") || pathname.startsWith("/onboarding")) {
+  if (
+    pathname.startsWith("/intake") ||
+    pathname.startsWith("/onboarding") ||
+    pathname.startsWith("/sales-intake")
+  ) {
     return <>{children}</>;
   }
 

@@ -16,6 +16,10 @@ import {
   applyStatus,
   claimReward as svcClaimReward,
   createCustomer as svcCreate,
+  createCustomerFromIntake as svcCreateFromIntake,
+  findIntakeDuplicate,
+  setReviewed as svcSetReviewed,
+  setAssignedCsm as svcSetAssignedCsm,
   duplicateCustomer,
   markChecklistFinished,
   markIntakeSent,
@@ -78,6 +82,15 @@ interface CustomerStore {
   recentIds: string[];
   getCustomer: (id: string) => Customer | undefined;
   create: (input: NewCustomerInput) => Customer;
+  /**
+   * Create an account from a submitted Sales Intake form (localStorage mode).
+   * Dedupes on company name / email; returns whether a new record was created
+   * or an existing one matched. Backend mode uses the `sales_intake_create` RPC
+   * (see public-access) instead, since the submitter is anonymous.
+   */
+  createFromSalesIntake: (intake: IntakeSurvey) => { status: "created" | "duplicate"; id?: string };
+  setReviewed: (id: string, reviewed: boolean) => void;
+  setAssignedCsm: (id: string, csm: string) => void;
   duplicate: (id: string) => Customer | undefined;
   remove: (id: string) => void;
   setArchived: (id: string, archived: boolean) => void;
@@ -220,6 +233,15 @@ export function CustomerStoreProvider({ children }: { children: React.ReactNode 
         persist(c);
         return c;
       },
+      createFromSalesIntake: (intake) => {
+        const existing = findIntakeDuplicate(customers, intake);
+        if (existing) return { status: "duplicate", id: existing.id };
+        const c = svcCreateFromIntake(intake);
+        persist(c);
+        return { status: "created", id: c.id };
+      },
+      setReviewed: (id, reviewed) => mutate(id, (c) => svcSetReviewed(c, reviewed)),
+      setAssignedCsm: (id, csm) => mutate(id, (c) => svcSetAssignedCsm(c, csm)),
       duplicate: (id) => {
         const source = customers.find((c) => c.id === id);
         if (!source) return undefined;

@@ -206,9 +206,109 @@ begin
 end;
 $$;
 
+-- Sales intake: the permanent, reusable intake link. Anonymous salespeople fill
+-- it out; this AUTO-CREATES a customer account server-side (new id + portal
+-- token), populated from the intake, marked submitted + unreviewed, and placed
+-- in the shared dashboard. Dedupes on company name (case-insensitive) OR email:
+-- a match is NOT duplicated — the existing account is flagged instead. This
+-- never touches an existing customer's portal token.
+create or replace function public.sales_intake_create(p_intake jsonb)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_now     timestamptz := now();
+  v_company text := trim(coalesce(p_intake->>'companyName', ''));
+  v_email   text := lower(trim(coalesce(p_intake->>'email', '')));
+  v_existing text;
+  v_id      text;
+  v_token   text;
+  v_data    jsonb;
+begin
+  -- Duplicate guard: same company name (case-insensitive) or same contact email.
+  select id into v_existing
+  from public.customers
+  where archived = false
+    and (
+      (v_company <> '' and lower(trim(coalesce(data->>'companyName', ''))) = lower(v_company))
+      or (v_email <> '' and lower(trim(coalesce(data->'intake'->>'email', ''))) = v_email)
+    )
+  limit 1;
+
+  if v_existing is not null then
+    -- Flag the existing account with a timeline note; do NOT create a duplicate
+    -- and do NOT alter its portal token or any other field.
+    update public.customers
+    set data = jsonb_set(
+          data,
+          '{timeline}',
+          jsonb_build_array(jsonb_build_object(
+            'id',    gen_random_uuid()::text,
+            'type',  'note_added',
+            'label', 'Duplicate sales intake received',
+            'detail', nullif(v_company, ''),
+            'by',    'Sales intake',
+            'at',    to_jsonb(v_now)
+          )) || coalesce(data->'timeline', '[]'::jsonb),
+          true
+        ),
+        updated_at = v_now
+    where id = v_existing;
+    return jsonb_build_object('status', 'duplicate');
+  end if;
+
+  -- Fresh id + portal token (unrelated to any existing customer's links).
+  v_id    := substr(replace(gen_random_uuid()::text, '-', ''), 1, 10);
+  v_token := substr(replace(gen_random_uuid()::text || gen_random_uuid()::text, '-', ''), 1, 24);
+
+  v_data := jsonb_build_object(
+    'id',              v_id,
+    'name',            coalesce(nullif(v_company, ''), 'New customer'),
+    'companyName',     coalesce(nullif(v_company, ''), 'New customer'),
+    'assignedCsm',     'Unassigned',
+    'portalToken',     v_token,
+    'status',          'intake_received',
+    'intake',          p_intake || jsonb_build_object('submittedAt', to_jsonb(v_now)),
+    'intakeSubmitted', true,
+    'reviewed',        false,
+    'checklist',       '{}'::jsonb,
+    'notes',           '[]'::jsonb,
+    'attachments',     '[]'::jsonb,
+    'timeline',        jsonb_build_array(
+      jsonb_build_object(
+        'id',    gen_random_uuid()::text,
+        'type',  'customer_created',
+        'label', 'New account from Sales intake',
+        'detail', p_intake->>'primaryContact',
+        'by',    'Sales intake',
+        'at',    to_jsonb(v_now)
+      ),
+      jsonb_build_object(
+        'id',    gen_random_uuid()::text,
+        'type',  'intake_submitted',
+        'label', 'Intake form submitted',
+        'by',    coalesce(nullif(v_company, ''), 'Customer'),
+        'at',    to_jsonb(v_now)
+      )
+    ),
+    'archived',        false,
+    'createdAt',       to_jsonb(v_now),
+    'updatedAt',       to_jsonb(v_now)
+  );
+
+  insert into public.customers (id, portal_token, archived, data, updated_at)
+  values (v_id, v_token, false, v_data, v_now);
+
+  return jsonb_build_object('status', 'created', 'id', v_id);
+end;
+$$;
+
 -- Expose only the RPCs to anonymous visitors.
 grant execute on function public.portal_get(text)                         to anon, authenticated;
 grant execute on function public.intake_get(text)                         to anon, authenticated;
 grant execute on function public.intake_submit(text, jsonb)               to anon, authenticated;
 grant execute on function public.portal_toggle_step(text, text, boolean)  to anon, authenticated;
 grant execute on function public.portal_claim_reward(text, jsonb)         to anon, authenticated;
+grant execute on function public.sales_intake_create(jsonb)               to anon, authenticated;
