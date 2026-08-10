@@ -43,9 +43,9 @@ export function seedCustomers(): Customer[] {
       emailMethod: "Email Forwarding",
       bidInbox: "bids@sierraair.com",
       teamMembers: [
-        { name: "Dana Okafor", email: "dana.okafor@sierraair.com", role: "Admin" },
-        { name: "Marcus Feld", email: "marcus@sierraair.com", role: "Admin" },
-        { name: "Priya Shah", email: "priya@sierraair.com", role: "Member" },
+        { firstName: "Dana", lastName: "Okafor", email: "dana.okafor@sierraair.com" },
+        { firstName: "Marcus", lastName: "Feld", email: "marcus@sierraair.com" },
+        { firstName: "Priya", lastName: "Shah", email: "priya@sierraair.com" },
       ],
       requestedGoLiveDate: daysAgo(-21).slice(0, 10),
       projectNotes: "Six offices across NV/CA. Wants line-card validated with reps before go-live.",
@@ -155,8 +155,8 @@ export function seedCustomers(): Customer[] {
       emailMethod: "Email Forwarding",
       bidInbox: "estimating@cascademech.com",
       teamMembers: [
-        { name: "Priya Venkataraman", email: "priya.v@cascademech.com", role: "Admin" },
-        { name: "Leah Brooks", email: "leah@cascademech.com", role: "Member" },
+        { firstName: "Priya", lastName: "Venkataraman", email: "priya.v@cascademech.com" },
+        { firstName: "Leah", lastName: "Brooks", email: "leah@cascademech.com" },
       ],
       requestedGoLiveDate: daysAgo(-35).slice(0, 10),
       projectNotes: "Pilot for the estimating team first, expand later.",

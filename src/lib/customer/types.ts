@@ -28,17 +28,18 @@ export const CUSTOMER_STATUSES: {
   { value: "completed", label: "Completed", tone: "success" },
 ];
 
-/** A person to provision in BuildVision, captured on the intake form. */
+/** A user to provision in BuildVision, captured on the intake form. */
 export interface TeamMember {
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
-  /** "Admin" | "Member" */
-  role: string;
 }
 
 /** The customer's intake survey responses. All optional until submitted. */
 export interface IntakeSurvey {
   companyName?: string;
+  /** The customer's website URL. */
+  website?: string;
   /** How the org name should appear in BuildVision. */
   organizationName?: string;
   /** "Yes" | "No" — whether to create child offices. */
@@ -55,7 +56,7 @@ export interface IntakeSurvey {
   emailMethod?: string;
   /** The address bids are forwarded from (only when emailMethod = Email Forwarding). */
   bidInbox?: string;
-  /** People who need access, with their permission level. */
+  /** Users who need a BuildVision login (first name, last name, email). */
   teamMembers?: TeamMember[];
   requestedGoLiveDate?: string;
   projectNotes?: string;

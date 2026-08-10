@@ -164,18 +164,18 @@ export function IntakeSurvey({ customer }: { customer: Customer }) {
                         {isFieldFilled(customer.intake[field.key]) ? (
                           <ul className="space-y-1">
                             {((customer.intake[field.key] as TeamMember[]) ?? [])
-                              .filter((m) => m && (m.name || m.email))
-                              .map((m, i) => (
-                                <li key={i} className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
-                                  <span className="text-foreground/90">{m.name || m.email}</span>
-                                  {m.name && m.email && (
-                                    <span className="text-muted-foreground">· {m.email}</span>
-                                  )}
-                                  <span className="rounded-md bg-muted px-1.5 py-0.5 text-[11px] text-foreground/80">
-                                    {m.role || "Member"}
-                                  </span>
-                                </li>
-                              ))}
+                              .filter((m) => m && (m.firstName || m.lastName || m.email))
+                              .map((m, i) => {
+                                const name = `${m.firstName ?? ""} ${m.lastName ?? ""}`.trim();
+                                return (
+                                  <li key={i} className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
+                                    <span className="text-foreground/90">{name || m.email}</span>
+                                    {name && m.email && (
+                                      <span className="text-muted-foreground">· {m.email}</span>
+                                    )}
+                                  </li>
+                                );
+                              })}
                           </ul>
                         ) : (
                           <span className="text-muted-foreground/60">—</span>

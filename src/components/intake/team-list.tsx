@@ -6,12 +6,12 @@ import type { TeamMember } from "@/lib/customer/types";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
-const ROLES = ["Admin", "Member"];
-const EMPTY: TeamMember = { name: "", email: "", role: "Member" };
+const EMPTY: TeamMember = { firstName: "", lastName: "", email: "" };
 
 /**
- * Repeatable list of users to provision (name, email, Admin/Member). Value is a
- * TeamMember[]. Used by the public intake form and the customer-page editor.
+ * Repeatable list of users to provision (first name, last name, email). Value
+ * is a TeamMember[]. Used by the public intake form and the customer-page
+ * editor. "Add user" appends another row; each row can be removed.
  */
 export function TeamMemberList({
   value,
@@ -33,31 +33,28 @@ export function TeamMemberList({
       {items.map((m, i) => (
         <div key={i} className="flex flex-col gap-2 rounded-lg border border-border/70 p-2 sm:flex-row sm:items-center">
           <Input
-            value={m.name}
-            onChange={(e) => update(i, { name: e.target.value })}
-            placeholder="Full name"
+            value={m.firstName}
+            onChange={(e) => update(i, { firstName: e.target.value })}
+            placeholder="First name"
             className="h-9 sm:flex-1"
+            aria-label="First name"
           />
           <Input
-            type="email"
-            value={m.email}
-            onChange={(e) => update(i, { email: e.target.value })}
-            placeholder="name@company.com"
+            value={m.lastName}
+            onChange={(e) => update(i, { lastName: e.target.value })}
+            placeholder="Last name"
             className="h-9 sm:flex-1"
+            aria-label="Last name"
           />
-          <div className="flex items-center gap-2">
-            <select
-              value={m.role || "Member"}
-              onChange={(e) => update(i, { role: e.target.value })}
-              className="h-9 rounded-md border border-input bg-background px-2 text-sm shadow-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              aria-label="Permission level"
-            >
-              {ROLES.map((r) => (
-                <option key={r} value={r}>
-                  {r}
-                </option>
-              ))}
-            </select>
+          <div className="flex items-center gap-2 sm:flex-[1.4]">
+            <Input
+              type="email"
+              value={m.email}
+              onChange={(e) => update(i, { email: e.target.value })}
+              placeholder="name@company.com"
+              className="h-9 flex-1"
+              aria-label="Email"
+            />
             <button
               type="button"
               onClick={() => remove(i)}
@@ -76,7 +73,7 @@ export function TeamMemberList({
         onClick={add}
         className="inline-flex items-center gap-1.5 rounded-md border border-dashed border-input px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:border-primary/50 hover:text-foreground"
       >
-        <Plus className="size-4" /> Add user
+        <Plus className="size-4" /> Add another user
       </button>
     </div>
   );
