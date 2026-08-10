@@ -83,6 +83,19 @@ export const INTAKE_GROUPS: IntakeGroup[] = [
     ],
   },
   {
+    id: "users",
+    title: "Users",
+    description: "Who needs a BuildVision login? We'll create an account for each person you add.",
+    fields: [
+      {
+        key: "teamMembers",
+        label: "Users to create",
+        type: "team",
+        helper: "Add each user's first name, last name, and email. Use “Add another user” for more.",
+      },
+    ],
+  },
+  {
     id: "engagement",
     title: "Your BuildVision Setup",
     description: "Details we need to configure your account.",
