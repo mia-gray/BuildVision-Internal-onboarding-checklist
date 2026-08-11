@@ -43,7 +43,7 @@ export const INTAKE_GROUPS: IntakeGroup[] = [
     id: "organization",
     title: "Organization",
     fields: [
-      { key: "companyName", label: "New Organization", type: "text", required: true, placeholder: "Acme Mechanical" },
+      { key: "companyName", label: "Organization", type: "text", required: true, placeholder: "Acme Mechanical" },
       {
         key: "website",
         label: "Organization URL",
@@ -57,13 +57,6 @@ export const INTAKE_GROUPS: IntakeGroup[] = [
         type: "multiselect",
         options: ["Rep", "Manufacturer"],
         helper: "Select all that apply — some organizations are both a Rep and a Manufacturer.",
-      },
-      {
-        key: "industry",
-        label: "Category",
-        type: "text",
-        placeholder: "e.g. HVAC",
-        helper: "Aligns with BuildVision Business Categories.",
       },
       {
         key: "equipmentSystems",

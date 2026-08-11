@@ -54,8 +54,6 @@ export interface IntakeSurvey {
   website?: string;
   /** Which type(s) the org operates as: "Rep" and/or "Manufacturer". */
   organizationType?: string[];
-  /** BuildVision Business Category (labelled "Category"; key kept as industry). */
-  industry?: string;
   /** Equipment systems the org works across: Mechanical / Electrical / Food Service. */
   equipmentSystems?: string[];
   /** "Yes" | "No" — whether there are associated (parent/child) organizations. */

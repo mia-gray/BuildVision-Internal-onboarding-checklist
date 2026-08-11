@@ -49,21 +49,10 @@ const CURRENT_USER_KEY = "bv.currentUser.v1";
 const RECENT_KEY = "bv.recentCustomers.v1";
 const SEED_FLAG_KEY = "bv.seeded.v1";
 
-/** Legacy value normalizations applied to stored records on load. */
-const INDUSTRY_RENAMES: Record<string, string> = {
-  "Mechanical Contractor": "Contractor",
-};
-
 /** Returns an upgraded copy if anything changed, else null (no write needed). */
 function migrateCustomer(c: Customer): Customer | null {
   let next = c;
   let changed = false;
-
-  const oldIndustry = c.intake?.industry;
-  if (oldIndustry && INDUSTRY_RENAMES[oldIndustry]) {
-    next = { ...next, intake: { ...next.intake, industry: INDUSTRY_RENAMES[oldIndustry] } };
-    changed = true;
-  }
 
   // Backfill a portal token for customers created before the portal existed.
   if (!next.portalToken) {
