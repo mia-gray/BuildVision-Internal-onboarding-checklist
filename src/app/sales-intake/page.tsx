@@ -59,7 +59,7 @@ function SalesIntakeInner() {
       <main className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
         <IntakeForm
           onSubmit={onSubmit}
-          heading="New customer intake"
+          heading="New Organization"
           subheading="Capture the new customer's details to kick off onboarding. Submitting creates their account and notifies the BuildVision onboarding team automatically."
           submitLabel="Create customer"
         />

@@ -33,7 +33,6 @@ export function seedCustomers(): Customer[] {
       companyName: "Sierra Air Partners, LLC",
       website: "https://sierraair.com",
       organizationType: ["Rep"],
-      industry: "HVAC",
       equipmentSystems: ["Mechanical"],
       hasAssociatedOrgs: "Yes",
       associatedOrgs: [
@@ -151,7 +150,6 @@ export function seedCustomers(): Customer[] {
       companyName: "Cascade Mechanical Group, Inc.",
       website: "https://cascademech.com",
       organizationType: ["Rep", "Manufacturer"],
-      industry: "Mechanical Contracting",
       equipmentSystems: ["Mechanical", "Electrical"],
       hasAssociatedOrgs: "No",
       primaryContact: "Priya Venkataraman, Operations Director",
