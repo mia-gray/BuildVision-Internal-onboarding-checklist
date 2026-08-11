@@ -3,7 +3,7 @@
 import * as React from "react";
 import { ClipboardList, Pencil, Check, X, Inbox } from "lucide-react";
 
-import type { Customer, IntakeSurvey as IntakeSurveyData, TeamMember } from "@/lib/customer/types";
+import type { AssociatedOrg, Customer, IntakeSurvey as IntakeSurveyData, TeamMember } from "@/lib/customer/types";
 import { INTAKE_GROUPS, isFieldFilled, isFieldVisible, type IntakeField } from "@/lib/customer/intake-schema";
 import { useCustomers } from "@/lib/customer/store";
 import { formatDate } from "@/lib/format";
@@ -12,6 +12,8 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { OfficeList } from "@/components/intake/office-list";
 import { TeamMemberList } from "@/components/intake/team-list";
+import { MultiSelect } from "@/components/intake/multi-select";
+import { AssociatedOrgList } from "@/components/intake/associated-org-list";
 
 function displayValue(field: IntakeField, value?: string): string {
   if (!isFieldFilled(value)) return "—";
@@ -144,6 +146,17 @@ export function IntakeSurvey({ customer }: { customer: Customer }) {
                             value={(draft[field.key] as TeamMember[]) ?? []}
                             onChange={(arr) => setDraft((d) => ({ ...d, [field.key]: arr }))}
                           />
+                        ) : field.type === "assocOrgs" ? (
+                          <AssociatedOrgList
+                            value={(draft[field.key] as AssociatedOrg[]) ?? []}
+                            onChange={(arr) => setDraft((d) => ({ ...d, [field.key]: arr }))}
+                          />
+                        ) : field.type === "multiselect" ? (
+                          <MultiSelect
+                            options={field.options ?? []}
+                            value={(draft[field.key] as string[]) ?? []}
+                            onChange={(arr) => setDraft((d) => ({ ...d, [field.key]: arr }))}
+                          />
                         ) : field.type === "list" ? (
                           <OfficeList
                             value={(draft[field.key] as string[]) ?? []}
@@ -177,6 +190,44 @@ export function IntakeSurvey({ customer }: { customer: Customer }) {
                                 );
                               })}
                           </ul>
+                        ) : (
+                          <span className="text-muted-foreground/60">—</span>
+                        )}
+                      </dd>
+                    ) : field.type === "assocOrgs" ? (
+                      <dd className="text-sm">
+                        {isFieldFilled(customer.intake[field.key]) ? (
+                          <ul className="space-y-1">
+                            {((customer.intake[field.key] as AssociatedOrg[]) ?? [])
+                              .filter((o) => o && o.name)
+                              .map((o, i) => (
+                                <li key={i} className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
+                                  <span className="text-foreground/90">{o.name}</span>
+                                  <span className="rounded-md bg-muted px-1.5 py-0.5 text-[11px] text-foreground/80">
+                                    {o.relationship || "Child"}
+                                  </span>
+                                </li>
+                              ))}
+                          </ul>
+                        ) : (
+                          <span className="text-muted-foreground/60">—</span>
+                        )}
+                      </dd>
+                    ) : field.type === "multiselect" ? (
+                      <dd className="text-sm">
+                        {isFieldFilled(customer.intake[field.key]) ? (
+                          <div className="flex flex-wrap gap-1.5">
+                            {((customer.intake[field.key] as string[]) ?? [])
+                              .filter(Boolean)
+                              .map((o, i) => (
+                                <span
+                                  key={i}
+                                  className="rounded-md bg-muted px-2 py-0.5 text-xs text-foreground/90"
+                                >
+                                  {o}
+                                </span>
+                              ))}
+                          </div>
                         ) : (
                           <span className="text-muted-foreground/60">—</span>
                         )}

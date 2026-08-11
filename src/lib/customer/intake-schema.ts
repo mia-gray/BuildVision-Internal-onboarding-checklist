@@ -5,7 +5,17 @@
  */
 import type { IntakeSurvey } from "./types";
 
-export type IntakeFieldType = "text" | "email" | "tel" | "textarea" | "select" | "date" | "list" | "team";
+export type IntakeFieldType =
+  | "text"
+  | "email"
+  | "tel"
+  | "textarea"
+  | "select"
+  | "date"
+  | "list"
+  | "team"
+  | "multiselect"
+  | "assocOrgs";
 
 export interface IntakeField {
   key: keyof IntakeSurvey;
@@ -30,51 +40,50 @@ export interface IntakeGroup {
 
 export const INTAKE_GROUPS: IntakeGroup[] = [
   {
-    id: "company",
-    title: "Company",
-    description: "Tell us who you are.",
+    id: "organization",
+    title: "Organization",
     fields: [
-      { key: "companyName", label: "Company Name", type: "text", required: true, placeholder: "Acme Mechanical" },
+      { key: "companyName", label: "New Organization", type: "text", required: true, placeholder: "Acme Mechanical" },
       {
         key: "website",
-        label: "Company Website",
+        label: "Organization URL",
         type: "text",
         placeholder: "https://acme.com",
-        helper: "The customer's website URL.",
+        helper: "Used to verify the right organization and help pre-fill details.",
       },
       {
-        key: "organizationName",
-        label: "How should your organization name appear in BuildVision?",
-        type: "text",
-        placeholder: "e.g. Acme Mechanical",
-        helper: "This is the name your team will see across BuildVision.",
-      },
-      {
-        key: "addChildOffices",
-        label: "Do you want any child offices added?",
-        type: "select",
-        options: ["No", "Yes"],
-        helper: "Offices or branches nested under your main organization.",
-      },
-      {
-        key: "childOffices",
-        label: "Child office names",
-        type: "list",
-        placeholder: "Office name (e.g. Reno)",
-        helper: "Add one box per office. You can add or remove as many as you need.",
-        showIf: { key: "addChildOffices", equals: "Yes" },
+        key: "organizationType",
+        label: "Organization Type",
+        type: "multiselect",
+        options: ["Rep", "Manufacturer"],
+        helper: "Select all that apply — some organizations are both a Rep and a Manufacturer.",
       },
       {
         key: "industry",
-        label: "Industry",
+        label: "Category",
+        type: "text",
+        placeholder: "e.g. HVAC",
+        helper: "Aligns with BuildVision Business Categories.",
+      },
+      {
+        key: "equipmentSystems",
+        label: "Equipment Systems",
+        type: "multiselect",
+        options: ["Mechanical", "Electrical", "Food Service"],
+        helper: "Select all that apply.",
+      },
+      {
+        key: "hasAssociatedOrgs",
+        label: "Will you have any associated organizations?",
         type: "select",
-        options: [
-          "Manufacturer's Rep",
-          "Contractor",
-          "Manufacturer",
-          "Engineering Firm",
-          "Other",
-        ],
+        options: ["No", "Yes"],
+      },
+      {
+        key: "associatedOrgs",
+        label: "Associated organizations",
+        type: "assocOrgs",
+        helper: "Add each related organization and whether it's a parent or child. Add as many as needed.",
+        showIf: { key: "hasAssociatedOrgs", equals: "Yes" },
       },
     ],
   },
@@ -129,7 +138,6 @@ export const INTAKE_GROUPS: IntakeGroup[] = [
     id: "notes",
     title: "Anything else?",
     fields: [
-      { key: "projectNotes", label: "Project Notes", type: "textarea", placeholder: "Goals, timeline, constraints…" },
       { key: "additionalComments", label: "Additional Comments", type: "textarea" },
     ],
   },
