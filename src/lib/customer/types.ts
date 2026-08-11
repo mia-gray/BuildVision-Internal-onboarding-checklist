@@ -33,6 +33,8 @@ export interface TeamMember {
   firstName: string;
   lastName: string;
   email: string;
+  /** "Standard user" | "Bid Desk Coordinator" — the user's role. */
+  role?: string;
 }
 
 /** An organization related to the customer (parent or child), from intake. */
@@ -61,6 +63,8 @@ export interface IntakeSurvey {
   /** Related organizations + their relationship (when hasAssociatedOrgs = "Yes"). */
   associatedOrgs?: AssociatedOrg[];
   primaryContact?: string;
+  /** The primary contact's job title. */
+  contactTitle?: string;
   email?: string;
   phone?: string;
   address?: string;

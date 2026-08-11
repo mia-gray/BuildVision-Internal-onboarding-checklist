@@ -49,14 +49,15 @@ export const INTAKE_GROUPS: IntakeGroup[] = [
         label: "Organization URL",
         type: "text",
         placeholder: "https://acme.com",
-        helper: "Used to verify the right organization and help pre-fill details.",
       },
+      { key: "phone", label: "Phone", type: "tel", placeholder: "(555) 123-4567" },
+      { key: "address", label: "Address", type: "textarea", placeholder: "Street, city, state, ZIP" },
       {
         key: "organizationType",
         label: "Organization Type",
         type: "multiselect",
-        options: ["Rep", "Manufacturer"],
-        helper: "Select all that apply — some organizations are both a Rep and a Manufacturer.",
+        options: ["Representative", "Manufacturer"],
+        helper: "Select all that apply.",
       },
       {
         key: "equipmentSystems",
@@ -83,30 +84,26 @@ export const INTAKE_GROUPS: IntakeGroup[] = [
   {
     id: "contact",
     title: "Primary Contact",
-    description: "Who should we work with day to day?",
     fields: [
-      { key: "primaryContact", label: "Primary Contact", type: "text", required: true, placeholder: "Full name + title" },
+      { key: "primaryContact", label: "First Name", type: "text", required: true, placeholder: "First name" },
+      { key: "contactTitle", label: "Title", type: "text", placeholder: "e.g. VP Sales" },
       { key: "email", label: "Email", type: "email", required: true, placeholder: "name@company.com" },
-      { key: "phone", label: "Phone", type: "tel", placeholder: "(555) 123-4567" },
-      { key: "address", label: "Address", type: "textarea", placeholder: "Street, city, state, ZIP" },
     ],
   },
   {
     id: "users",
     title: "Users",
-    description: "Who needs a BuildVision login? We'll create an account for each person you add.",
     fields: [
       {
         key: "teamMembers",
         label: "Users to create",
         type: "team",
-        helper: "Add each user's first name, last name, and email. Use “Add another user” for more.",
       },
     ],
   },
   {
     id: "engagement",
-    title: "Your BuildVision Setup",
+    title: "Admin Setup",
     description: "Details we need to configure your account.",
     fields: [
       {
@@ -114,7 +111,6 @@ export const INTAKE_GROUPS: IntakeGroup[] = [
         label: "How should BuildVision receive your bids?",
         type: "select",
         options: ["Email integration", "Email Forwarding"],
-        helper: "Email integration connects your inbox directly. Email Forwarding sends bids from an address you choose.",
       },
       {
         key: "bidInbox",

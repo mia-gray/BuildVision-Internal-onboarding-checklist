@@ -186,6 +186,11 @@ export function IntakeSurvey({ customer }: { customer: Customer }) {
                                     {name && m.email && (
                                       <span className="text-muted-foreground">· {m.email}</span>
                                     )}
+                                    {m.role === "Bid Desk Coordinator" && (
+                                      <span className="rounded-md bg-muted px-1.5 py-0.5 text-[11px] text-foreground/80">
+                                        Bid Desk Coordinator
+                                      </span>
+                                    )}
                                   </li>
                                 );
                               })}

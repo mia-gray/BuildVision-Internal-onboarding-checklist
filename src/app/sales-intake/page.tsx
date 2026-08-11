@@ -60,7 +60,7 @@ function SalesIntakeInner() {
         <IntakeForm
           onSubmit={onSubmit}
           heading="New Organization"
-          subheading="Capture the new customer's details to kick off onboarding. Submitting creates their account and notifies the BuildVision onboarding team automatically."
+          subheading=""
           submitLabel="Create customer"
         />
       </main>

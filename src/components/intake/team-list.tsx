@@ -6,7 +6,8 @@ import type { TeamMember } from "@/lib/customer/types";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
-const EMPTY: TeamMember = { firstName: "", lastName: "", email: "" };
+const ROLES = ["Standard user", "Bid Desk Coordinator"];
+const EMPTY: TeamMember = { firstName: "", lastName: "", email: "", role: "Standard user" };
 
 /**
  * Repeatable list of users to provision (first name, last name, email). Value
@@ -46,15 +47,27 @@ export function TeamMemberList({
             className="h-9 sm:flex-1"
             aria-label="Last name"
           />
-          <div className="flex items-center gap-2 sm:flex-[1.4]">
-            <Input
-              type="email"
-              value={m.email}
-              onChange={(e) => update(i, { email: e.target.value })}
-              placeholder="name@company.com"
-              className="h-9 flex-1"
-              aria-label="Email"
-            />
+          <Input
+            type="email"
+            value={m.email}
+            onChange={(e) => update(i, { email: e.target.value })}
+            placeholder="name@company.com"
+            className="h-9 sm:flex-1"
+            aria-label="Email"
+          />
+          <div className="flex items-center gap-2">
+            <select
+              value={m.role || "Standard user"}
+              onChange={(e) => update(i, { role: e.target.value })}
+              className="h-9 rounded-md border border-input bg-background px-2 text-sm shadow-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              aria-label="User role"
+            >
+              {ROLES.map((r) => (
+                <option key={r} value={r}>
+                  {r}
+                </option>
+              ))}
+            </select>
             <button
               type="button"
               onClick={() => remove(i)}
