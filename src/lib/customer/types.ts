@@ -35,22 +35,37 @@ export interface TeamMember {
   email: string;
 }
 
+/** An organization related to the customer (parent or child), from intake. */
+export interface AssociatedOrg {
+  name: string;
+  /** "Parent" | "Child" — its relationship to the primary organization. */
+  relationship: string;
+}
+
 /** The customer's intake survey responses. All optional until submitted. */
 export interface IntakeSurvey {
+  /**
+   * The organization's name. NOTE: the data key stays `companyName` (used by
+   * the dashboard + sales-intake duplicate check); it's labelled "Organization"
+   * in the UI to match the BuildVision admin portal terminology.
+   */
   companyName?: string;
-  /** The customer's website URL. */
+  /** The organization's website URL (verification + AI pre-fill). */
   website?: string;
-  /** How the org name should appear in BuildVision. */
-  organizationName?: string;
-  /** "Yes" | "No" — whether to create child offices. */
-  addChildOffices?: string;
-  /** Names of child offices to create (when addChildOffices = "Yes"). */
-  childOffices?: string[];
+  /** Which type(s) the org operates as: "Rep" and/or "Manufacturer". */
+  organizationType?: string[];
+  /** BuildVision Business Category (labelled "Category"; key kept as industry). */
+  industry?: string;
+  /** Equipment systems the org works across: Mechanical / Electrical / Food Service. */
+  equipmentSystems?: string[];
+  /** "Yes" | "No" — whether there are associated (parent/child) organizations. */
+  hasAssociatedOrgs?: string;
+  /** Related organizations + their relationship (when hasAssociatedOrgs = "Yes"). */
+  associatedOrgs?: AssociatedOrg[];
   primaryContact?: string;
   email?: string;
   phone?: string;
   address?: string;
-  industry?: string;
   crmSystem?: string;
   /** "Email integration" | "Email Forwarding" — how BuildVision receives bids. */
   emailMethod?: string;
@@ -59,7 +74,6 @@ export interface IntakeSurvey {
   /** Users who need a BuildVision login (first name, last name, email). */
   teamMembers?: TeamMember[];
   requestedGoLiveDate?: string;
-  projectNotes?: string;
   additionalComments?: string;
   /** Set when the customer submits the external intake form. */
   submittedAt?: string;

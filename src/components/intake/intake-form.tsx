@@ -3,13 +3,15 @@
 import * as React from "react";
 import { CheckCircle2, Loader2 } from "lucide-react";
 
-import type { Customer, IntakeSurvey, TeamMember } from "@/lib/customer/types";
+import type { AssociatedOrg, Customer, IntakeSurvey, TeamMember } from "@/lib/customer/types";
 import { INTAKE_GROUPS, INTAKE_FIELDS, isFieldFilled, isFieldVisible, type IntakeField } from "@/lib/customer/intake-schema";
 import { useCustomers } from "@/lib/customer/store";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { OfficeList } from "./office-list";
 import { TeamMemberList } from "./team-list";
+import { MultiSelect } from "./multi-select";
+import { AssociatedOrgList } from "./associated-org-list";
 import { cn } from "@/lib/utils";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -109,7 +111,7 @@ export function IntakeForm({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  function set(key: keyof IntakeSurvey, v: string | string[] | TeamMember[]) {
+  function set(key: keyof IntakeSurvey, v: string | string[] | TeamMember[] | AssociatedOrg[]) {
     setValues((prev) => {
       const next = { ...prev, [key]: v };
       try {
@@ -232,6 +234,25 @@ export function IntakeForm({
                       <label className="mb-1.5 block text-sm font-medium">{field.label}</label>
                       <TeamMemberList
                         value={(values[field.key] as TeamMember[]) ?? []}
+                        onChange={(arr) => set(field.key, arr)}
+                      />
+                      {field.helper && <p className="mt-1.5 text-xs text-muted-foreground">{field.helper}</p>}
+                    </div>
+                  ) : field.type === "assocOrgs" ? (
+                    <div key={field.key} id={`field-${field.key}`} className="sm:col-span-2">
+                      <label className="mb-1.5 block text-sm font-medium">{field.label}</label>
+                      <AssociatedOrgList
+                        value={(values[field.key] as AssociatedOrg[]) ?? []}
+                        onChange={(arr) => set(field.key, arr)}
+                      />
+                      {field.helper && <p className="mt-1.5 text-xs text-muted-foreground">{field.helper}</p>}
+                    </div>
+                  ) : field.type === "multiselect" ? (
+                    <div key={field.key} id={`field-${field.key}`} className="sm:col-span-2">
+                      <label className="mb-1.5 block text-sm font-medium">{field.label}</label>
+                      <MultiSelect
+                        options={field.options ?? []}
+                        value={(values[field.key] as string[]) ?? []}
                         onChange={(arr) => set(field.key, arr)}
                       />
                       {field.helper && <p className="mt-1.5 text-xs text-muted-foreground">{field.helper}</p>}
