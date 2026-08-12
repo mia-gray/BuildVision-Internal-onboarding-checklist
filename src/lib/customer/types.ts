@@ -63,6 +63,8 @@ export interface IntakeSurvey {
   /** Related organizations + their relationship (when hasAssociatedOrgs = "Yes"). */
   associatedOrgs?: AssociatedOrg[];
   primaryContact?: string;
+  /** The primary contact's last name. */
+  contactLastName?: string;
   /** The primary contact's job title. */
   contactTitle?: string;
   email?: string;

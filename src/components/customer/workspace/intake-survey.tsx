@@ -126,9 +126,11 @@ export function IntakeSurvey({ customer }: { customer: Customer }) {
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           {INTAKE_GROUPS.map((group) => (
             <div key={group.id} className="rounded-xl border border-border bg-card p-4">
-              <h3 className="mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                {group.title}
-              </h3>
+              {group.title && (
+                <h3 className="mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                  {group.title}
+                </h3>
+              )}
               <dl className="space-y-3">
                 {group.fields
                   .filter((field) =>
@@ -138,7 +140,7 @@ export function IntakeSurvey({ customer }: { customer: Customer }) {
                   )
                   .map((field) => (
                   <div key={field.key} className="grid grid-cols-1 gap-1">
-                    <dt className="text-xs text-muted-foreground">{field.label}</dt>
+                    {field.label && <dt className="text-xs text-muted-foreground">{field.label}</dt>}
                     {editing ? (
                       <dd>
                         {field.type === "team" ? (
