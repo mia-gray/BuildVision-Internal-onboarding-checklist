@@ -61,7 +61,7 @@ function SalesIntakeInner() {
           onSubmit={onSubmit}
           heading="New Organization"
           subheading=""
-          submitLabel="Create customer"
+          submitLabel="Create Organization"
         />
       </main>
 
