@@ -34,10 +34,12 @@ function Field({
   );
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="text-sm font-medium">
-        {field.label}
-        {field.required && <span className="ml-0.5 text-destructive">*</span>}
-      </label>
+      {field.label && (
+        <label className="text-sm font-medium">
+          {field.label}
+          {field.required && <span className="ml-0.5 text-destructive">*</span>}
+        </label>
+      )}
       {field.type === "textarea" ? (
         <textarea rows={3} value={value} onChange={(e) => onChange(e.target.value)} placeholder={field.placeholder} className={base} />
       ) : field.type === "select" ? (
@@ -227,7 +229,7 @@ export function IntakeForm({
       <div className="space-y-10">
         {INTAKE_GROUPS.map((group) => (
           <section key={group.id}>
-            <h2 className="text-lg font-semibold tracking-tight">{group.title}</h2>
+            {group.title && <h2 className="text-lg font-semibold tracking-tight">{group.title}</h2>}
             {group.description && <p className="mt-1 text-sm text-muted-foreground">{group.description}</p>}
             <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
               {group.fields

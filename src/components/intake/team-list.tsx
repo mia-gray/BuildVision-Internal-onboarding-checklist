@@ -6,7 +6,7 @@ import type { TeamMember } from "@/lib/customer/types";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
-const ROLES = ["Standard user", "Bid Desk Coordinator"];
+const ROLES = ["Standard user", "Admin", "Bid Desk Coordinator"];
 const EMPTY: TeamMember = { firstName: "", lastName: "", email: "", role: "Standard user" };
 
 /**

@@ -86,6 +86,7 @@ export const INTAKE_GROUPS: IntakeGroup[] = [
     title: "Primary Contact",
     fields: [
       { key: "primaryContact", label: "First Name", type: "text", required: true, placeholder: "First name" },
+      { key: "contactLastName", label: "Last Name", type: "text", placeholder: "Last name" },
       { key: "contactTitle", label: "Title", type: "text", placeholder: "e.g. VP Sales" },
       { key: "email", label: "Email", type: "email", required: true, placeholder: "name@company.com" },
     ],
@@ -104,13 +105,12 @@ export const INTAKE_GROUPS: IntakeGroup[] = [
   {
     id: "engagement",
     title: "Admin Setup",
-    description: "Details we need to configure your account.",
     fields: [
       {
         key: "emailMethod",
         label: "How should BuildVision receive your bids?",
         type: "select",
-        options: ["Email integration", "Email Forwarding"],
+        options: ["Email integration", "Email forwarding"],
       },
       {
         key: "bidInbox",
@@ -118,14 +118,14 @@ export const INTAKE_GROUPS: IntakeGroup[] = [
         type: "email",
         placeholder: "bids@yourcompany.com",
         helper: "We'll forward from here to Bids@BuildVision.io.",
-        showIf: { key: "emailMethod", equals: "Email Forwarding" },
+        showIf: { key: "emailMethod", equals: "Email forwarding" },
       },
       { key: "requestedGoLiveDate", label: "Requested Go-Live Date", type: "date" },
     ],
   },
   {
     id: "notes",
-    title: "Anything else?",
+    title: "",
     fields: [
       { key: "additionalComments", label: "Additional Comments", type: "textarea" },
     ],
