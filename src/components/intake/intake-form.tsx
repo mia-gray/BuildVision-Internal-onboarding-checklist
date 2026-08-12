@@ -4,7 +4,7 @@ import * as React from "react";
 import { CheckCircle2, Loader2 } from "lucide-react";
 
 import type { AssociatedOrg, Customer, IntakeSurvey, TeamMember } from "@/lib/customer/types";
-import { INTAKE_GROUPS, INTAKE_FIELDS, isFieldFilled, isFieldVisible, type IntakeField } from "@/lib/customer/intake-schema";
+import { INTAKE_GROUPS, INTAKE_FIELDS, INTAKE_DEFAULTS, isFieldFilled, isFieldVisible, type IntakeField } from "@/lib/customer/intake-schema";
 import { useCustomers } from "@/lib/customer/store";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -94,7 +94,10 @@ export function IntakeForm({
 }) {
   const { updateIntake } = useCustomers();
   const dkey = draftKey(customer?.id ?? "sales-new");
-  const [values, setValues] = React.useState<IntakeSurvey>(customer?.intake ?? {});
+  const [values, setValues] = React.useState<IntakeSurvey>(() => ({
+    ...INTAKE_DEFAULTS,
+    ...(customer?.intake ?? {}),
+  }));
   const [errors, setErrors] = React.useState<Record<string, string>>({});
   const [submitting, setSubmitting] = React.useState(false);
   const [submitted, setSubmitted] = React.useState(false);
@@ -112,6 +115,35 @@ export function IntakeForm({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // The primary contact is always the first user: mirror their name + email into
+  // user #1, defaulting that user to Admin and not a bid-desk coordinator. Only
+  // the name/email are synced — the role / bid-desk selects stay user-editable.
+  React.useEffect(() => {
+    setValues((prev) => {
+      const users = [...((prev.teamMembers as TeamMember[]) ?? [])];
+      const first = users[0] ?? { firstName: "", lastName: "", email: "", role: "Admin", bidDesk: "No" };
+      const nextFirst: TeamMember = {
+        ...first,
+        firstName: prev.primaryContact ?? "",
+        lastName: prev.contactLastName ?? "",
+        email: prev.email ?? "",
+        role: first.role ?? "Admin",
+        bidDesk: first.bidDesk ?? "No",
+      };
+      // No change → skip the state update (avoids an extra render).
+      if (
+        users[0] &&
+        users[0].firstName === nextFirst.firstName &&
+        users[0].lastName === nextFirst.lastName &&
+        users[0].email === nextFirst.email
+      ) {
+        return prev;
+      }
+      users[0] = nextFirst;
+      return { ...prev, teamMembers: users };
+    });
+  }, [values.primaryContact, values.contactLastName, values.email]);
 
   function set(key: keyof IntakeSurvey, v: string | string[] | TeamMember[] | AssociatedOrg[]) {
     setValues((prev) => {
@@ -237,41 +269,57 @@ export function IntakeForm({
                 .map((field) =>
                   field.type === "team" ? (
                     <div key={field.key} id={`field-${field.key}`} className="sm:col-span-2">
-                      <label className="mb-1.5 block text-sm font-medium">{field.label}</label>
+                      <label className="mb-1.5 block text-sm font-medium">
+                        {field.label}
+                        {field.required && <span className="ml-0.5 text-destructive">*</span>}
+                      </label>
                       <TeamMemberList
                         value={(values[field.key] as TeamMember[]) ?? []}
                         onChange={(arr) => set(field.key, arr)}
                       />
                       {field.helper && <p className="mt-1.5 text-xs text-muted-foreground">{field.helper}</p>}
+                      {errors[field.key] && <p className="mt-1.5 text-xs text-destructive">{errors[field.key]}</p>}
                     </div>
                   ) : field.type === "assocOrgs" ? (
                     <div key={field.key} id={`field-${field.key}`} className="sm:col-span-2">
-                      <label className="mb-1.5 block text-sm font-medium">{field.label}</label>
+                      <label className="mb-1.5 block text-sm font-medium">
+                        {field.label}
+                        {field.required && <span className="ml-0.5 text-destructive">*</span>}
+                      </label>
                       <AssociatedOrgList
                         value={(values[field.key] as AssociatedOrg[]) ?? []}
                         onChange={(arr) => set(field.key, arr)}
                       />
                       {field.helper && <p className="mt-1.5 text-xs text-muted-foreground">{field.helper}</p>}
+                      {errors[field.key] && <p className="mt-1.5 text-xs text-destructive">{errors[field.key]}</p>}
                     </div>
                   ) : field.type === "multiselect" ? (
                     <div key={field.key} id={`field-${field.key}`} className="sm:col-span-2">
-                      <label className="mb-1.5 block text-sm font-medium">{field.label}</label>
+                      <label className="mb-1.5 block text-sm font-medium">
+                        {field.label}
+                        {field.required && <span className="ml-0.5 text-destructive">*</span>}
+                      </label>
                       <MultiSelect
                         options={field.options ?? []}
                         value={(values[field.key] as string[]) ?? []}
                         onChange={(arr) => set(field.key, arr)}
                       />
                       {field.helper && <p className="mt-1.5 text-xs text-muted-foreground">{field.helper}</p>}
+                      {errors[field.key] && <p className="mt-1.5 text-xs text-destructive">{errors[field.key]}</p>}
                     </div>
                   ) : field.type === "list" ? (
                     <div key={field.key} id={`field-${field.key}`} className="sm:col-span-2">
-                      <label className="mb-1.5 block text-sm font-medium">{field.label}</label>
+                      <label className="mb-1.5 block text-sm font-medium">
+                        {field.label}
+                        {field.required && <span className="ml-0.5 text-destructive">*</span>}
+                      </label>
                       <OfficeList
                         value={(values[field.key] as string[]) ?? []}
                         onChange={(arr) => set(field.key, arr)}
                         placeholder={field.placeholder}
                       />
                       {field.helper && <p className="mt-1.5 text-xs text-muted-foreground">{field.helper}</p>}
+                      {errors[field.key] && <p className="mt-1.5 text-xs text-destructive">{errors[field.key]}</p>}
                     </div>
                   ) : (
                     <div key={field.key} id={`field-${field.key}`} className={field.type === "textarea" ? "sm:col-span-2" : ""}>

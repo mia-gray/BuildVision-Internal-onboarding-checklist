@@ -22,6 +22,8 @@ export interface IntakeField {
   label: string;
   type: IntakeFieldType;
   required?: boolean;
+  /** Default value applied to a blank intake form (e.g. a Yes/No select). */
+  default?: string;
   placeholder?: string;
   options?: string[];
   /** Regex (as string) for lightweight validation on text-like fields. */
@@ -48,6 +50,7 @@ export const INTAKE_GROUPS: IntakeGroup[] = [
         key: "website",
         label: "Organization URL",
         type: "text",
+        required: true,
         placeholder: "https://acme.com",
       },
       { key: "phone", label: "Phone", type: "tel", placeholder: "(555) 123-4567" },
@@ -56,6 +59,7 @@ export const INTAKE_GROUPS: IntakeGroup[] = [
         key: "organizationType",
         label: "Organization Type",
         type: "multiselect",
+        required: true,
         options: ["Representative", "Manufacturer"],
         helper: "Select all that apply.",
       },
@@ -63,6 +67,7 @@ export const INTAKE_GROUPS: IntakeGroup[] = [
         key: "equipmentSystems",
         label: "Equipment Systems",
         type: "multiselect",
+        required: true,
         options: ["Mechanical", "Electrical", "Food Service"],
         helper: "Select all that apply.",
       },
@@ -70,6 +75,7 @@ export const INTAKE_GROUPS: IntakeGroup[] = [
         key: "hasAssociatedOrgs",
         label: "Will you have any associated organizations?",
         type: "select",
+        default: "No",
         options: ["No", "Yes"],
       },
       {
@@ -86,7 +92,7 @@ export const INTAKE_GROUPS: IntakeGroup[] = [
     title: "Primary Contact",
     fields: [
       { key: "primaryContact", label: "First Name", type: "text", required: true, placeholder: "First name" },
-      { key: "contactLastName", label: "Last Name", type: "text", placeholder: "Last name" },
+      { key: "contactLastName", label: "Last Name", type: "text", required: true, placeholder: "Last name" },
       { key: "contactTitle", label: "Title", type: "text", placeholder: "e.g. VP Sales" },
       { key: "email", label: "Email", type: "email", required: true, placeholder: "name@company.com" },
     ],
@@ -134,6 +140,11 @@ export const INTAKE_GROUPS: IntakeGroup[] = [
 
 /** Flat list of every field, in group order. */
 export const INTAKE_FIELDS: IntakeField[] = INTAKE_GROUPS.flatMap((g) => g.fields);
+
+/** Default values applied to a blank intake form (keyed by field). */
+export const INTAKE_DEFAULTS: IntakeSurvey = Object.fromEntries(
+  INTAKE_FIELDS.filter((f) => f.default !== undefined).map((f) => [f.key, f.default]),
+);
 
 export function isFieldFilled(value: unknown): boolean {
   if (Array.isArray(value)) {
