@@ -41,7 +41,7 @@ export interface IntakeGroup {
 export const INTAKE_GROUPS: IntakeGroup[] = [
   {
     id: "organization",
-    title: "Organization",
+    title: "",
     fields: [
       { key: "companyName", label: "Organization", type: "text", required: true, placeholder: "Acme Mechanical" },
       {
