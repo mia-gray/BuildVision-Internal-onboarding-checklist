@@ -50,9 +50,9 @@ export function seedCustomers(): Customer[] {
       emailMethod: "Email forwarding",
       bidInbox: "bids@sierraair.com",
       teamMembers: [
-        { firstName: "Dana", lastName: "Okafor", email: "dana.okafor@sierraair.com", role: "Admin" },
-        { firstName: "Marcus", lastName: "Feld", email: "marcus@sierraair.com", role: "Bid Desk Coordinator" },
-        { firstName: "Priya", lastName: "Shah", email: "priya@sierraair.com", role: "Standard user" },
+        { firstName: "Dana", lastName: "Okafor", email: "dana.okafor@sierraair.com", role: "Admin", bidDesk: "No" },
+        { firstName: "Marcus", lastName: "Feld", email: "marcus@sierraair.com", role: "Standard user", bidDesk: "Yes" },
+        { firstName: "Priya", lastName: "Shah", email: "priya@sierraair.com", role: "Standard user", bidDesk: "No" },
       ],
       requestedGoLiveDate: daysAgo(-21).slice(0, 10),
       additionalComments: "Six offices across NV/CA. Wants line-card validated with reps before go-live. Prefers Thursday check-ins.",
@@ -164,8 +164,8 @@ export function seedCustomers(): Customer[] {
       emailMethod: "Email forwarding",
       bidInbox: "estimating@cascademech.com",
       teamMembers: [
-        { firstName: "Priya", lastName: "Venkataraman", email: "priya.v@cascademech.com", role: "Bid Desk Coordinator" },
-        { firstName: "Leah", lastName: "Brooks", email: "leah@cascademech.com", role: "Standard user" },
+        { firstName: "Priya", lastName: "Venkataraman", email: "priya.v@cascademech.com", role: "Admin", bidDesk: "Yes" },
+        { firstName: "Leah", lastName: "Brooks", email: "leah@cascademech.com", role: "Standard user", bidDesk: "No" },
       ],
       requestedGoLiveDate: daysAgo(-35).slice(0, 10),
       additionalComments: "Pilot for the estimating team first, expand later.",

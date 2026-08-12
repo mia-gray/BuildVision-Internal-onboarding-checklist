@@ -6,13 +6,18 @@ import type { TeamMember } from "@/lib/customer/types";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
-const ROLES = ["Standard user", "Admin", "Bid Desk Coordinator"];
-const EMPTY: TeamMember = { firstName: "", lastName: "", email: "", role: "Standard user" };
+const ROLES = ["Standard user", "Admin"];
+const BID_DESK = ["No", "Yes"];
+const EMPTY: TeamMember = { firstName: "", lastName: "", email: "", role: "Standard user", bidDesk: "No" };
+
+const selectClass =
+  "h-9 rounded-md border border-input bg-background px-2 text-sm shadow-sm outline-none focus-visible:ring-2 focus-visible:ring-ring";
 
 /**
- * Repeatable list of users to provision (first name, last name, email). Value
+ * Repeatable list of users to provision. Each user has a name, email, an access
+ * role (Standard user / Admin) and a Yes/No "bid desk coordinator" flag. Value
  * is a TeamMember[]. Used by the public intake form and the customer-page
- * editor. "Add user" appends another row; each row can be removed.
+ * editor. "Add another user" appends a row; each row can be removed.
  */
 export function TeamMemberList({
   value,
@@ -32,48 +37,70 @@ export function TeamMemberList({
   return (
     <div className="space-y-2">
       {items.map((m, i) => (
-        <div key={i} className="flex flex-col gap-2 rounded-lg border border-border/70 p-2 sm:flex-row sm:items-center">
-          <Input
-            value={m.firstName}
-            onChange={(e) => update(i, { firstName: e.target.value })}
-            placeholder="First name"
-            className="h-9 sm:flex-1"
-            aria-label="First name"
-          />
-          <Input
-            value={m.lastName}
-            onChange={(e) => update(i, { lastName: e.target.value })}
-            placeholder="Last name"
-            className="h-9 sm:flex-1"
-            aria-label="Last name"
-          />
-          <Input
-            type="email"
-            value={m.email}
-            onChange={(e) => update(i, { email: e.target.value })}
-            placeholder="name@company.com"
-            className="h-9 sm:flex-1"
-            aria-label="Email"
-          />
-          <div className="flex items-center gap-2">
-            <select
-              value={m.role || "Standard user"}
-              onChange={(e) => update(i, { role: e.target.value })}
-              className="h-9 rounded-md border border-input bg-background px-2 text-sm shadow-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              aria-label="User role"
-            >
-              {ROLES.map((r) => (
-                <option key={r} value={r}>
-                  {r}
-                </option>
-              ))}
-            </select>
+        <div key={i} className="space-y-2 rounded-lg border border-border/70 p-2">
+          {/* Name + email */}
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+            <Input
+              value={m.firstName}
+              onChange={(e) => update(i, { firstName: e.target.value })}
+              placeholder="First name"
+              className="h-9 sm:flex-1"
+              aria-label="First name"
+            />
+            <Input
+              value={m.lastName}
+              onChange={(e) => update(i, { lastName: e.target.value })}
+              placeholder="Last name"
+              className="h-9 sm:flex-1"
+              aria-label="Last name"
+            />
+            <Input
+              type="email"
+              value={m.email}
+              onChange={(e) => update(i, { email: e.target.value })}
+              placeholder="name@company.com"
+              className="h-9 sm:flex-1"
+              aria-label="Email"
+            />
+          </div>
+          {/* Role + bid desk coordinator + remove */}
+          <div className="flex flex-wrap items-end gap-3">
+            <label className="flex flex-col gap-1 text-xs text-muted-foreground">
+              Role
+              <select
+                value={m.role || "Standard user"}
+                onChange={(e) => update(i, { role: e.target.value })}
+                className={selectClass}
+                aria-label="Role"
+              >
+                {ROLES.map((r) => (
+                  <option key={r} value={r}>
+                    {r}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="flex flex-col gap-1 text-xs text-muted-foreground">
+              Bid desk coordinator
+              <select
+                value={m.bidDesk || "No"}
+                onChange={(e) => update(i, { bidDesk: e.target.value })}
+                className={selectClass}
+                aria-label="Bid desk coordinator"
+              >
+                {BID_DESK.map((r) => (
+                  <option key={r} value={r}>
+                    {r}
+                  </option>
+                ))}
+              </select>
+            </label>
             <button
               type="button"
               onClick={() => remove(i)}
               aria-label="Remove user"
               className={cn(
-                "flex size-9 shrink-0 items-center justify-center rounded-md border border-input text-muted-foreground transition-colors hover:bg-accent hover:text-destructive",
+                "mb-0.5 ml-auto flex size-9 shrink-0 items-center justify-center rounded-md border border-input text-muted-foreground transition-colors hover:bg-accent hover:text-destructive",
               )}
             >
               <X className="size-4" />

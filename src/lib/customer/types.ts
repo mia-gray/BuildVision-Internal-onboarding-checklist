@@ -33,8 +33,10 @@ export interface TeamMember {
   firstName: string;
   lastName: string;
   email: string;
-  /** "Standard user" | "Bid Desk Coordinator" — the user's role. */
+  /** "Standard user" | "Admin" — the user's access level. */
   role?: string;
+  /** "Yes" | "No" — whether the user is a bid desk coordinator. */
+  bidDesk?: string;
 }
 
 /** An organization related to the customer (parent or child), from intake. */
