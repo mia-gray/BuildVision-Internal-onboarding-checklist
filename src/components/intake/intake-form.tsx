@@ -128,7 +128,7 @@ export function IntakeForm({
         firstName: prev.primaryContact ?? "",
         lastName: prev.contactLastName ?? "",
         email: prev.email ?? "",
-        role: first.role ?? "Admin",
+        role: "Admin", // the primary contact is always an Admin
         bidDesk: first.bidDesk ?? "No",
       };
       // No change → skip the state update (avoids an extra render).

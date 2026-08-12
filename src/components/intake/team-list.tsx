@@ -13,11 +13,17 @@ const EMPTY: TeamMember = { firstName: "", lastName: "", email: "", role: "Stand
 const selectClass =
   "h-9 rounded-md border border-input bg-background px-2 text-sm shadow-sm outline-none focus-visible:ring-2 focus-visible:ring-ring";
 
+/** The first user (the primary contact) is always an Admin. */
+function withFirstAdmin(list: TeamMember[]): TeamMember[] {
+  return list.map((m, i) => (i === 0 ? { ...m, role: "Admin" } : m));
+}
+
 /**
- * Repeatable list of users to provision. Each user has a name, email, an access
- * role (Standard user / Admin) and a Yes/No "bid desk coordinator" flag. Value
- * is a TeamMember[]. Used by the public intake form and the customer-page
- * editor. "Add another user" appends a row; each row can be removed.
+ * Repeatable list of users to provision. Each user has a name, email, a role and
+ * a Yes/No "bid desk coordinator" flag. The FIRST user is the primary contact
+ * and is always an Admin (role is locked); additional users can be Admin or a
+ * Standard user. Value is a TeamMember[]. Used by the intake form and the
+ * customer-page editor.
  */
 export function TeamMemberList({
   value,
@@ -26,13 +32,14 @@ export function TeamMemberList({
   value: TeamMember[];
   onChange: (next: TeamMember[]) => void;
 }) {
-  const items = value.length ? value : [{ ...EMPTY }];
+  const items = withFirstAdmin(value.length ? value : [{ ...EMPTY }]);
 
-  const update = (i: number, patch: Partial<TeamMember>) => {
-    onChange(items.map((m, j) => (j === i ? { ...m, ...patch } : m)));
-  };
-  const add = () => onChange([...items, { ...EMPTY }]);
-  const remove = (i: number) => onChange(items.filter((_, j) => j !== i));
+  // All mutations keep the first user pinned to Admin.
+  const commit = (list: TeamMember[]) => onChange(withFirstAdmin(list));
+  const update = (i: number, patch: Partial<TeamMember>) =>
+    commit(items.map((m, j) => (j === i ? { ...m, ...patch } : m)));
+  const add = () => commit([...items, { ...EMPTY }]);
+  const remove = (i: number) => commit(items.filter((_, j) => j !== i));
 
   return (
     <div className="space-y-2">
@@ -67,18 +74,27 @@ export function TeamMemberList({
           <div className="flex flex-wrap items-end gap-3">
             <label className="flex flex-col gap-1 text-xs text-muted-foreground">
               Role
-              <select
-                value={m.role || "Standard user"}
-                onChange={(e) => update(i, { role: e.target.value })}
-                className={selectClass}
-                aria-label="Role"
-              >
-                {ROLES.map((r) => (
-                  <option key={r} value={r}>
-                    {r}
-                  </option>
-                ))}
-              </select>
+              {i === 0 ? (
+                <span
+                  className="flex h-9 items-center rounded-md border border-input bg-muted/50 px-2 text-sm text-foreground"
+                  title="The primary contact is always an Admin"
+                >
+                  Admin
+                </span>
+              ) : (
+                <select
+                  value={m.role || "Standard user"}
+                  onChange={(e) => update(i, { role: e.target.value })}
+                  className={selectClass}
+                  aria-label="Role"
+                >
+                  {ROLES.map((r) => (
+                    <option key={r} value={r}>
+                      {r}
+                    </option>
+                  ))}
+                </select>
+              )}
             </label>
             <label className="flex flex-col gap-1 text-xs text-muted-foreground">
               Bid desk coordinator
@@ -95,16 +111,19 @@ export function TeamMemberList({
                 ))}
               </select>
             </label>
-            <button
-              type="button"
-              onClick={() => remove(i)}
-              aria-label="Remove user"
-              className={cn(
-                "mb-0.5 ml-auto flex size-9 shrink-0 items-center justify-center rounded-md border border-input text-muted-foreground transition-colors hover:bg-accent hover:text-destructive",
-              )}
-            >
-              <X className="size-4" />
-            </button>
+            {/* The first user (primary contact) can't be removed here. */}
+            {i > 0 && (
+              <button
+                type="button"
+                onClick={() => remove(i)}
+                aria-label="Remove user"
+                className={cn(
+                  "mb-0.5 ml-auto flex size-9 shrink-0 items-center justify-center rounded-md border border-input text-muted-foreground transition-colors hover:bg-accent hover:text-destructive",
+                )}
+              >
+                <X className="size-4" />
+              </button>
+            )}
           </div>
         </div>
       ))}
