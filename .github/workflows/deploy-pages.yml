@@ -32,8 +32,16 @@ jobs:
           node-version: 20
           cache: npm
 
-      - name: Derive base path from repo name
-        run: echo "NEXT_PUBLIC_BASE_PATH=/${GITHUB_REPOSITORY#*/}" >> "$GITHUB_ENV"
+      # With a custom domain (public/CNAME present) the site serves at the root,
+      # so the base path must be empty. Otherwise derive it from the repo name
+      # (project pages live under https://<user>.github.io/<repo>/).
+      - name: Derive base path
+        run: |
+          if [ -f public/CNAME ]; then
+            echo "NEXT_PUBLIC_BASE_PATH=" >> "$GITHUB_ENV"
+          else
+            echo "NEXT_PUBLIC_BASE_PATH=/${GITHUB_REPOSITORY#*/}" >> "$GITHUB_ENV"
+          fi
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
